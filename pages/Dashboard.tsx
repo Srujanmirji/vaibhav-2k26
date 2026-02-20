@@ -12,6 +12,7 @@ const Dashboard: React.FC = () => {
     const [registrations, setRegistrations] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
+    const canRegisterMore = registrations.length < 14;
 
     const handleCredentialResponse = (response: any) => {
         const authUser = getAuthUserFromToken(response.credential);
@@ -132,9 +133,19 @@ const Dashboard: React.FC = () => {
                     </div>
                 ) : (
                     <div className="bg-card/40 backdrop-blur-xl border border-white/10 rounded-2xl p-8 min-h-[400px]">
-                        <h2 className="text-2xl font-bold text-white mb-6 border-b border-white/10 pb-4 flex items-center gap-2">
-                            <Ticket className="w-6 h-6 text-secondary" /> Registered Events
-                        </h2>
+                        <div className="mb-6 border-b border-white/10 pb-4 flex items-center justify-between gap-3">
+                            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                                <Ticket className="w-6 h-6 text-secondary" /> Registered Events
+                            </h2>
+                            {!loading && canRegisterMore && (
+                                <a
+                                    href="#/register"
+                                    className="inline-block px-4 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-white hover:text-primary transition-all whitespace-nowrap"
+                                >
+                                    REGISTER
+                                </a>
+                            )}
+                        </div>
 
                         {loading ? (
                             <div className="flex items-center justify-center py-20">

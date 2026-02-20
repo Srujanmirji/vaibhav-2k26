@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { GOOGLE_CLIENT_ID, ADMIN_ALLOWED_EMAILS } from '../constants';
 import { getAllRegistrationsForAdmin } from '../services/googleSheets';
 import { clearAuthToken, getAuthUserFromToken, getStoredAuthUser, persistAuthToken, type AuthUser } from '../services/authSession';
-import { AlertCircle, Loader2, LogOut, Shield, Users } from 'lucide-react';
+import { AlertCircle, Loader2, LogOut, Shield, Users, RefreshCcw } from 'lucide-react';
 import type { AdminRegistrationRecord } from '../types';
 
 declare const google: any;
@@ -36,11 +36,11 @@ const Admin: React.FC = () => {
     setMessage('');
   };
 
-  const fetchAllRegistrations = async (adminEmail: string) => {
+  const fetchAllRegistrations = async (adminEmail: string, forceRefresh = false) => {
     setLoading(true);
     setMessage('');
 
-    const response = await getAllRegistrationsForAdmin(adminEmail);
+    const response = await getAllRegistrationsForAdmin(adminEmail, forceRefresh);
     setLoading(false);
 
     if (response.status === 'success') {
@@ -53,6 +53,12 @@ const Admin: React.FC = () => {
 
     setRows([]);
     setMessage(response.message || 'Failed to load registrations.');
+  };
+
+  const handleRefresh = () => {
+    if (user && isAuthorized) {
+      fetchAllRegistrations(user.email, true);
+    }
   };
 
   useEffect(() => {
@@ -169,9 +175,19 @@ const Admin: React.FC = () => {
         {user && isAuthorized && (
           <div className="bg-card/40 border border-white/10 rounded-2xl p-6">
             <div className="flex flex-wrap items-center justify-between gap-4 mb-5">
-              <div className="flex items-center gap-2 text-white">
-                <Users className="w-5 h-5 text-secondary" />
-                <span className="font-bold">Total Records: {filteredRows.length}</span>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 text-white">
+                  <Users className="w-5 h-5 text-secondary" />
+                  <span className="font-bold">Total Records: {filteredRows.length}</span>
+                </div>
+                <button
+                  onClick={handleRefresh}
+                  disabled={loading}
+                  className="p-2 bg-white/5 border border-white/10 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-50"
+                  title="Refresh Data"
+                >
+                  <RefreshCcw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                </button>
               </div>
               <input
                 type="text"

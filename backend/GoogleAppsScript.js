@@ -13,6 +13,10 @@
 
 const DEFAULT_SHEET_NAME = 'Sheet1';
 const EVENT_DATE_LABEL = 'March 27-28, 2026';
+const USER_REGISTRATIONS_CACHE_PREFIX = 'user_registrations:';
+const USER_REGISTRATIONS_CACHE_TTL_SECONDS = 120;
+const ADMIN_REGISTRATIONS_CACHE_KEY = 'admin_all_registrations';
+const ADMIN_REGISTRATIONS_CACHE_TTL_SECONDS = 120;
 
 const ADMIN_ALLOWED_EMAILS = [
   'vaibhav2k26jcet@gmail.com',
@@ -97,8 +101,16 @@ function doGet(e) {
 
     if (action === 'getallregistrations') {
       const adminEmail = normalizeString_((e && e.parameter && e.parameter.adminEmail) || '').toLowerCase();
+      const forceRefresh = isTruthy_((e && e.parameter && e.parameter.forceRefresh) || '');
       if (!isAdminAllowed_(adminEmail)) {
         return createJSONOutput_({ status: 'error', message: 'Unauthorized admin access.' });
+      }
+
+      if (!forceRefresh) {
+        const cachedAdminRows = readScriptCacheJSON_(ADMIN_REGISTRATIONS_CACHE_KEY);
+        if (cachedAdminRows && Array.isArray(cachedAdminRows.data)) {
+          return createJSONOutput_({ status: 'success', data: cachedAdminRows.data });
+        }
       }
 
       const allRows = [];
@@ -138,6 +150,12 @@ function doGet(e) {
         return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
       });
 
+      writeScriptCacheJSON_(
+        ADMIN_REGISTRATIONS_CACHE_KEY,
+        { data: allRows },
+        ADMIN_REGISTRATIONS_CACHE_TTL_SECONDS
+      );
+
       return createJSONOutput_({ status: 'success', data: allRows });
     }
 
@@ -146,8 +164,17 @@ function doGet(e) {
     }
 
     const email = normalizeString_((e && e.parameter && e.parameter.email) || '').toLowerCase();
+    const forceRefresh = isTruthy_((e && e.parameter && e.parameter.forceRefresh) || '');
     if (!email) {
       return createJSONOutput_({ status: 'error', message: 'Email is required.' });
+    }
+
+    const userRegistrationsCacheKey = getUserRegistrationsCacheKey_(email);
+    if (!forceRefresh) {
+      const cachedUserRows = readScriptCacheJSON_(userRegistrationsCacheKey);
+      if (cachedUserRows && Array.isArray(cachedUserRows.data)) {
+        return createJSONOutput_({ status: 'success', data: cachedUserRows.data });
+      }
     }
 
     const allRegistrations = [];
@@ -165,23 +192,25 @@ function doGet(e) {
         return;
       }
 
-      const rows = sheet.getRange(2, 1, lastRow - 1, 9).getValues();
-      rows.forEach(function (row) {
-        const rowEmail = normalizeString_(row[2]).toLowerCase();
-        if (rowEmail !== email) {
-          return;
-        }
+      const matchingRow = getFirstMatchingRegistrationRow_(sheet, lastRow, email);
+      if (!matchingRow) {
+        return;
+      }
 
-        const rowEventTitle = normalizeString_(row[7]) || EVENT_ID_TO_TITLE[eventId] || eventId;
-        allRegistrations.push({
-          id: eventId,
-          title: rowEventTitle,
-          date: EVENT_ID_TO_DATE[eventId] || EVENT_DATE_LABEL
-        });
+      const rowEventTitle = normalizeString_(matchingRow[7]) || EVENT_ID_TO_TITLE[eventId] || eventId;
+      allRegistrations.push({
+        id: normalizeString_(matchingRow[8]) || eventId,
+        title: rowEventTitle,
+        date: EVENT_ID_TO_DATE[eventId] || EVENT_DATE_LABEL
       });
     });
 
     const deduped = dedupeRegistrations_(allRegistrations);
+    writeScriptCacheJSON_(
+      userRegistrationsCacheKey,
+      { data: deduped },
+      USER_REGISTRATIONS_CACHE_TTL_SECONDS
+    );
     return createJSONOutput_({ status: 'success', data: deduped });
   } catch (error) {
     return createJSONOutput_({ status: 'error', message: error.toString() });
@@ -218,10 +247,7 @@ function doPost(e) {
       const sheet = getSheet_(resolved.spreadsheetId, resolved.sheetName);
 
       const lastRow = sheet.getLastRow();
-      const existingRows = lastRow > 1 ? sheet.getRange(2, 1, lastRow - 1, 9).getValues() : [];
-      const alreadyRegistered = existingRows.some(function (row) {
-        return normalizeString_(row[2]).toLowerCase() === email;
-      });
+      const alreadyRegistered = hasEmailInSheet_(sheet, lastRow, email);
 
       if (alreadyRegistered) {
         skippedEvents.push(resolved.eventTitle);
@@ -255,6 +281,7 @@ function doPost(e) {
       });
     }
 
+    clearRegistrationsCaches_(email);
     sendConfirmationEmail_(data, insertedEvents);
 
     const skippedCount = skippedEvents.length;
@@ -387,6 +414,84 @@ function dedupeRegistrations_(rows) {
   return deduped;
 }
 
+function getUserRegistrationsCacheKey_(email) {
+  return USER_REGISTRATIONS_CACHE_PREFIX + normalizeString_(email).toLowerCase();
+}
+
+function readScriptCacheJSON_(key) {
+  if (!key) {
+    return null;
+  }
+
+  try {
+    const cache = CacheService.getScriptCache();
+    const raw = cache.get(key);
+    if (!raw) {
+      return null;
+    }
+    return JSON.parse(raw);
+  } catch (error) {
+    console.log('Cache read error: ' + error);
+    return null;
+  }
+}
+
+function writeScriptCacheJSON_(key, value, ttlSeconds) {
+  if (!key) {
+    return;
+  }
+
+  try {
+    CacheService.getScriptCache().put(key, JSON.stringify(value), ttlSeconds);
+  } catch (error) {
+    console.log('Cache write error: ' + error);
+  }
+}
+
+function clearRegistrationsCaches_(email) {
+  try {
+    const cache = CacheService.getScriptCache();
+    cache.remove(getUserRegistrationsCacheKey_(email));
+    cache.remove(ADMIN_REGISTRATIONS_CACHE_KEY);
+  } catch (error) {
+    console.log('Cache clear error: ' + error);
+  }
+}
+
+function getFirstMatchingRegistrationRow_(sheet, lastRow, email) {
+  if (lastRow < 2) {
+    return null;
+  }
+
+  const emailRange = sheet.getRange(2, 3, lastRow - 1, 1);
+  const match = emailRange
+    .createTextFinder(email)
+    .matchEntireCell(true)
+    .matchCase(false)
+    .findNext();
+
+  if (!match) {
+    return null;
+  }
+
+  return sheet.getRange(match.getRow(), 1, 1, 9).getValues()[0];
+}
+
+function hasEmailInSheet_(sheet, lastRow, email) {
+  if (lastRow < 2) {
+    return false;
+  }
+
+  const emailRange = sheet.getRange(2, 3, lastRow - 1, 1);
+  const match = emailRange
+    .createTextFinder(email)
+    .matchEntireCell(true)
+    .matchCase(false)
+    .findNext();
+
+  return !!match;
+}
+
 function createJSONOutput_(payload) {
   return ContentService
     .createTextOutput(JSON.stringify(payload))
@@ -400,6 +505,11 @@ function normalizeString_(value) {
 
 function normalizeKey_(value) {
   return normalizeString_(value).toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function isTruthy_(value) {
+  const normalized = normalizeString_(value).toLowerCase();
+  return normalized === '1' || normalized === 'true' || normalized === 'yes';
 }
 
 function sendConfirmationEmail_(data, eventTitles) {

@@ -3,11 +3,87 @@ import { EVENTS, GOOGLE_SCRIPT_URL } from '../constants';
 
 // Simulate a database for demo purposes (in-memory)
 const SIMULATED_DB: RegistrationFormData[] = [];
+const USER_REGISTRATIONS_CACHE_PREFIX = 'user_registrations_cache:';
+const USER_REGISTRATIONS_CACHE_DURATION = 2 * 60 * 1000; // 2 minutes
+const inFlightRegistrationRequests = new Map<string, Promise<RegistrationsResponse>>();
 
 type RawApiResponse = {
   status?: string;
   message?: string;
   error?: string;
+};
+
+type RegistrationsResponse = {
+  status: 'success' | 'error';
+  data?: any[];
+  message?: string;
+};
+
+const normalizeEmailKey = (email: string) => email.trim().toLowerCase();
+const getUserRegistrationsCacheKey = (email: string) => `${USER_REGISTRATIONS_CACHE_PREFIX}${normalizeEmailKey(email)}`;
+
+const readUserRegistrationsCache = (
+  email: string,
+  ignoreExpiry = false
+): { data: any[]; timestamp: number } | null => {
+  try {
+    const cached = sessionStorage.getItem(getUserRegistrationsCacheKey(email));
+    if (!cached) {
+      return null;
+    }
+
+    const parsed = JSON.parse(cached) as { timestamp?: number; data?: any[] };
+    if (!Array.isArray(parsed?.data) || typeof parsed?.timestamp !== 'number') {
+      return null;
+    }
+
+    if (!ignoreExpiry && Date.now() - parsed.timestamp >= USER_REGISTRATIONS_CACHE_DURATION) {
+      return null;
+    }
+
+    return {
+      data: parsed.data,
+      timestamp: parsed.timestamp,
+    };
+  } catch (error) {
+    console.warn('Failed to read user registrations cache:', error);
+    return null;
+  }
+};
+
+const writeUserRegistrationsCache = (email: string, data: any[]) => {
+  try {
+    sessionStorage.setItem(
+      getUserRegistrationsCacheKey(email),
+      JSON.stringify({
+        timestamp: Date.now(),
+        data,
+      })
+    );
+  } catch (error) {
+    console.warn('Failed to write user registrations cache:', error);
+  }
+};
+
+export const invalidateRegistrationsCache = (email?: string) => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  if (email) {
+    const normalizedEmail = normalizeEmailKey(email);
+    sessionStorage.removeItem(getUserRegistrationsCacheKey(normalizedEmail));
+    inFlightRegistrationRequests.delete(normalizedEmail);
+    return;
+  }
+
+  for (let index = sessionStorage.length - 1; index >= 0; index -= 1) {
+    const key = sessionStorage.key(index);
+    if (key?.startsWith(USER_REGISTRATIONS_CACHE_PREFIX)) {
+      sessionStorage.removeItem(key);
+    }
+  }
+  inFlightRegistrationRequests.clear();
 };
 
 const normalizeApiResponse = (response: RawApiResponse | null, defaultError: string): ApiResponse => {
@@ -99,6 +175,7 @@ export const submitRegistration = async (data: RegistrationFormData): Promise<Ap
     const succeeded = results.length - failed.length;
 
     if (failed.length === 0) {
+      invalidateRegistrationsCache(data.email);
       if (results.length === 1) {
         return { status: 'success', message: results[0].message || 'Registration successful!' };
       }
@@ -106,6 +183,7 @@ export const submitRegistration = async (data: RegistrationFormData): Promise<Ap
     }
 
     if (succeeded > 0) {
+      invalidateRegistrationsCache(data.email);
       return {
         status: 'error',
         message: `Registered for ${succeeded}/${results.length} events. ${failed[0].message}`,
@@ -119,11 +197,30 @@ export const submitRegistration = async (data: RegistrationFormData): Promise<Ap
   }
 };
 
-export const getRegistrations = async (email: string): Promise<{ status: 'success' | 'error', data?: any[], message?: string }> => {
+export const getRegistrations = async (email: string, forceRefresh = false): Promise<RegistrationsResponse> => {
+  const normalizedEmail = normalizeEmailKey(email);
+  if (!normalizedEmail) {
+    return { status: 'error', message: 'Email is required.' };
+  }
+
+  if (!forceRefresh) {
+    const cached = readUserRegistrationsCache(normalizedEmail);
+    if (cached) {
+      return { status: 'success', data: cached.data };
+    }
+  }
+
+  if (!forceRefresh) {
+    const inFlight = inFlightRegistrationRequests.get(normalizedEmail);
+    if (inFlight) {
+      return inFlight;
+    }
+  }
+
   if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('INSERT_YOUR')) {
     // Simulate fetching from in-memory DB
     console.warn("Google Script URL is not configured. Simulating fetch.");
-    const userRegistrations = SIMULATED_DB.filter(r => r.email === email);
+    const userRegistrations = SIMULATED_DB.filter(r => normalizeEmailKey(r.email) === normalizedEmail);
     // Flatten events if they are stored as arrays, or just return the list
     // For the dashboard, we want a list of events.
     // In a real scenario, the backend would return a list of event names or objects.
@@ -134,36 +231,84 @@ export const getRegistrations = async (email: string): Promise<{ status: 'succes
 
     return new Promise((resolve) => {
       setTimeout(() => {
+        const data = uniqueEvents.map(e => ({ title: e, date: 'March 27-28, 2026' }));
+        writeUserRegistrationsCache(normalizedEmail, data);
         resolve({
           status: 'success',
-          data: uniqueEvents.map(e => ({ title: e, date: 'March 27-28, 2026' })) // Mock data structure 
+          data // Mock data structure
         });
       }, 1000);
     });
   }
 
-  try {
-    const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getRegistrations&email=${encodeURIComponent(email)}`);
+  const requestPromise = (async (): Promise<RegistrationsResponse> => {
+    try {
+      const query = new URLSearchParams({
+        action: 'getRegistrations',
+        email: normalizedEmail,
+      });
+      if (forceRefresh) {
+        query.set('forceRefresh', '1');
+      }
 
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
+      const response = await fetch(`${GOOGLE_SCRIPT_URL}?${query.toString()}`);
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const result = await response.json();
+      if (result?.status === 'error') {
+        return { status: 'error', message: result.message || result.error || 'Failed to fetch registrations.' };
+      }
+
+      const data = Array.isArray(result?.data) ? result.data : [];
+      writeUserRegistrationsCache(normalizedEmail, data);
+
+      return { status: 'success', data };
+    } catch (error) {
+      console.error("Fetch error:", error);
+      const staleCache = readUserRegistrationsCache(normalizedEmail, true);
+      if (staleCache) {
+        return { status: 'success', data: staleCache.data };
+      }
+      return { status: 'error', message: 'Failed to fetch registrations.' };
+    } finally {
+      inFlightRegistrationRequests.delete(normalizedEmail);
     }
+  })();
 
-    const result = await response.json();
-    if (result?.status === 'error') {
-      return { status: 'error', message: result.message || result.error || 'Failed to fetch registrations.' };
-    }
-
-    return result;
-  } catch (error) {
-    console.error("Fetch error:", error);
-    return { status: 'error', message: 'Failed to fetch registrations.' };
+  if (!forceRefresh) {
+    inFlightRegistrationRequests.set(normalizedEmail, requestPromise);
   }
+
+  return requestPromise;
 };
 
+const CACHE_KEY = 'admin_registrations_cache';
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
 export const getAllRegistrationsForAdmin = async (
-  adminEmail: string
+  adminEmail: string,
+  forceRefresh = false
 ): Promise<{ status: 'success' | 'error'; data?: AdminRegistrationRecord[]; message?: string }> => {
+  // Check cache first if not forcing refresh
+  if (!forceRefresh) {
+    try {
+      const cached = sessionStorage.getItem(CACHE_KEY);
+      if (cached) {
+        const { timestamp, data } = JSON.parse(cached);
+        // Check if cache is still valid (less than 5 minutes old)
+        if (Date.now() - timestamp < CACHE_DURATION) {
+          console.log('Serving from cache');
+          return { status: 'success', data };
+        }
+      }
+    } catch (e) {
+      console.warn('Failed to read from cache:', e);
+    }
+  }
+
   if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('INSERT_YOUR')) {
     const rows: AdminRegistrationRecord[] = SIMULATED_DB.flatMap((registration) =>
       (registration.selectedEvents || []).map((eventTitle) => ({
@@ -184,8 +329,16 @@ export const getAllRegistrationsForAdmin = async (
   }
 
   try {
+    const query = new URLSearchParams({
+      action: 'getAllRegistrations',
+      adminEmail,
+    });
+    if (forceRefresh) {
+      query.set('forceRefresh', '1');
+    }
+
     const response = await fetch(
-      `${GOOGLE_SCRIPT_URL}?action=getAllRegistrations&adminEmail=${encodeURIComponent(adminEmail)}`
+      `${GOOGLE_SCRIPT_URL}?${query.toString()}`
     );
 
     if (!response.ok) {
@@ -195,6 +348,18 @@ export const getAllRegistrationsForAdmin = async (
     const result = await response.json();
     if (result?.status === 'error') {
       return { status: 'error', message: result.message || result.error || 'Failed to fetch admin data.' };
+    }
+
+    // Cache the successful result
+    if (result?.status === 'success' && result.data) {
+      try {
+        sessionStorage.setItem(CACHE_KEY, JSON.stringify({
+          timestamp: Date.now(),
+          data: result.data
+        }));
+      } catch (e) {
+        console.warn('Failed to save to cache:', e);
+      }
     }
 
     return {

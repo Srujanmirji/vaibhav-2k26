@@ -10,6 +10,7 @@ export const GOOGLE_CLIENT_ID = '693447204709-ja2segvloojfgru7u7u20n35a85h1bc3.a
 // Only these Google accounts can access the Admin page.
 export const ADMIN_ALLOWED_EMAILS = [
   'vaibhav2k26jcet@gmail.com',
+  'Srujanmirji10@gmail.com',
 ];
 
 export const DEPARTMENTS = ['All', 'CSE', 'ECE', 'CVE', 'ME', 'BS', 'General'];
