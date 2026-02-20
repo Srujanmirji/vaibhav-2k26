@@ -20,7 +20,7 @@ const Home: React.FC = () => {
           <div className="mb-8 relative group">
             <div className="absolute inset-0 bg-tertiary/10 blur-[50px] rounded-full animate-pulse-slow"></div>
             <img
-              src="/logo.png"
+              src="/logo.png.bak"
               alt="Vaibhav 2K26 official logo"
               className="relative w-48 md:w-72 h-auto animate-float drop-shadow-[0_0_25px_rgba(255,215,0,0.5)] transition-transform duration-500 hover:scale-105"
               fetchPriority="high"

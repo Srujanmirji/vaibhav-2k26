@@ -13,7 +13,7 @@ export const ADMIN_ALLOWED_EMAILS = [
   'Srujanmirji10@gmail.com',
 ];
 
-export const DEPARTMENTS = ['All', 'CSE', 'ECE', 'CVE', 'ME', 'BS', 'General'];
+export const DEPARTMENTS = ['All', 'CSE', 'ECE', 'CVE', 'ME', 'BS'];
 
 export const EVENTS: EventDetails[] = [
   {
