@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+# Keep private dashboards out of search indices.
+Disallow: /admin
+Disallow: /dashboard

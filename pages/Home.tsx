@@ -20,15 +20,21 @@ const Home: React.FC = () => {
           <div className="mb-8 relative group">
             <div className="absolute inset-0 bg-tertiary/10 blur-[50px] rounded-full animate-pulse-slow"></div>
             <img
-              src="/logo.png.bak"
-              alt="Vaibhav 2K26 Logo"
+              src="/logo.png"
+              alt="Vaibhav 2K26 official logo"
               className="relative w-48 md:w-72 h-auto animate-float drop-shadow-[0_0_25px_rgba(255,215,0,0.5)] transition-transform duration-500 hover:scale-105"
+              fetchPriority="high"
+              decoding="async"
             />
           </div>
 
           <div className="inline-block mb-8 px-4 py-1.5 rounded-full border border-secondary/50 bg-secondary/10 text-secondary text-sm font-bold tracking-widest uppercase shadow-[0_0_15px_rgba(0,255,255,0.3)] backdrop-blur-sm">
             March 27-28, 2026
           </div>
+
+          <h1 className="text-4xl md:text-7xl font-black text-white mb-6 font-mono tracking-tight uppercase">
+            Vaibhav <span className="text-primary">2K26</span>
+          </h1>
 
           <p className="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl mx-auto font-light border-l-2 border-primary pl-4 text-left md:text-center md:border-none md:pl-0 bg-black/20 md:bg-transparent p-2 md:p-0 rounded-r-lg">
             The ultimate convergence of code, creativity, and chaos.

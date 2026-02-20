@@ -10,6 +10,7 @@ import Register from './pages/Register';
 import Contact from './pages/Contact';
 import Dashboard from './pages/Dashboard';
 import Admin from './pages/Admin';
+import SeoManager from './components/SeoManager';
 import { getStoredAuthUser } from './services/authSession';
 import { getRegistrations } from './services/googleSheets';
 
@@ -36,6 +37,7 @@ const App: React.FC = () => {
 
   return (
     <Router>
+      <SeoManager />
       <ScrollToTop />
       <div className="flex flex-col min-h-screen bg-dark text-white">
         <Navbar />

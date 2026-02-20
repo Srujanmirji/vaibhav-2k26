@@ -65,6 +65,8 @@ const Events: React.FC = () => {
                   src={event.image}
                   alt={event.title}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div className="absolute top-4 right-4 z-20">
                   <span className="inline-block px-3 py-1 bg-black/50 backdrop-blur border border-primary/50 text-primary text-xs font-bold uppercase tracking-wider rounded">
