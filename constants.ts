@@ -14,7 +14,6 @@ export const ADMIN_ALLOWED_EMAILS = [
 ];
 
 export const DEPARTMENTS = ['All', 'CSE', 'ECE', 'CVE', 'ME', 'BS'];
-
 export const EVENTS: EventDetails[] = [
   {
     id: 'e1',

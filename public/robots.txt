@@ -4,3 +4,5 @@ Allow: /
 # Keep private dashboards out of search indices.
 Disallow: /admin
 Disallow: /dashboard
+
+Sitemap: https://www.vaibhav2k26.online/sitemap.xml
