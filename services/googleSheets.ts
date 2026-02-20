@@ -4,7 +4,7 @@ import { EVENTS, GOOGLE_SCRIPT_URL } from '../constants';
 // Simulate a database for demo purposes (in-memory)
 const SIMULATED_DB: RegistrationFormData[] = [];
 const USER_REGISTRATIONS_CACHE_PREFIX = 'user_registrations_cache:';
-const USER_REGISTRATIONS_CACHE_DURATION = 2 * 60 * 1000; // 2 minutes
+const USER_REGISTRATIONS_CACHE_DURATION = 30 * 60 * 1000; // 30 minutes
 const inFlightRegistrationRequests = new Map<string, Promise<RegistrationsResponse>>();
 
 type RawApiResponse = {
@@ -26,8 +26,12 @@ const readUserRegistrationsCache = (
   email: string,
   ignoreExpiry = false
 ): { data: any[]; timestamp: number } | null => {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
   try {
-    const cached = sessionStorage.getItem(getUserRegistrationsCacheKey(email));
+    const cached = localStorage.getItem(getUserRegistrationsCacheKey(email));
     if (!cached) {
       return null;
     }
@@ -52,8 +56,12 @@ const readUserRegistrationsCache = (
 };
 
 const writeUserRegistrationsCache = (email: string, data: any[]) => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
   try {
-    sessionStorage.setItem(
+    localStorage.setItem(
       getUserRegistrationsCacheKey(email),
       JSON.stringify({
         timestamp: Date.now(),
@@ -72,15 +80,15 @@ export const invalidateRegistrationsCache = (email?: string) => {
 
   if (email) {
     const normalizedEmail = normalizeEmailKey(email);
-    sessionStorage.removeItem(getUserRegistrationsCacheKey(normalizedEmail));
+    localStorage.removeItem(getUserRegistrationsCacheKey(normalizedEmail));
     inFlightRegistrationRequests.delete(normalizedEmail);
     return;
   }
 
-  for (let index = sessionStorage.length - 1; index >= 0; index -= 1) {
-    const key = sessionStorage.key(index);
+  for (let index = localStorage.length - 1; index >= 0; index -= 1) {
+    const key = localStorage.key(index);
     if (key?.startsWith(USER_REGISTRATIONS_CACHE_PREFIX)) {
-      sessionStorage.removeItem(key);
+      localStorage.removeItem(key);
     }
   }
   inFlightRegistrationRequests.clear();

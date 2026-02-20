@@ -14,9 +14,10 @@
 const DEFAULT_SHEET_NAME = 'Sheet1';
 const EVENT_DATE_LABEL = 'March 27-28, 2026';
 const USER_REGISTRATIONS_CACHE_PREFIX = 'user_registrations:';
-const USER_REGISTRATIONS_CACHE_TTL_SECONDS = 120;
+const USER_REGISTRATIONS_CACHE_TTL_SECONDS = 1800;
 const ADMIN_REGISTRATIONS_CACHE_KEY = 'admin_all_registrations';
-const ADMIN_REGISTRATIONS_CACHE_TTL_SECONDS = 120;
+const ADMIN_REGISTRATIONS_CACHE_TTL_SECONDS = 1800;
+const USER_INDEX_PROPERTY_PREFIX = 'user_index:';
 
 const ADMIN_ALLOWED_EMAILS = [
   'vaibhav2k26jcet@gmail.com',
@@ -169,6 +170,13 @@ function doGet(e) {
       return createJSONOutput_({ status: 'error', message: 'Email is required.' });
     }
 
+    if (!forceRefresh) {
+      const indexedRegistrations = readUserRegistrationsIndex_(email);
+      if (indexedRegistrations) {
+        return createJSONOutput_({ status: 'success', data: indexedRegistrations });
+      }
+    }
+
     const userRegistrationsCacheKey = getUserRegistrationsCacheKey_(email);
     if (!forceRefresh) {
       const cachedUserRows = readScriptCacheJSON_(userRegistrationsCacheKey);
@@ -206,6 +214,7 @@ function doGet(e) {
     });
 
     const deduped = dedupeRegistrations_(allRegistrations);
+    writeUserRegistrationsIndex_(email, deduped);
     writeScriptCacheJSON_(
       userRegistrationsCacheKey,
       { data: deduped },
@@ -281,6 +290,7 @@ function doPost(e) {
       });
     }
 
+    updateUserRegistrationsIndex_(email, insertedEvents);
     clearRegistrationsCaches_(email);
     sendConfirmationEmail_(data, insertedEvents);
 
@@ -414,6 +424,79 @@ function dedupeRegistrations_(rows) {
   return deduped;
 }
 
+function getUserIndexPropertyKey_(email) {
+  return USER_INDEX_PROPERTY_PREFIX + normalizeString_(email).toLowerCase();
+}
+
+function readUserRegistrationsIndex_(email) {
+  const key = getUserIndexPropertyKey_(email);
+  if (!key) {
+    return null;
+  }
+
+  try {
+    const raw = PropertiesService.getScriptProperties().getProperty(key);
+    if (!raw) {
+      return null;
+    }
+
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) {
+      return null;
+    }
+
+    return dedupeRegistrations_(parsed.map(function (entry) {
+      return {
+        id: normalizeString_(entry && entry.id),
+        title: normalizeString_(entry && entry.title),
+        date: normalizeString_(entry && entry.date)
+      };
+    })).filter(function (entry) {
+      return !!entry.id || !!entry.title;
+    });
+  } catch (error) {
+    console.log('User index read error: ' + error);
+    return null;
+  }
+}
+
+function writeUserRegistrationsIndex_(email, rows) {
+  const key = getUserIndexPropertyKey_(email);
+  if (!key) {
+    return;
+  }
+
+  try {
+    const normalizedRows = dedupeRegistrations_((rows || []).map(function (entry) {
+      return {
+        id: normalizeString_(entry && entry.id),
+        title: normalizeString_(entry && entry.title),
+        date: normalizeString_(entry && entry.date)
+      };
+    })).filter(function (entry) {
+      return !!entry.id || !!entry.title;
+    });
+
+    PropertiesService.getScriptProperties().setProperty(key, JSON.stringify(normalizedRows));
+  } catch (error) {
+    console.log('User index write error: ' + error);
+  }
+}
+
+function updateUserRegistrationsIndex_(email, insertedEvents) {
+  const existing = readUserRegistrationsIndex_(email) || [];
+  const normalizedInserted = (insertedEvents || []).map(function (eventItem) {
+    const eventId = normalizeString_(eventItem && eventItem.id).toLowerCase();
+    return {
+      id: eventId,
+      title: normalizeString_(eventItem && eventItem.title) || EVENT_ID_TO_TITLE[eventId] || eventId,
+      date: normalizeString_(eventItem && eventItem.date) || EVENT_ID_TO_DATE[eventId] || EVENT_DATE_LABEL
+    };
+  });
+
+  writeUserRegistrationsIndex_(email, existing.concat(normalizedInserted));
+}
+
 function getUserRegistrationsCacheKey_(email) {
   return USER_REGISTRATIONS_CACHE_PREFIX + normalizeString_(email).toLowerCase();
 }
@@ -490,6 +573,46 @@ function hasEmailInSheet_(sheet, lastRow, email) {
     .findNext();
 
   return !!match;
+}
+
+function rebuildAllUserIndexes_() {
+  const registrationsByEmail = {};
+  const eventIds = Object.keys(EVENT_SHEET_MAP);
+
+  eventIds.forEach(function (eventId) {
+    const config = EVENT_SHEET_MAP[eventId];
+    if (!config || !isSpreadsheetConfigured_(config.spreadsheetId)) {
+      return;
+    }
+
+    const sheet = getSheet_(config.spreadsheetId, config.sheetName || DEFAULT_SHEET_NAME);
+    const lastRow = sheet.getLastRow();
+    if (lastRow < 2) {
+      return;
+    }
+
+    const rows = sheet.getRange(2, 1, lastRow - 1, 9).getValues();
+    rows.forEach(function (row) {
+      const email = normalizeString_(row[2]).toLowerCase();
+      if (!email) {
+        return;
+      }
+
+      if (!registrationsByEmail[email]) {
+        registrationsByEmail[email] = [];
+      }
+
+      registrationsByEmail[email].push({
+        id: normalizeString_(row[8]) || eventId,
+        title: normalizeString_(row[7]) || EVENT_ID_TO_TITLE[eventId] || eventId,
+        date: EVENT_ID_TO_DATE[eventId] || EVENT_DATE_LABEL
+      });
+    });
+  });
+
+  Object.keys(registrationsByEmail).forEach(function (email) {
+    writeUserRegistrationsIndex_(email, registrationsByEmail[email]);
+  });
 }
 
 function createJSONOutput_(payload) {

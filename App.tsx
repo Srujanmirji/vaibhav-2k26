@@ -10,6 +10,8 @@ import Register from './pages/Register';
 import Contact from './pages/Contact';
 import Dashboard from './pages/Dashboard';
 import Admin from './pages/Admin';
+import { getStoredAuthUser } from './services/authSession';
+import { getRegistrations } from './services/googleSheets';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -20,6 +22,18 @@ const ScrollToTop = () => {
 };
 
 const App: React.FC = () => {
+  React.useEffect(() => {
+    const storedUser = getStoredAuthUser();
+    if (!storedUser?.email) {
+      return;
+    }
+
+    // Warm dashboard cache in the background to reduce perceived load time on first open.
+    getRegistrations(storedUser.email).catch((error) => {
+      console.warn('Dashboard prefetch failed:', error);
+    });
+  }, []);
+
   return (
     <Router>
       <ScrollToTop />

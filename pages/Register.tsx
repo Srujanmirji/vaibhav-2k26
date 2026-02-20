@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { EVENTS, GOOGLE_CLIENT_ID, DEPARTMENTS } from '../constants';
 import { useLocation } from 'react-router-dom';
 
-import { submitRegistration } from '../services/googleSheets';
+import { getRegistrations, submitRegistration } from '../services/googleSheets';
 import { clearAuthToken, getAuthUserFromToken, getStoredAuthUser, persistAuthToken } from '../services/authSession';
 import { RegistrationFormData } from '../types';
 import { CheckCircle, AlertCircle, Loader2, Sparkles, User, LogOut, Check } from 'lucide-react';
 
 // Declare google global for TypeScript
 declare const google: any;
+const normalizeTitleKey = (value: string) => value.trim().toLowerCase();
 
 const Register: React.FC = () => {
   const location = useLocation();
@@ -26,6 +27,33 @@ const Register: React.FC = () => {
   const [message, setMessage] = useState('');
   const [isGoogleSignedIn, setIsGoogleSignedIn] = useState(false);
   const [userProfilePicture, setUserProfilePicture] = useState('');
+  const [loadingRegisteredEvents, setLoadingRegisteredEvents] = useState(false);
+  const [registeredEventKeys, setRegisteredEventKeys] = useState<string[]>([]);
+  const registeredEventSet = new Set(registeredEventKeys);
+  const availableEvents = EVENTS.filter((event) => !registeredEventSet.has(normalizeTitleKey(event.title)));
+
+  const fetchRegisteredEvents = async (email: string, forceRefresh = false) => {
+    if (!email) {
+      setRegisteredEventKeys([]);
+      return;
+    }
+
+    setLoadingRegisteredEvents(true);
+    const response = await getRegistrations(email, forceRefresh);
+    setLoadingRegisteredEvents(false);
+
+    if (response.status !== 'success') {
+      console.warn('Failed to fetch registered events for filtering:', response.message);
+      return;
+    }
+
+    const keys = [...new Set(
+      (response.data || [])
+        .map((event: any) => normalizeTitleKey(String(event?.title || '')))
+        .filter(Boolean)
+    )];
+    setRegisteredEventKeys(keys);
+  };
 
   useEffect(() => {
     const stateEventId = (location.state as { preselectedEventId?: string } | null)?.preselectedEventId;
@@ -40,6 +68,9 @@ const Register: React.FC = () => {
     if (!preselectedEvent) {
       return;
     }
+    if (registeredEventSet.has(normalizeTitleKey(preselectedEvent.title))) {
+      return;
+    }
 
     setFormData((prev) => {
       if (prev.selectedEvents.includes(preselectedEvent.title)) {
@@ -51,7 +82,7 @@ const Register: React.FC = () => {
         selectedEvents: [preselectedEvent.title],
       };
     });
-  }, [location.search, location.state]);
+  }, [location.search, location.state, registeredEventKeys]);
 
   const handleCredentialResponse = (response: any) => {
     const authUser = getAuthUserFromToken(response.credential);
@@ -67,6 +98,7 @@ const Register: React.FC = () => {
       }
       setMessage(""); // Clear any previous messages
       persistAuthToken(response.credential);
+      fetchRegisteredEvents(authUser.email);
     }
   };
 
@@ -75,6 +107,8 @@ const Register: React.FC = () => {
     setFormData(prev => ({ ...prev, fullName: '', email: '' }));
     setUserProfilePicture('');
     setMessage('');
+    setRegisteredEventKeys([]);
+    setLoadingRegisteredEvents(false);
     clearAuthToken();
   };
 
@@ -90,8 +124,30 @@ const Register: React.FC = () => {
       if (storedUser.picture) {
         setUserProfilePicture(storedUser.picture);
       }
+      fetchRegisteredEvents(storedUser.email);
     }
   }, []);
+
+  useEffect(() => {
+    if (registeredEventKeys.length === 0) {
+      return;
+    }
+
+    setFormData((prev) => {
+      const filteredSelections = (prev.selectedEvents || []).filter(
+        (title) => !registeredEventSet.has(normalizeTitleKey(title))
+      );
+
+      if (filteredSelections.length === prev.selectedEvents.length) {
+        return prev;
+      }
+
+      return {
+        ...prev,
+        selectedEvents: filteredSelections
+      };
+    });
+  }, [registeredEventKeys]);
 
   useEffect(() => {
     const renderGoogleButton = () => {
@@ -197,6 +253,7 @@ const Register: React.FC = () => {
           year: '1',
           selectedEvents: []
         }));
+        fetchRegisteredEvents(formData.email, true);
       } else {
         setStatus('error');
         setMessage(response.message || 'Registration failed.');
@@ -380,7 +437,16 @@ const Register: React.FC = () => {
                       Select Events <span className="text-gray-500 text-[10px] lowercase font-normal">(choose at least one)</span>
                     </label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[300px] overflow-y-auto p-2 bg-black/20 rounded-xl border border-white/5 custom-scrollbar">
-                      {EVENTS.map(event => {
+                      {loadingRegisteredEvents ? (
+                        <div className="col-span-full flex items-center justify-center py-8 text-gray-400">
+                          <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                          Loading available events...
+                        </div>
+                      ) : availableEvents.length === 0 ? (
+                        <div className="col-span-full text-center py-8 text-gray-400">
+                          You are already registered for all events.
+                        </div>
+                      ) : availableEvents.map(event => {
                         const isSelected = formData.selectedEvents.includes(event.title);
                         return (
                           <div
@@ -423,7 +489,7 @@ const Register: React.FC = () => {
                   {/* Submit Button */}
                   <button
                     type="submit"
-                    disabled={status === 'submitting'}
+                    disabled={status === 'submitting' || loadingRegisteredEvents || availableEvents.length === 0}
                     className="w-full bg-primary hover:bg-white hover:text-primary disabled:bg-gray-800 disabled:text-gray-500 text-white font-black uppercase tracking-widest py-4 rounded-lg transition-all transform hover:scale-[1.01] flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,0,85,0.4)] hover:shadow-[0_0_30px_rgba(255,0,85,0.6)]"
                   >
                     {status === 'submitting' ? (
