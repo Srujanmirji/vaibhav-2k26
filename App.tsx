@@ -1,9 +1,9 @@
 import React from 'react';
-import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
-import About from './pages/About';
+import Gallery from './pages/Gallery';
 import Events from './pages/Events';
 import Schedule from './pages/Schedule';
 import Register from './pages/Register';
@@ -44,7 +44,8 @@ const App: React.FC = () => {
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
+            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/about" element={<Navigate to="/gallery" replace />} />
             <Route path="/events" element={<Events />} />
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/register" element={<Register />} />

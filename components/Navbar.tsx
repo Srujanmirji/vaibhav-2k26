@@ -46,7 +46,7 @@ const Navbar: React.FC = () => {
 
   const navLinks = [
     { name: 'Home', path: '/' },
-    { name: 'About', path: '/about' },
+    { name: 'Gallery', path: '/gallery' },
     { name: 'Events', path: '/events' },
     { name: 'Schedule', path: '/schedule' },
     { name: 'Contact', path: '/contact' },
@@ -87,7 +87,7 @@ const Navbar: React.FC = () => {
             ))}
             <NavLink
               to={actionLink.path}
-              className="bg-primary hover:bg-white hover:text-primary text-white font-bold py-2 px-6 rounded-none skew-x-[-10deg] transition-all transform hover:scale-105 shadow-[0_0_10px_rgba(255,0,85,0.4)]"
+              className="min-h-[44px] inline-flex items-center justify-center bg-primary hover:bg-white hover:text-primary text-white font-bold py-2 px-6 rounded-none skew-x-[-10deg] transition-all transform hover:scale-105 shadow-[0_0_10px_rgba(255,0,85,0.4)]"
             >
               <span className="skew-x-[10deg]">{actionLink.label}</span>
             </NavLink>
@@ -97,7 +97,7 @@ const Navbar: React.FC = () => {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-white hover:text-primary focus:outline-none transition-colors"
+              className="p-2 -mr-2 text-white hover:text-primary focus:outline-none transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
             >
               {isOpen ? <X className="h-8 w-8" /> : <Menu className="h-8 w-8" />}
             </button>
@@ -107,7 +107,7 @@ const Navbar: React.FC = () => {
 
       {/* Mobile Menu Dropdown */}
       <div
-        className={`md:hidden absolute w-full h-screen overflow-y-auto bg-darker/95 backdrop-blur-xl border-b border-primary/20 transition-all duration-300 ease-in-out ${isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
+        className={`md:hidden absolute w-full h-screen overflow-y-auto bg-transparent backdrop-blur-md border-b border-primary/20 transition-all duration-300 ease-in-out ${isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
           }`}
       >
         <div className="px-4 pt-2 pb-6 space-y-2">

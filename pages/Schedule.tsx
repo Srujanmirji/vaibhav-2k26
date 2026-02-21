@@ -8,10 +8,10 @@ import { SCHEDULE } from '../constants';
 const FloatingShape = ({ position, color }: { position: [number, number, number], color: string }) => {
   const meshRef = useRef<THREE.Mesh>(null);
 
-  useFrame((state) => {
+  useFrame((_, delta) => {
     if (meshRef.current) {
-      meshRef.current.rotation.x = state.clock.getElapsedTime() * 0.2;
-      meshRef.current.rotation.y = state.clock.getElapsedTime() * 0.3;
+      meshRef.current.rotation.x += delta * 0.2;
+      meshRef.current.rotation.y += delta * 0.3;
     }
   });
 
@@ -63,7 +63,7 @@ const Schedule: React.FC = () => {
   });
 
   return (
-    <div className="relative pt-24 min-h-screen bg-transparent overflow-hidden">
+    <div className="relative pt-24 min-h-screen bg-transparent overflow-x-clip">
       <Background3D />
 
       {/* Content Layer */}
@@ -84,7 +84,7 @@ const Schedule: React.FC = () => {
             TIMELINE
           </motion.h1>
 
-          <div ref={containerRef} className="space-y-16">
+          <div ref={containerRef} className="space-y-16 relative">
             {SCHEDULE.map((day, dayIndex) => (
               <motion.div
                 key={dayIndex}

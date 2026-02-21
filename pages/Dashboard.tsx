@@ -96,28 +96,28 @@ const Dashboard: React.FC = () => {
             <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-secondary/10 rounded-full blur-[120px]"></div>
             <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px]"></div>
 
-            <div className="w-full max-w-5xl z-10">
-                <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
-                    <div>
-                        <h1 className="text-4xl font-black text-white font-mono tracking-tighter uppercase flex items-center gap-3">
-                            <LayoutDashboard className="w-10 h-10 text-primary" /> User Dashboard
-                        </h1>
-                        <p className="text-gray-400 mt-2">Manage your participations and view event details.</p>
-                    </div>
+        <div className="w-full max-w-5xl z-10">
+            <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div>
+                    <h1 className="text-3xl md:text-4xl font-black text-white font-mono tracking-tighter uppercase flex items-center gap-3">
+                        <LayoutDashboard className="w-10 h-10 text-primary" /> User Dashboard
+                    </h1>
+                    <p className="text-gray-400 mt-2">Manage your participations and view event details.</p>
+                </div>
 
-                    {user && (
-                        <div className="flex items-center gap-4 bg-white/5 border border-white/10 p-2 pr-4 rounded-full">
-                            <img src={user.picture} alt="Profile" className="w-10 h-10 rounded-full border border-primary" referrerPolicy="no-referrer" />
-                            <div>
-                                <p className="text-sm font-bold text-white">{user.name}</p>
-                                <p className="text-xs text-secondary">{user.email}</p>
-                            </div>
-                            <button
-                                onClick={handleSignOut}
-                                className="ml-2 p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-full transition-colors"
-                                title="Sign Out"
-                            >
-                                <LogOut className="w-4 h-4" />
+                {user && (
+                    <div className="w-full md:w-auto min-w-0 flex items-center gap-3 bg-white/5 border border-white/10 p-2 pr-3 md:pr-4 rounded-2xl md:rounded-full">
+                        <img src={user.picture} alt="Profile" className="w-10 h-10 rounded-full border border-primary" referrerPolicy="no-referrer" />
+                        <div className="min-w-0">
+                            <p className="text-sm font-bold text-white truncate">{user.name}</p>
+                            <p className="text-xs text-secondary truncate">{user.email}</p>
+                        </div>
+                        <button
+                            onClick={handleSignOut}
+                            className="ml-auto p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-full transition-colors"
+                            title="Sign Out"
+                        >
+                            <LogOut className="w-4 h-4" />
                             </button>
                         </div>
                     )}
@@ -132,15 +132,15 @@ const Dashboard: React.FC = () => {
                         <div id="googleSignInDivDashboard" className="h-[44px] w-full max-w-[250px]"></div>
                     </div>
                 ) : (
-                    <div className="bg-card/40 backdrop-blur-xl border border-white/10 rounded-2xl p-8 min-h-[400px]">
-                        <div className="mb-6 border-b border-white/10 pb-4 flex items-center justify-between gap-3">
-                            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                    <div className="bg-card/40 backdrop-blur-xl border border-white/10 rounded-2xl p-4 sm:p-6 md:p-8 min-h-[400px]">
+                        <div className="mb-6 border-b border-white/10 pb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
                                 <Ticket className="w-6 h-6 text-secondary" /> Registered Events
                             </h2>
                             {!loading && canRegisterMore && (
                                 <a
                                     href="#/register"
-                                    className="inline-block px-4 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-white hover:text-primary transition-all whitespace-nowrap"
+                                    className="inline-flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-white hover:text-primary transition-all whitespace-nowrap"
                                 >
                                     REGISTER
                                 </a>

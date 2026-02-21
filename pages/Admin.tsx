@@ -138,7 +138,7 @@ const Admin: React.FC = () => {
       <div className="max-w-7xl mx-auto">
         <div className="mb-8 flex items-center justify-between gap-4 flex-wrap">
           <div>
-            <h1 className="text-4xl font-black text-white font-mono tracking-tighter uppercase flex items-center gap-3">
+            <h1 className="text-3xl md:text-4xl font-black text-white font-mono tracking-tighter uppercase flex items-center gap-3">
               <Shield className="w-9 h-9 text-primary" /> Admin Panel
             </h1>
             <p className="text-gray-400 mt-2">View all registered users across events.</p>
@@ -173,9 +173,9 @@ const Admin: React.FC = () => {
         )}
 
         {user && isAuthorized && (
-          <div className="bg-card/40 border border-white/10 rounded-2xl p-6">
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-5">
-              <div className="flex items-center gap-4">
+          <div className="bg-card/40 border border-white/10 rounded-2xl p-4 sm:p-6">
+            <div className="mb-5 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
                 <div className="flex items-center gap-2 text-white">
                   <Users className="w-5 h-5 text-secondary" />
                   <span className="font-bold">Total Records: {filteredRows.length}</span>
@@ -183,7 +183,7 @@ const Admin: React.FC = () => {
                 <button
                   onClick={handleRefresh}
                   disabled={loading}
-                  className="p-2 bg-white/5 border border-white/10 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-50"
+                  className="inline-flex items-center justify-center w-fit p-2 bg-white/5 border border-white/10 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-50"
                   title="Refresh Data"
                 >
                   <RefreshCcw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -194,7 +194,7 @@ const Admin: React.FC = () => {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search by name, email, event..."
-                className="w-full md:w-80 bg-black/40 border border-white/10 rounded-lg px-4 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:border-primary"
+                className="w-full lg:w-80 bg-black/40 border border-white/10 rounded-lg px-4 py-2 text-white placeholder:text-gray-500 focus:outline-none focus:border-primary"
               />
             </div>
 
@@ -203,38 +203,78 @@ const Admin: React.FC = () => {
                 <Loader2 className="w-8 h-8 text-primary animate-spin" />
               </div>
             ) : (
-              <div className="overflow-x-auto border border-white/10 rounded-xl">
-                <table className="min-w-full text-sm">
-                  <thead className="bg-black/40">
-                    <tr className="text-left text-gray-300">
-                      <th className="px-4 py-3">Timestamp</th>
-                      <th className="px-4 py-3">Name</th>
-                      <th className="px-4 py-3">Email</th>
-                      <th className="px-4 py-3">Phone</th>
-                      <th className="px-4 py-3">College</th>
-                      <th className="px-4 py-3">Department</th>
-                      <th className="px-4 py-3">Year</th>
-                      <th className="px-4 py-3">Event</th>
-                      <th className="px-4 py-3">Event Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredRows.map((row, index) => (
-                      <tr key={`${row.email}-${row.eventId}-${index}`} className="border-t border-white/5 text-gray-200">
-                        <td className="px-4 py-3 whitespace-nowrap">{row.timestamp || '-'}</td>
-                        <td className="px-4 py-3 whitespace-nowrap">{row.fullName || '-'}</td>
-                        <td className="px-4 py-3 whitespace-nowrap">{row.email || '-'}</td>
-                        <td className="px-4 py-3 whitespace-nowrap">{row.phone || '-'}</td>
-                        <td className="px-4 py-3 whitespace-nowrap">{row.college || '-'}</td>
-                        <td className="px-4 py-3 whitespace-nowrap">{row.department || '-'}</td>
-                        <td className="px-4 py-3 whitespace-nowrap">{row.year || '-'}</td>
-                        <td className="px-4 py-3 whitespace-nowrap">{row.eventTitle || '-'}</td>
-                        <td className="px-4 py-3 whitespace-nowrap">{row.eventDate || '-'}</td>
+              <>
+                <div className="space-y-4 md:hidden">
+                  {filteredRows.map((row, index) => {
+                    const details = [
+                      { label: 'Phone', value: row.phone },
+                      { label: 'College', value: row.college },
+                      { label: 'Branch', value: row.department },
+                      { label: 'Year', value: row.year },
+                      { label: 'Event Date', value: row.eventDate },
+                      { label: 'Timestamp', value: row.timestamp },
+                    ];
+
+                    return (
+                      <article
+                        key={`${row.email}-${row.eventId}-${index}`}
+                        className="rounded-xl border border-white/10 bg-black/30 p-4"
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="text-sm font-bold text-white">{row.fullName || '-'}</p>
+                            <p className="text-xs text-secondary break-all">{row.email || '-'}</p>
+                          </div>
+                          <span className="shrink-0 rounded-md border border-primary/40 bg-primary/10 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-primary text-right">
+                            {row.eventTitle || '-'}
+                          </span>
+                        </div>
+                        <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
+                          {details.map((detail) => (
+                            <div key={detail.label} className="min-w-0">
+                              <dt className="text-gray-500 uppercase tracking-wide">{detail.label}</dt>
+                              <dd className="text-gray-200 break-words">{detail.value || '-'}</dd>
+                            </div>
+                          ))}
+                        </dl>
+                      </article>
+                    );
+                  })}
+                </div>
+
+                <div className="hidden md:block overflow-x-auto border border-white/10 rounded-xl">
+                  <table className="min-w-full text-sm">
+                    <thead className="bg-black/40">
+                      <tr className="text-left text-gray-300">
+                        <th className="px-4 py-3">Timestamp</th>
+                        <th className="px-4 py-3">Name</th>
+                        <th className="px-4 py-3">Email</th>
+                        <th className="px-4 py-3">Phone</th>
+                        <th className="px-4 py-3">College</th>
+                        <th className="px-4 py-3">Department</th>
+                        <th className="px-4 py-3">Year</th>
+                        <th className="px-4 py-3">Event</th>
+                        <th className="px-4 py-3">Event Date</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {filteredRows.map((row, index) => (
+                        <tr key={`${row.email}-${row.eventId}-${index}`} className="border-t border-white/5 text-gray-200">
+                          <td className="px-4 py-3 whitespace-nowrap">{row.timestamp || '-'}</td>
+                          <td className="px-4 py-3 whitespace-nowrap">{row.fullName || '-'}</td>
+                          <td className="px-4 py-3 whitespace-nowrap">{row.email || '-'}</td>
+                          <td className="px-4 py-3 whitespace-nowrap">{row.phone || '-'}</td>
+                          <td className="px-4 py-3 whitespace-nowrap">{row.college || '-'}</td>
+                          <td className="px-4 py-3 whitespace-nowrap">{row.department || '-'}</td>
+                          <td className="px-4 py-3 whitespace-nowrap">{row.year || '-'}</td>
+                          <td className="px-4 py-3 whitespace-nowrap">{row.eventTitle || '-'}</td>
+                          <td className="px-4 py-3 whitespace-nowrap">{row.eventDate || '-'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
             )}
 
             {message && (

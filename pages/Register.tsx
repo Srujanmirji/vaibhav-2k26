@@ -309,8 +309,8 @@ const Register: React.FC = () => {
 
             {isGoogleSignedIn && (
               <div className="animate-fade-in-up">
-                <div className="flex items-center justify-between gap-4 bg-primary/10 border border-primary/30 p-4 rounded-xl mb-6">
-                  <div className="flex items-center gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-primary/10 border border-primary/30 p-4 rounded-xl mb-6">
+                  <div className="flex items-center gap-4 min-w-0">
                     {userProfilePicture ? (
                       <img src={userProfilePicture} alt="Profile" referrerPolicy="no-referrer" className="w-12 h-12 rounded-full border-2 border-primary" />
                     ) : (
@@ -318,15 +318,15 @@ const Register: React.FC = () => {
                         <User className="w-6 h-6" />
                       </div>
                     )}
-                    <div>
+                    <div className="min-w-0">
                       <p className="text-xs text-gray-400 uppercase tracking-wider font-bold">Signed in as</p>
-                      <p className="text-white font-bold">{formData.fullName}</p>
-                      <p className="text-xs text-secondary">{formData.email}</p>
+                      <p className="text-white font-bold break-words">{formData.fullName}</p>
+                      <p className="text-xs text-secondary break-all">{formData.email}</p>
                     </div>
                   </div>
                   <button
                     onClick={handleSignOut}
-                    className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-full transition-colors"
+                    className="self-end sm:self-auto p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-full transition-colors"
                     title="Sign Out"
                   >
                     <LogOut className="w-5 h-5" />

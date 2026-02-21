@@ -6,13 +6,27 @@ import { Calendar, MapPin, Users, ArrowUpRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Events: React.FC = () => {
+  const [selectedTrack, setSelectedTrack] = React.useState('All');
   const [selectedDepartment, setSelectedDepartment] = React.useState('All');
 
   const departments = DEPARTMENTS;
+  const tracks = ['All', 'Cultural', 'Tech'];
+
+  const isTechEvent = (category: string) => {
+    return ['AI/Tech', 'Innovation', 'Competition'].includes(category);
+  };
 
   const filteredEvents = EVENTS.filter(event => {
-    if (selectedDepartment === 'All') return true;
-    return event.department === selectedDepartment;
+    const matchesTrack =
+      selectedTrack === 'All'
+        ? true
+        : selectedTrack === 'Cultural'
+          ? event.category === 'Cultural'
+          : isTechEvent(event.category);
+
+    const matchesDepartment = selectedDepartment === 'All' ? true : event.department === selectedDepartment;
+
+    return matchesTrack && matchesDepartment;
   });
 
   return (
@@ -31,6 +45,22 @@ const Events: React.FC = () => {
           <p className="text-gray-400 max-w-2xl mx-auto text-lg mb-8">
             Choose your battleground. Compete with the best.
           </p>
+
+          {/* Track Filters */}
+          <div className="flex flex-wrap justify-center gap-4 mb-4">
+            {tracks.map((track) => (
+              <button
+                key={track}
+                onClick={() => setSelectedTrack(track)}
+                className={`px-6 py-2 rounded-full font-bold transition-all duration-300 border ${selectedTrack === track
+                  ? 'bg-secondary border-secondary text-darker shadow-[0_0_15px_rgba(0,255,255,0.35)]'
+                  : 'bg-white/5 border-white/10 text-gray-400 hover:border-secondary/50 hover:text-white'
+                  }`}
+              >
+                {track}
+              </button>
+            ))}
+          </div>
 
           {/* Department Filters */}
           <div className="flex flex-wrap justify-center gap-4 mb-8">

@@ -8,6 +8,8 @@ export const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz75RM
 export const GOOGLE_CLIENT_ID = '693447204709-ja2segvloojfgru7u7u20n35a85h1bc3.apps.googleusercontent.com';
 
 // Only these Google accounts can access the Admin page.
+export const DEFAULT_KEYWORDS =
+  'Vaibhav 2K26, tech fest, JCET, JCET Hubballi, Jain College of Engineering and Technology, Jain College Hubli, college events, hackathon, Hubli';
 export const ADMIN_ALLOWED_EMAILS = [
   'vaibhav2k26jcet@gmail.com',
   'Srujanmirji10@gmail.com',
