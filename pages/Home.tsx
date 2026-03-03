@@ -44,9 +44,9 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-darker">
+    <div className="min-h-[100dvh] bg-darker">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 md:pt-0">
+      <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden pt-24 pb-4 md:pt-0 md:pb-0">
         {/* Background Gradients */}
         <div className="absolute top-0 left-0 w-full h-full bg-darker">
           <CyberpunkTerrain />
@@ -58,12 +58,12 @@ const Home: React.FC = () => {
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto flex flex-col items-center">
 
           {/* Animated Logo */}
-          <div className="mb-4 md:mb-8 mt-8 md:mt-16 relative group">
+          <div className="mb-3 md:mb-8 mt-2 md:mt-16 relative group">
             <div className="absolute inset-0 bg-tertiary/10 blur-[50px] rounded-full animate-pulse-slow"></div>
             <img
               src="/logo.png.bak"
               alt="Vaibhav 2K26 official logo"
-              className="relative w-48 md:w-72 h-auto animate-float drop-shadow-[0_0_25px_rgba(255,215,0,0.5)] transition-transform duration-500 hover:scale-105"
+              className="relative w-36 sm:w-48 md:w-72 h-auto animate-float drop-shadow-[0_0_25px_rgba(255,215,0,0.5)] transition-transform duration-500 hover:scale-105"
               fetchPriority="high"
               decoding="async"
             />
@@ -77,15 +77,15 @@ const Home: React.FC = () => {
             Vaibhav <span className="text-primary">2K26</span>
           </h1>
 
-          <p className="text-fluid-p text-gray-300 mb-6 max-w-2xl mx-auto font-light border-l-2 border-primary pl-4 text-left md:text-center md:border-none md:pl-0 bg-black/20 md:bg-transparent p-2 md:p-0 rounded-r-lg">
+          <p className="text-fluid-p text-gray-300 mb-4 md:mb-6 max-w-2xl mx-auto font-light border-l-2 border-primary pl-4 text-left md:text-center md:border-none md:pl-0 bg-black/20 md:bg-transparent p-2 md:p-0 rounded-r-lg">
             The ultimate convergence of code, creativity, and chaos.
             <br className="hidden md:block" /> Join the revolution at Vaibhav 2K26.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-6 justify-center w-full sm:w-auto px-4 sm:px-0">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 justify-center w-full sm:w-auto px-4 sm:px-0">
             <Link
               to="/register"
-              className="min-h-[44px] min-w-[44px] w-full sm:w-auto px-8 py-4 bg-primary hover:bg-white hover:text-primary text-white font-bold text-lg rounded-none skew-x-[-10deg] transition-all duration-300 flex items-center justify-center gap-2 group shadow-[0_0_20px_rgba(255,0,85,0.4)] hover:shadow-[0_0_30px_rgba(255,0,85,0.6)]"
+              className="min-h-[44px] min-w-[44px] w-full sm:w-auto px-6 py-3 md:px-8 md:py-4 bg-primary hover:bg-white hover:text-primary text-white font-bold text-base md:text-lg rounded-none skew-x-[-10deg] transition-all duration-300 flex items-center justify-center gap-2 group shadow-[0_0_20px_rgba(255,0,85,0.4)] hover:shadow-[0_0_30px_rgba(255,0,85,0.6)]"
             >
               <span className="skew-x-[10deg] flex items-center gap-2">
                 Register Now
@@ -94,13 +94,13 @@ const Home: React.FC = () => {
             </Link>
             <Link
               to="/events"
-              className="min-h-[44px] min-w-[44px] w-full sm:w-auto px-8 py-4 bg-transparent border border-secondary text-secondary hover:bg-secondary hover:text-darker font-bold text-lg rounded-none skew-x-[-10deg] transition-all duration-300 flex items-center justify-center shadow-[0_0_10px_rgba(0,255,255,0.2)] hover:shadow-[0_0_20px_rgba(0,255,255,0.4)]"
+              className="min-h-[44px] min-w-[44px] w-full sm:w-auto px-6 py-3 md:px-8 md:py-4 bg-transparent border border-secondary text-secondary hover:bg-secondary hover:text-darker font-bold text-base md:text-lg rounded-none skew-x-[-10deg] transition-all duration-300 flex items-center justify-center shadow-[0_0_10px_rgba(0,255,255,0.2)] hover:shadow-[0_0_20px_rgba(0,255,255,0.4)]"
             >
               <span className="skew-x-[10deg]">Explore Events</span>
             </Link>
           </div>
 
-          <div className="mt-6 md:mt-8 flex flex-wrap justify-center gap-3">
+          <div className="mt-4 md:mt-8 flex flex-wrap justify-center gap-2 md:gap-3">
             {countdown.isLive ? (
               <div className="px-5 py-3 rounded-xl border border-emerald-400/60 bg-emerald-400/10 text-emerald-300 text-sm md:text-base font-bold uppercase tracking-wider shadow-[0_0_15px_rgba(52,211,153,0.35)]">
                 Event Is Live
@@ -129,7 +129,7 @@ const Home: React.FC = () => {
             )}
           </div>
 
-          <div className="mt-4 inline-flex items-center gap-2 md:gap-3 px-3 md:px-5 py-2 md:py-2.5 rounded-full border border-primary/50 bg-primary/10 backdrop-blur-sm shadow-[0_0_18px_rgba(255,0,85,0.35)] animate-pulse">
+          <div className="mt-3 md:mt-4 inline-flex items-center gap-2 md:gap-3 px-3 md:px-5 py-2 md:py-2.5 rounded-full border border-primary/50 bg-primary/10 backdrop-blur-sm shadow-[0_0_18px_rgba(255,0,85,0.35)] animate-pulse">
             <span className="relative flex h-2 w-2 md:h-3 md:w-3">
               <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-75 animate-ping" />
               <span className="relative inline-flex h-2 w-2 md:h-3 md:w-3 rounded-full bg-primary" />
@@ -149,11 +149,11 @@ const Home: React.FC = () => {
           <button
             type="button"
             onClick={handleScrollDown}
-            className="mt-6 md:mt-10 min-h-[44px] min-w-[44px] inline-flex flex-col items-center text-gray-400 hover:text-secondary transition-colors duration-300 group"
+            className="mt-4 md:mt-10 min-h-[44px] min-w-[44px] inline-flex flex-col items-center text-gray-400 hover:text-secondary transition-colors duration-300 group pb-2 md:pb-0"
             aria-label="Scroll down to next section"
           >
-            <span className="text-xs font-bold tracking-[0.25em] uppercase">Scroll</span>
-            <span className="mt-3 h-12 w-7 rounded-full border border-secondary/60 bg-secondary/5 p-1 flex justify-center">
+            <span className="text-[10px] md:text-xs font-bold tracking-[0.25em] uppercase">Scroll</span>
+            <span className="mt-2 h-10 w-6 md:h-12 md:w-7 rounded-full border border-secondary/60 bg-secondary/5 p-1 flex justify-center">
               <span className="h-2.5 w-2.5 rounded-full bg-secondary animate-bounce shadow-[0_0_8px_rgba(0,255,255,0.7)]" />
             </span>
             <ChevronDown className="w-5 h-5 mt-2 text-secondary animate-bounce [animation-delay:180ms]" />
