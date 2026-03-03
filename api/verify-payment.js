@@ -1,6 +1,6 @@
-import crypto from 'crypto';
+const crypto = require('crypto');
 
-export default function handler(req, res) {
+module.exports = function handler(req, res) {
     // CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -21,7 +21,6 @@ export default function handler(req, res) {
             return res.status(400).json({ success: false, message: 'Missing payment details' });
         }
 
-        // Cryptographically verify the signature
         const body = razorpay_order_id + '|' + razorpay_payment_id;
         const expectedSignature = crypto
             .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
@@ -35,6 +34,6 @@ export default function handler(req, res) {
         }
     } catch (error) {
         console.error('Verification Error:', error);
-        res.status(500).json({ success: false, message: 'Verification failed' });
+        res.status(500).json({ success: false, message: 'Verification failed: ' + error.message });
     }
-}
+};

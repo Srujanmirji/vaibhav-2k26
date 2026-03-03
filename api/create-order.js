@@ -1,4 +1,4 @@
-import Razorpay from 'razorpay';
+const Razorpay = require('razorpay');
 
 const EVENT_FEES = {
     e1: 1, e2: 1, e3: 1, e4: 1, e5: 1,
@@ -6,7 +6,7 @@ const EVENT_FEES = {
     e11: 1, e12: 1, e13: 1, e14: 1, e15: 1,
 };
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
     // CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -49,7 +49,7 @@ export default async function handler(req, res) {
         const order = await razorpay.orders.create({
             amount: totalFee * 100,
             currency: currency || 'INR',
-            receipt: `receipt_${Date.now()}`,
+            receipt: 'receipt_' + Date.now(),
         });
 
         res.json({
@@ -61,6 +61,6 @@ export default async function handler(req, res) {
         });
     } catch (error) {
         console.error('Order Creation Error:', error);
-        res.status(500).json({ success: false, error: 'Failed to create order' });
+        res.status(500).json({ success: false, error: 'Failed to create order: ' + error.message });
     }
-}
+};

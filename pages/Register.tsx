@@ -450,9 +450,10 @@ const Register: React.FC = () => {
 
           return; // Return here so we don't process registration until payment is done
 
-        } catch (backendError) {
+        } catch (backendError: any) {
+          console.error('Backend error:', backendError);
           setStatus('error');
-          setMessage('Our payment servers are currently unreachable. Please try again later.');
+          setMessage('Payment error: ' + (backendError?.message || 'Could not connect to payment server. Please try again.'));
           return;
         }
       }
