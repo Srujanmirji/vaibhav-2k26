@@ -315,7 +315,7 @@ const Register: React.FC = () => {
 
         try {
           // 1. Hit the new Node.js Backend to create a secure Order ID lock
-          const orderResponse = await fetch('http://localhost:5000/api/create-order', {
+          const orderResponse = await fetch('/api/create-order', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -349,7 +349,7 @@ const Register: React.FC = () => {
                 setMessage('Verifying payment...');
 
                 // 3. Send the signature to the backend for cryptographic verification
-                const verifyResponse = await fetch('http://localhost:5000/api/verify-payment', {
+                const verifyResponse = await fetch('/api/verify-payment', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
