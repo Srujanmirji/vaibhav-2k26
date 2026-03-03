@@ -330,9 +330,16 @@ const Register: React.FC = () => {
             })
           });
 
-          const orderData = await orderResponse.json();
+          const orderText = await orderResponse.text();
+          let orderData;
+          try {
+            orderData = JSON.parse(orderText);
+          } catch {
+            console.error('API returned non-JSON:', orderText.substring(0, 200));
+            throw new Error('Server returned an invalid response. Please try again.');
+          }
           if (!orderData.success) {
-            throw new Error("Failed to create secure order on backend.");
+            throw new Error(orderData.error || "Failed to create secure order on backend.");
           }
 
           // 2. Open Razorpay Checkbox locked to the Backend Order ID

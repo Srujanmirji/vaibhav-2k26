@@ -1,4 +1,4 @@
-const Razorpay = require('razorpay');
+import Razorpay from 'razorpay';
 
 const EVENT_FEES = {
     e1: 1, e2: 1, e3: 1, e4: 1, e5: 1,
@@ -6,19 +6,13 @@ const EVENT_FEES = {
     e11: 1, e12: 1, e13: 1, e14: 1, e15: 1,
 };
 
-module.exports = async function handler(req, res) {
-    // CORS headers
+export default async function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
-    }
-
-    if (req.method !== 'POST') {
-        return res.status(405).json({ success: false, error: 'Method not allowed' });
-    }
+    if (req.method === 'OPTIONS') return res.status(200).end();
+    if (req.method !== 'POST') return res.status(405).json({ success: false, error: 'Method not allowed' });
 
     try {
         const razorpay = new Razorpay({
@@ -26,7 +20,7 @@ module.exports = async function handler(req, res) {
             key_secret: process.env.RAZORPAY_KEY_SECRET,
         });
 
-        const { selectedEventIds, currency, email, phone, name } = req.body;
+        const { selectedEventIds, currency } = req.body;
 
         if (!Array.isArray(selectedEventIds) || selectedEventIds.length === 0) {
             return res.status(400).json({ success: false, error: 'No events selected.' });
@@ -52,7 +46,7 @@ module.exports = async function handler(req, res) {
             receipt: 'receipt_' + Date.now(),
         });
 
-        res.json({
+        return res.json({
             success: true,
             order_id: order.id,
             amount: order.amount,
@@ -61,6 +55,6 @@ module.exports = async function handler(req, res) {
         });
     } catch (error) {
         console.error('Order Creation Error:', error);
-        res.status(500).json({ success: false, error: 'Failed to create order: ' + error.message });
+        return res.status(500).json({ success: false, error: 'Failed to create order: ' + error.message });
     }
-};
+}

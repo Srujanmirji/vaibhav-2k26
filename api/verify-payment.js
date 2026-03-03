@@ -1,18 +1,12 @@
-const crypto = require('crypto');
+import crypto from 'crypto';
 
-module.exports = function handler(req, res) {
-    // CORS headers
+export default function handler(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
-    }
-
-    if (req.method !== 'POST') {
-        return res.status(405).json({ success: false, error: 'Method not allowed' });
-    }
+    if (req.method === 'OPTIONS') return res.status(200).end();
+    if (req.method !== 'POST') return res.status(405).json({ success: false, error: 'Method not allowed' });
 
     try {
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
@@ -28,12 +22,12 @@ module.exports = function handler(req, res) {
             .digest('hex');
 
         if (expectedSignature === razorpay_signature) {
-            res.json({ success: true, message: 'Payment verified successfully' });
+            return res.json({ success: true, message: 'Payment verified successfully' });
         } else {
-            res.status(400).json({ success: false, message: 'Invalid payment signature!' });
+            return res.status(400).json({ success: false, message: 'Invalid payment signature!' });
         }
     } catch (error) {
         console.error('Verification Error:', error);
-        res.status(500).json({ success: false, message: 'Verification failed: ' + error.message });
+        return res.status(500).json({ success: false, message: 'Verification failed: ' + error.message });
     }
-};
+}
