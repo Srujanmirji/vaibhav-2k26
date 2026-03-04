@@ -22,7 +22,10 @@ const USER_INDEX_PROPERTY_PREFIX = 'user_index:';
 const ADMIN_ALLOWED_EMAILS = [
   'vaibhav2k26jcet@gmail.com',
   'srujanmirji10@gmail.com',
-  'jcetvaibhav@gmail.com'
+  'jcetvaibhav@gmail.com',
+  'prajwaljinagi63@gmail.com',
+  'dharwadzishan@gmail.com',
+  'sachitsarangamath44@gmail.com'
 ];
 
 const EVENT_SHEET_MAP = {
