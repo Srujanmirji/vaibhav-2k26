@@ -63,7 +63,7 @@ const Home: React.FC = () => {
             <img
               src="/LOGO.png"
               alt="Vaibhav 2K26 official logo"
-              className="relative w-36 sm:w-48 md:w-72 h-auto animate-float drop-shadow-[0_0_25px_rgba(255,215,0,0.5)] transition-transform duration-500 hover:scale-105"
+              className="relative w-80 sm:w-96 md:w-[48rem] h-auto animate-float drop-shadow-[0_0_25px_rgba(255,215,0,0.5)] transition-transform duration-500 hover:scale-105"
               fetchPriority="high"
               decoding="async"
             />
