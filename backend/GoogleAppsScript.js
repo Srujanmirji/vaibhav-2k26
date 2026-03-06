@@ -767,7 +767,7 @@ function sendConfirmationEmail_(data, eventTitles, skippedEvents) {
 
       // ── Logo Header ──
       + '<tr><td align="center" style="padding:24px 0 20px;">'
-      + '<img src="https://www.vaibhav2k26.online/logo.png.bak" alt="Vaibhav 2K26" width="120" height="120" style="display:block;border:none;outline:none;" />'
+      + '<img src="https://www.vaibhav2k26.online/LOGO.png" alt="Vaibhav 2K26" width="120" height="120" style="display:block;border:none;outline:none;" />'
       + '</td></tr>'
 
       // ── Main Card ──

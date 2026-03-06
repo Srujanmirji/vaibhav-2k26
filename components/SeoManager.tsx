@@ -104,7 +104,7 @@ const upsertStructuredData = (origin: string) => {
         alternateName: [SITE_NAME, ...COLLEGE_ALIASES.map((name) => `${name} Vaibhav`)],
         url: `${origin}/`,
         email: 'contactus@jcethbl.edu.in',
-        logo: `${origin}/logo.png.bak`,
+        logo: `${origin}/LOGO.png`,
       },
       {
         '@type': 'CollegeOrUniversity',
@@ -142,7 +142,7 @@ const upsertStructuredData = (origin: string) => {
         eventStatus: 'https://schema.org/EventScheduled',
         eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
         url: `${origin}/#/register`,
-        image: [`${origin}/logo.png.bak`],
+        image: [`${origin}/LOGO.png`],
         organizer: {
           '@id': `${origin}/#organization`,
         },
@@ -188,7 +188,7 @@ const SeoManager: React.FC = () => {
 
     const origin = window.location.origin;
     const canonicalUrl = pathname === '/' ? `${origin}/` : `${origin}/#${pathname}`;
-    const imageUrl = `${origin}/logo.png.bak`;
+    const imageUrl = `${origin}/LOGO.png`;
 
     document.title = metadata.title;
     document.documentElement.setAttribute('lang', 'en');
