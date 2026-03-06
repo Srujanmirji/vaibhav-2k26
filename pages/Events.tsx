@@ -151,7 +151,7 @@ const Events: React.FC = () => {
 
       {/* Detail Modal */}
       {selectedEventForModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 mb-10">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-6">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -161,12 +161,12 @@ const Events: React.FC = () => {
           ></motion.div>
 
           <motion.div
-            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+            initial={{ scale: 0.95, opacity: 0, y: 10 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            className="relative w-full max-w-2xl bg-card border border-white/10 rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] max-h-[90dvh] flex flex-col"
+            className="relative w-full max-w-2xl bg-card border border-white/10 rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] max-h-[95dvh] md:max-h-[90dvh] flex flex-col mt-4 md:mt-0"
           >
             {/* Modal Header/Image */}
-            <div className="relative h-48 sm:h-64 shrink-0">
+            <div className="relative h-40 sm:h-64 shrink-0">
               <img
                 src={selectedEventForModal.image}
                 alt={selectedEventForModal.title}
@@ -175,43 +175,43 @@ const Events: React.FC = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent"></div>
               <button
                 onClick={() => setSelectedEventForModal(null)}
-                className="absolute top-4 right-4 p-2 bg-black/50 hover:bg-primary text-white rounded-full transition-colors z-20"
+                className="absolute top-2 right-2 md:top-4 md:right-4 p-2 bg-black/50 hover:bg-primary text-white rounded-full transition-colors z-20"
               >
-                <X className="w-6 h-6" />
+                <X className="w-5 h-5 md:w-6 md:h-6" />
               </button>
-              <div className="absolute bottom-4 left-6 z-10">
-                <span className="px-3 py-1 bg-primary text-white text-xs font-bold uppercase rounded mb-2 inline-block">
+              <div className="absolute bottom-2 left-4 md:bottom-4 md:left-6 z-10 w-[90%]">
+                <span className="px-2 py-0.5 md:px-3 md:py-1 bg-primary text-white text-[10px] md:text-xs font-bold uppercase rounded mb-1 md:mb-2 inline-block">
                   {selectedEventForModal.category}
                 </span>
-                <h2 className="text-2xl sm:text-3xl font-black text-white font-mono">{selectedEventForModal.title}</h2>
+                <h2 className="text-xl md:text-3xl font-black text-white font-mono truncate">{selectedEventForModal.title}</h2>
               </div>
             </div>
 
             {/* Modal Content */}
-            <div className="p-6 overflow-y-auto custom-scrollbar space-y-8">
+            <div className="p-4 md:p-6 overflow-y-auto custom-scrollbar space-y-6 md:space-y-8">
               {/* Core Info Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
-                  <p className="text-secondary text-[10px] uppercase font-bold tracking-widest mb-1">Schedule</p>
-                  <p className="text-white text-sm font-semibold">{selectedEventForModal.date}</p>
-                  <p className="text-gray-400 text-xs">{selectedEventForModal.time}</p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 md:gap-4">
+                <div className="bg-white/5 p-3 md:p-4 rounded-xl md:rounded-2xl border border-white/5">
+                  <p className="text-secondary text-[9px] md:text-[10px] uppercase font-bold tracking-widest mb-1">Schedule</p>
+                  <p className="text-white text-xs md:text-sm font-semibold">{selectedEventForModal.date}</p>
+                  <p className="text-gray-400 text-[10px] md:text-xs">{selectedEventForModal.time}</p>
                 </div>
-                <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
-                  <p className="text-secondary text-[10px] uppercase font-bold tracking-widest mb-1">Location</p>
-                  <p className="text-white text-sm font-semibold">{selectedEventForModal.venue}</p>
-                  <p className="text-gray-400 text-xs">{selectedEventForModal.department} Dept</p>
+                <div className="bg-white/5 p-3 md:p-4 rounded-xl md:rounded-2xl border border-white/5">
+                  <p className="text-secondary text-[9px] md:text-[10px] uppercase font-bold tracking-widest mb-1">Location</p>
+                  <p className="text-white text-xs md:text-sm font-semibold truncate">{selectedEventForModal.venue}</p>
+                  <p className="text-gray-400 text-[10px] md:text-xs truncate">{selectedEventForModal.department} Dept</p>
                 </div>
                 {selectedEventForModal.rulesPdf && (
                   <a
                     href={selectedEventForModal.rulesPdf}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-primary/10 p-4 rounded-2xl border border-primary/20 flex flex-col items-center justify-center group hover:bg-primary/20 transition-all text-center"
+                    className="bg-primary/10 p-3 md:p-4 rounded-xl md:rounded-2xl border border-primary/20 flex flex-col items-center justify-center group hover:bg-primary/20 transition-all text-center col-span-2 sm:col-span-1"
                   >
-                    <p className="text-primary text-[10px] uppercase font-bold tracking-widest mb-1">Event Rules</p>
-                    <div className="flex items-center gap-2 text-white">
-                      <FileText className="w-5 h-5 text-primary" />
-                      <span className="text-sm font-semibold group-hover:text-primary transition-colors">VIEW PDF</span>
+                    <p className="text-primary text-[9px] md:text-[10px] uppercase font-bold tracking-widest mb-1">Event Rules</p>
+                    <div className="flex items-center gap-1 md:gap-2 text-white">
+                      <FileText className="w-4 h-4 md:w-5 md:h-5 text-primary" />
+                      <span className="text-xs md:text-sm font-semibold group-hover:text-primary transition-colors">VIEW PDF</span>
                     </div>
                   </a>
                 )}

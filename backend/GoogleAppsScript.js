@@ -12,6 +12,9 @@ const ADMIN_REGISTRATIONS_CACHE_KEY = 'admin_all_registrations';
 const ADMIN_REGISTRATIONS_CACHE_TTL_SECONDS = 1800;
 const USER_INDEX_PROPERTY_PREFIX = 'user_index:';
 
+// ADD YOUR MASTER SPREADSHEET ID HERE FOR A COMBINED COPY OF ALL REGISTRATIONS
+const MAIN_SPREADSHEET_ID = '10ea7M_hhVJPDS1L7cMnH3xeFrZEq00_-TadKXvW8YzQ';
+
 const ADMIN_ALLOWED_EMAILS = [
   'vaibhav2k26jcet@gmail.com',
   'srujanmirji10@gmail.com',
@@ -23,24 +26,24 @@ const ADMIN_ALLOWED_EMAILS = [
 
 
 const EVENT_SHEET_MAP = {
-  e2: { spreadsheetId: '1VnBiox2fD8hO3M4cQH90TozkEEHNAk8Z_AHVcxCe7w8', sheetName: 'Project Pitch Day' },
-  e3: { spreadsheetId: '1_Jppe15kIt6rgPFm9z9Z8KJBHfyGbdfjZR7zJXTb9LU', sheetName: 'AI in EV' },
-  e4: { spreadsheetId: '1o31pM9TWeixE6vPcYUVrvb_PbhM7bmf0xSsl2PhkSBM', sheetName: 'Cooking Without Fire' },
-  e5: { spreadsheetId: '1oRCLdP4drIT_aPdUILhW-9AfNzsynFGdDxiufLycQ9Y', sheetName: 'Blind Fold Taste Test' },
-  e6: { spreadsheetId: '17BAD5CBBtcMHNJEazb-epppJoazGsKd62vZuL_9-cuc', sheetName: 'Survey Hunt' },
-  e7: { spreadsheetId: '1JxcVaYAbMFPCmtC61PqapNoqXUogIs_Ab22dLc1PQjs', sheetName: 'Art Gallery' },
-  e8: { spreadsheetId: '12zsrckESHgKTrg804KEENUmAMCMR86d2vKem8jD0OYc', sheetName: 'Spot Acting Battle' },
-  e9: { spreadsheetId: '1X3cJt_vKRPZJJ16wWsGbzF0lmWG8cIUIQap_MU6wzHw', sheetName: 'Laugh Logic Loot' },
-  e13: { spreadsheetId: '1CLTK4aMGGdGzaXg9qk_WwJa5-W0s92r_XUPx4BVsIsA', sheetName: 'AI Prompt Battle' },
-  e14: { spreadsheetId: '1wiokWotdzXmcdVSLzblY6VfhbwmlvPHRd2p_uaBCEpw', sheetName: 'Tallest Tower Challenge' },
-  e15: { spreadsheetId: '1OfeY3JCuNQFmACNluKG7QmRORY8WFptcgQjD2eZK1vQ', sheetName: 'Buildathon' },
-  e16: { spreadsheetId: '1sX7T4aN324NJpSc5gnAoZYeOzAEAY-y_nhV-Ki37ySo', sheetName: 'Social Awareness Video Contest' },
-  e17: { spreadsheetId: '1hVXYSe4IJbbfFVkPG2Xv_PTe_mUizHGqBcZrssMZtLI', sheetName: 'Meme Challenge' },
-  e18: { spreadsheetId: '1PrbQ5-CedLDepaHAAzRK5BRDfNdDp2yTgBoNfbZfvJs', sheetName: 'Game Zone' },
-  e19: { spreadsheetId: '1Ep8YGX4YyeQuHT8joopBV5l7zW67bMcy6b2m9mY7iZ0', sheetName: 'Circuit Mania' },
-  e20: { spreadsheetId: '1jZ5GXfeuqNZK4hdSdSPLycFEWJP1goe3T9_C3u9USyU', sheetName: 'Dialogue Delivery Battle' },
-  e21: { spreadsheetId: '1a2QtQ9UpD6gCICtll_9HS0aeVuSwsAv7mbEMfFIlaQo', sheetName: 'Minute Master' },
-  e23: { spreadsheetId: '1DPwxrchkyrDlytQouSlsihyHS1uCDOIF2-XLCnQ6x1M', sheetName: 'Melody Mania & Dance Infusion' }
+  e2: { spreadsheetId: '1VnBiox2fD8hO3M4cQH90TozkEEHNAk8Z_AHVcxCe7w8', sheetName: 'Sheet1' },
+  e3: { spreadsheetId: '1_Jppe15kIt6rgPFm9z9Z8KJBHfyGbdfjZR7zJXTb9LU', sheetName: 'Sheet1' },
+  e4: { spreadsheetId: '1o31pM9TWeixE6vPcYUVrvb_PbhM7bmf0xSsl2PhkSBM', sheetName: 'Sheet1' },
+  e5: { spreadsheetId: '1oRCLdP4drIT_aPdUILhW-9AfNzsynFGdDxiufLycQ9Y', sheetName: 'Sheet1' },
+  e6: { spreadsheetId: '17BAD5CBBtcMHNJEazb-epppJoazGsKd62vZuL_9-cuc', sheetName: 'Sheet1' },
+  e7: { spreadsheetId: '1JxcVaYAbMFPCmtC61PqapNoqXUogIs_Ab22dLc1PQjs', sheetName: 'Sheet1' },
+  e8: { spreadsheetId: '12zsrckESHgKTrg804KEENUmAMCMR86d2vKem8jD0OYc', sheetName: 'Sheet1' },
+  e9: { spreadsheetId: '1X3cJt_vKRPZJJ16wWsGbzF0lmWG8cIUIQap_MU6wzHw', sheetName: 'Sheet1' },
+  e13: { spreadsheetId: '1CLTK4aMGGdGzaXg9qk_WwJa5-W0s92r_XUPx4BVsIsA', sheetName: 'Sheet1' },
+  e14: { spreadsheetId: '1wiokWotdzXmcdVSLzblY6VfhbwmlvPHRd2p_uaBCEpw', sheetName: 'Sheet1' },
+  e15: { spreadsheetId: '1OfeY3JCuNQFmACNluKG7QmRORY8WFptcgQjD2eZK1vQ', sheetName: 'Sheet1' },
+  e16: { spreadsheetId: '1sX7T4aN324NJpSc5gnAoZYeOzAEAY-y_nhV-Ki37ySo', sheetName: 'Sheet1' },
+  e17: { spreadsheetId: '1hVXYSe4IJbbfFVkPG2Xv_PTe_mUizHGqBcZrssMZtLI', sheetName: 'Sheet1' },
+  e18: { spreadsheetId: '1PrbQ5-CedLDepaHAAzRK5BRDfNdDp2yTgBoNfbZfvJs', sheetName: 'Sheet1' },
+  e19: { spreadsheetId: '1Ep8YGX4YyeQuHT8joopBV5l7zW67bMcy6b2m9mY7iZ0', sheetName: 'Sheet1' },
+  e20: { spreadsheetId: '1jZ5GXfeuqNZK4hdSdSPLycFEWJP1goe3T9_C3u9USyU', sheetName: 'Sheet1' },
+  e21: { spreadsheetId: '1a2QtQ9UpD6gCICtll_9HS0aeVuSwsAv7mbEMfFIlaQo', sheetName: 'Sheet1' },
+  e23: { spreadsheetId: '1DPwxrchkyrDlytQouSlsihyHS1uCDOIF2-XLCnQ6x1M', sheetName: 'Sheet1' }
 };
 
 const EVENT_ID_TO_TITLE = {
@@ -297,6 +300,19 @@ function doPost(e) {
       ];
 
       sheet.getRange(sheet.getLastRow() + 1, 1, 1, row.length).setValues([row]);
+
+      // Copy to the main combined spreadsheet
+      if (MAIN_SPREADSHEET_ID && MAIN_SPREADSHEET_ID !== 'YOUR_MAIN_SPREADSHEET_ID_HERE' && MAIN_SPREADSHEET_ID !== '') {
+        try {
+          const mainSheet = getSheet_(MAIN_SPREADSHEET_ID, DEFAULT_SHEET_NAME);
+          if (mainSheet) {
+            mainSheet.getRange(mainSheet.getLastRow() + 1, 1, 1, row.length).setValues([row]);
+          }
+        } catch (mainSheetError) {
+          console.error("Failed to append to main spreadsheet: " + mainSheetError);
+        }
+      }
+
       insertedEvents.push({
         id: resolved.eventId,
         title: resolved.eventTitle,
@@ -737,7 +753,7 @@ function sendConfirmationEmail_(data, eventTitles, skippedEvents) {
     }
 
     // QR Code for the overall registration (using the first one as primary ID for the pass)
-    var qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent(regId || email);
+
 
 
     var htmlBody = '<!DOCTYPE html>'
@@ -771,13 +787,7 @@ function sendConfirmationEmail_(data, eventTitles, skippedEvents) {
       + '<p style="margin:10px 0 0;font-size:14px;color:#aaa;line-height:1.6;">You\'re officially locked in. Here\'s your event lineup — save this email as your digital pass.</p>'
       + '</td></tr>'
 
-      // ── Digital Pass / QR Code ──
-      + '<tr><td align="center" style="padding:20px 32px;">'
-      + '<table cellpadding="0" cellspacing="0" style="background:#ffffff;padding:12px;border-radius:12px;">'
-      + '<tr><td><img src="' + qrCodeUrl + '" alt="Digital Pass QR" width="150" height="150" style="display:block;" /></td></tr>'
-      + '</table>'
-      + '<p style="margin:12px 0 0;font-size:12px;color:#00FFFF;font-weight:bold;letter-spacing:1px;">SHOW THIS QR AT THE VENUE</p>'
-      + '</td></tr>'
+
 
       // ── Event Cards Section ──
       + '<tr><td style="padding:20px 32px 8px;">'

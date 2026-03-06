@@ -5,6 +5,8 @@
 @layer base {
   body {
     @apply bg-darker text-slate-200 font-sans overflow-x-hidden;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 
   h1,
