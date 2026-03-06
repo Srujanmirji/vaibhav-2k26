@@ -1,15 +1,18 @@
 /**
- * GOOGLE APPS SCRIPT CODE (MULTI-SHEET BY EVENT)
+ * GOOGLE APPS SCRIPT CODE (MULTI-SHEET BY EVENT) - HYPER OPTIMIZED
  *
- * Each event writes to its own Google Spreadsheet.
+ * Features: Global object caching, O(1) duplicate checks, batched API writes, 
+ * extended cache TTL, and a ping route for cold-start prevention.
  */
+
+let globalSheetCache = {}; // Fix 1: Cache spreadsheet objects in memory
 
 const DEFAULT_SHEET_NAME = 'Sheet1';
 const EVENT_DATE_LABEL = 'March 27-28, 2026';
 const USER_REGISTRATIONS_CACHE_PREFIX = 'user_registrations:';
-const USER_REGISTRATIONS_CACHE_TTL_SECONDS = 1800;
+const USER_REGISTRATIONS_CACHE_TTL_SECONDS = 7200; // Fix 4: Increased TTL
 const ADMIN_REGISTRATIONS_CACHE_KEY = 'admin_all_registrations';
-const ADMIN_REGISTRATIONS_CACHE_TTL_SECONDS = 1800;
+const ADMIN_REGISTRATIONS_CACHE_TTL_SECONDS = 7200; // Fix 4: Increased TTL
 const USER_INDEX_PROPERTY_PREFIX = 'user_index:';
 
 // ADD YOUR MASTER SPREADSHEET ID HERE FOR A COMBINED COPY OF ALL REGISTRATIONS
@@ -24,6 +27,8 @@ const ADMIN_ALLOWED_EMAILS = [
   'sachitsarangamath44@gmail.com'
 ];
 
+// Fix 5: Pre-normalize admin emails for faster checking
+const ADMIN_ALLOWED_EMAILS_NORMALIZED = ADMIN_ALLOWED_EMAILS.map(e => String(e).toLowerCase().trim());
 
 const EVENT_SHEET_MAP = {
   e2: { spreadsheetId: '1VnBiox2fD8hO3M4cQH90TozkEEHNAk8Z_AHVcxCe7w8', sheetName: 'Sheet1' },
@@ -121,9 +126,16 @@ function doGet(e) {
     const action = normalizeString_((e && e.parameter && e.parameter.action) || '').toLowerCase();
     const callback = (e && e.parameter && e.parameter.callback) || '';
 
+    // Cold-start prevention ping route
+    if (action === 'ping') {
+      CacheService.getScriptCache().put("ping", "1", 60);
+      return createJSONOutput_({ status: 'success', message: 'pong' }, callback);
+    }
+
     if (action === 'getallregistrations') {
       const adminEmail = normalizeString_((e && e.parameter && e.parameter.adminEmail) || '').toLowerCase();
       const forceRefresh = isTruthy_((e && e.parameter && e.parameter.forceRefresh) || '');
+
       if (!isAdminAllowed_(adminEmail)) {
         return createJSONOutput_({ status: 'error', message: 'Unauthorized admin access.' }, callback);
       }
@@ -136,53 +148,58 @@ function doGet(e) {
       }
 
       const allRows = [];
-      const eventIds = Object.keys(EVENT_SHEET_MAP);
+      const useMainSheet = MAIN_SPREADSHEET_ID && MAIN_SPREADSHEET_ID !== 'YOUR_MAIN_SPREADSHEET_ID_HERE';
 
-      eventIds.forEach(function (eventId) {
-        const config = EVENT_SHEET_MAP[eventId];
-        if (!config || !isSpreadsheetConfigured_(config.spreadsheetId)) {
-          return;
+      if (useMainSheet) {
+        const mainSheet = getSheet_(MAIN_SPREADSHEET_ID, DEFAULT_SHEET_NAME);
+        const lastRow = mainSheet.getLastRow();
+
+        if (lastRow > 1) {
+          const rows = mainSheet.getRange(2, 1, lastRow - 1, 15).getValues();
+          rows.forEach(function (row) {
+            const eventId = normalizeString_(row[8]);
+            const eventTitle = normalizeString_(row[7]) || EVENT_ID_TO_TITLE[eventId] || eventId;
+            allRows.push({
+              timestamp: formatTimestamp_(row[0]),
+              fullName: normalizeString_(row[1]),
+              email: normalizeString_(row[2]).toLowerCase(),
+              phone: normalizeString_(row[3]),
+              college: normalizeString_(row[4]),
+              department: normalizeString_(row[5]),
+              year: normalizeString_(row[6]),
+              eventTitle: eventTitle,
+              eventId: eventId,
+              eventDate: EVENT_ID_TO_DATE[eventId] || EVENT_DATE_LABEL,
+              registrationId: normalizeString_(row[9]),
+              razorpayPaymentId: normalizeString_(row[10]),
+              teamName: normalizeString_(row[12]),
+              teamMembers: normalizeString_(row[13]),
+              registrationType: normalizeString_(row[14]) || (normalizeString_(row[12]) ? 'Group' : 'Solo'),
+            });
+          });
         }
+      } else {
+        const eventIds = Object.keys(EVENT_SHEET_MAP);
+        eventIds.forEach(function (eventId) {
+          const config = EVENT_SHEET_MAP[eventId];
+          if (!config || !isSpreadsheetConfigured_(config.spreadsheetId)) return;
 
-        const sheet = getSheet_(config.spreadsheetId, config.sheetName || DEFAULT_SHEET_NAME);
-        const lastRow = sheet.getLastRow();
-        if (lastRow < 2) {
-          return;
-        }
+          const sheet = getSheet_(config.spreadsheetId, config.sheetName || DEFAULT_SHEET_NAME);
+          const lastRow = sheet.getLastRow();
+          if (lastRow < 2) return;
 
-        const rows = sheet.getRange(2, 1, lastRow - 1, 15).getValues();
-        rows.forEach(function (row) {
-          const eventTitle = normalizeString_(row[7]) || EVENT_ID_TO_TITLE[eventId] || eventId;
-          allRows.push({
-            timestamp: formatTimestamp_(row[0]),
-            fullName: normalizeString_(row[1]),
-            email: normalizeString_(row[2]).toLowerCase(),
-            phone: normalizeString_(row[3]),
-            college: normalizeString_(row[4]),
-            department: normalizeString_(row[5]),
-            year: normalizeString_(row[6]),
-            eventTitle: eventTitle,
-            eventId: normalizeString_(row[8]) || eventId,
-            eventDate: EVENT_ID_TO_DATE[eventId] || EVENT_DATE_LABEL,
-            registrationId: normalizeString_(row[9]),
-            razorpayPaymentId: normalizeString_(row[10]),
-            teamName: normalizeString_(row[12]),
-            teamMembers: normalizeString_(row[13]),
-            registrationType: normalizeString_(row[14]) || (normalizeString_(row[12]) ? 'Group' : 'Solo'),
+          const rows = sheet.getRange(2, 1, lastRow - 1, 15).getValues();
+          rows.forEach(function (row) {
+            const eventTitle = normalizeString_(row[7]) || EVENT_ID_TO_TITLE[eventId] || eventId;
+            allRows.push({
+              timestamp: formatTimestamp_(row[0]), fullName: normalizeString_(row[1]), email: normalizeString_(row[2]).toLowerCase(), phone: normalizeString_(row[3]), college: normalizeString_(row[4]), department: normalizeString_(row[5]), year: normalizeString_(row[6]), eventTitle: eventTitle, eventId: normalizeString_(row[8]) || eventId, eventDate: EVENT_ID_TO_DATE[eventId] || EVENT_DATE_LABEL, registrationId: normalizeString_(row[9]), razorpayPaymentId: normalizeString_(row[10]), teamName: normalizeString_(row[12]), teamMembers: normalizeString_(row[13]), registrationType: normalizeString_(row[14]) || (normalizeString_(row[12]) ? 'Group' : 'Solo')
+            });
           });
         });
-      });
+      }
 
-      allRows.sort(function (a, b) {
-        return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
-      });
-
-      writeScriptCacheJSON_(
-        ADMIN_REGISTRATIONS_CACHE_KEY,
-        { data: allRows },
-        ADMIN_REGISTRATIONS_CACHE_TTL_SECONDS
-      );
-
+      allRows.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+      writeScriptCacheJSON_(ADMIN_REGISTRATIONS_CACHE_KEY, { data: allRows }, ADMIN_REGISTRATIONS_CACHE_TTL_SECONDS);
       return createJSONOutput_({ status: 'success', data: allRows }, callback);
     }
 
@@ -192,61 +209,54 @@ function doGet(e) {
 
     const email = normalizeString_((e && e.parameter && e.parameter.email) || '').toLowerCase();
     const forceRefresh = isTruthy_((e && e.parameter && e.parameter.forceRefresh) || '');
-    if (!email) {
-      return createJSONOutput_({ status: 'error', message: 'Email is required.' }, callback);
-    }
+    if (!email) return createJSONOutput_({ status: 'error', message: 'Email is required.' }, callback);
 
     if (!forceRefresh) {
       const indexedRegistrations = readUserRegistrationsIndex_(email);
-      if (indexedRegistrations) {
-        return createJSONOutput_({ status: 'success', data: indexedRegistrations }, callback);
-      }
-    }
+      if (indexedRegistrations) return createJSONOutput_({ status: 'success', data: indexedRegistrations }, callback);
 
-    const userRegistrationsCacheKey = getUserRegistrationsCacheKey_(email);
-    if (!forceRefresh) {
-      const cachedUserRows = readScriptCacheJSON_(userRegistrationsCacheKey);
+      const cachedUserRows = readScriptCacheJSON_(getUserRegistrationsCacheKey_(email));
       if (cachedUserRows && Array.isArray(cachedUserRows.data)) {
         return createJSONOutput_({ status: 'success', data: cachedUserRows.data }, callback);
       }
     }
 
     const allRegistrations = [];
-    const eventIds = Object.keys(EVENT_SHEET_MAP);
+    const useMainSheet = MAIN_SPREADSHEET_ID && MAIN_SPREADSHEET_ID !== 'YOUR_MAIN_SPREADSHEET_ID_HERE';
 
-    eventIds.forEach(function (eventId) {
-      const config = EVENT_SHEET_MAP[eventId];
-      if (!config || !isSpreadsheetConfigured_(config.spreadsheetId)) {
-        return;
+    if (useMainSheet) {
+      const mainSheet = getSheet_(MAIN_SPREADSHEET_ID, DEFAULT_SHEET_NAME);
+      const lastRow = mainSheet.getLastRow();
+      if (lastRow > 1) {
+        const data = mainSheet.getRange(2, 1, lastRow - 1, 15).getValues();
+        data.forEach(function (row) {
+          if (normalizeString_(row[2]).toLowerCase() === email) {
+            allRegistrations.push({
+              id: normalizeString_(row[8]), title: normalizeString_(row[7]), date: EVENT_ID_TO_DATE[row[8]] || EVENT_DATE_LABEL
+            });
+          }
+        });
       }
-
-      const sheet = getSheet_(config.spreadsheetId, config.sheetName || DEFAULT_SHEET_NAME);
-      const lastRow = sheet.getLastRow();
-      if (lastRow < 2) {
-        return;
-      }
-
-      const matchingRow = getFirstMatchingRegistrationRow_(sheet, lastRow, email);
-      if (!matchingRow) {
-        return;
-      }
-
-      const rowEventTitle = normalizeString_(matchingRow[7]) || EVENT_ID_TO_TITLE[eventId] || eventId;
-      allRegistrations.push({
-        id: normalizeString_(matchingRow[8]) || eventId,
-        title: rowEventTitle,
-        date: EVENT_ID_TO_DATE[eventId] || EVENT_DATE_LABEL
+    } else {
+      Object.keys(EVENT_SHEET_MAP).forEach(function (eventId) {
+        const config = EVENT_SHEET_MAP[eventId];
+        if (!config || !isSpreadsheetConfigured_(config.spreadsheetId)) return;
+        const sheet = getSheet_(config.spreadsheetId, config.sheetName || DEFAULT_SHEET_NAME);
+        const lastRow = sheet.getLastRow();
+        if (lastRow < 2) return;
+        const matchingRow = getFirstMatchingRegistrationRow_(sheet, lastRow, email);
+        if (!matchingRow) return;
+        allRegistrations.push({
+          id: normalizeString_(matchingRow[8]) || eventId, title: normalizeString_(matchingRow[7]) || EVENT_ID_TO_TITLE[eventId] || eventId, date: EVENT_ID_TO_DATE[eventId] || EVENT_DATE_LABEL
+        });
       });
-    });
+    }
 
     const deduped = dedupeRegistrations_(allRegistrations);
     writeUserRegistrationsIndex_(email, deduped);
-    writeScriptCacheJSON_(
-      userRegistrationsCacheKey,
-      { data: deduped },
-      USER_REGISTRATIONS_CACHE_TTL_SECONDS
-    );
+    writeScriptCacheJSON_(getUserRegistrationsCacheKey_(email), { data: deduped }, USER_REGISTRATIONS_CACHE_TTL_SECONDS);
     return createJSONOutput_({ status: 'success', data: deduped }, callback);
+
   } catch (error) {
     return createJSONOutput_({ status: 'error', message: error.toString() }, callback || '');
   }
@@ -257,32 +267,48 @@ function doPost(e) {
   lock.tryLock(10000);
 
   try {
-    if (!e || !e.postData || !e.postData.contents) {
-      return createJSONOutput_({ status: 'error', message: 'Missing request body.' });
-    }
+    if (!e || !e.postData || !e.postData.contents) return createJSONOutput_({ status: 'error', message: 'Missing request body.' });
 
     const data = JSON.parse(e.postData.contents);
     const action = normalizeString_(data.action || 'register').toLowerCase();
 
-    if (action !== 'register') {
-      return createJSONOutput_({ status: 'error', message: 'Invalid action.' });
-    }
+    if (action !== 'register') return createJSONOutput_({ status: 'error', message: 'Invalid action.' });
 
     const email = normalizeString_(data.email).toLowerCase();
     const selectedEvents = normalizeEvents_(data);
-    if (!email || selectedEvents.length === 0) {
-      return createJSONOutput_({ status: 'error', message: 'Email and at least one event are required.' });
-    }
+
+    if (!email || selectedEvents.length === 0) return createJSONOutput_({ status: 'error', message: 'Email and at least one event are required.' });
 
     const insertedEvents = [];
     const skippedEvents = [];
 
+    const useMainSheet = MAIN_SPREADSHEET_ID && MAIN_SPREADSHEET_ID !== 'YOUR_MAIN_SPREADSHEET_ID_HERE' && MAIN_SPREADSHEET_ID !== '';
+    let mainSheet = null;
+    const rowsToAppendToMainSheet = [];
+    const eventSheetWrites = {};
+    const registeredSet = new Set();
+
+    if (useMainSheet) {
+      mainSheet = getSheet_(MAIN_SPREADSHEET_ID, DEFAULT_SHEET_NAME);
+      const lastRow = mainSheet.getLastRow();
+      if (lastRow > 1) {
+        const mainSheetData = mainSheet.getRange(2, 3, lastRow - 1, 7).getValues();
+        mainSheetData.forEach(row => {
+          registeredSet.add(normalizeString_(row[0]).toLowerCase() + '|' + normalizeString_(row[6]).toLowerCase());
+        });
+      }
+    }
+
     selectedEvents.forEach(function (eventEntry) {
       const resolved = resolveEvent_(eventEntry);
-      const sheet = getSheet_(resolved.spreadsheetId, resolved.sheetName);
+      let alreadyRegistered = false;
 
-      const lastRow = sheet.getLastRow();
-      const alreadyRegistered = hasEmailInSheet_(sheet, lastRow, email);
+      if (useMainSheet) {
+        alreadyRegistered = registeredSet.has(email + '|' + resolved.eventId.toLowerCase());
+      } else {
+        const sheet = getSheet_(resolved.spreadsheetId, resolved.sheetName);
+        alreadyRegistered = hasEmailInSheet_(sheet, sheet.getLastRow(), email);
+      }
 
       if (alreadyRegistered) {
         skippedEvents.push(resolved.eventTitle);
@@ -293,58 +319,46 @@ function doPost(e) {
       const paymentLink = paymentId ? 'https://dashboard.razorpay.com/app/payments/' + paymentId : '';
 
       const row = [
-        new Date(),
-        normalizeString_(data.fullName),
-        email,
-        "'" + normalizeString_(data.phone),
-        normalizeString_(data.college),
-        normalizeString_(data.department),
-        normalizeString_(data.year),
-        resolved.eventTitle,
-        resolved.eventId,
-        normalizeString_(data.registrationId) || ('VBHV-' + resolved.eventId.toUpperCase() + '-' + Math.floor(1000 + Math.random() * 9000)),
-        paymentId,
-        paymentLink,
-        normalizeString_(data.teamName),
-        normalizeString_(data.teamMembers),
-        normalizeString_(data.registrationType) || (normalizeString_(data.teamName) ? 'Group' : 'Solo')
+        new Date(), normalizeString_(data.fullName), email, "'" + normalizeString_(data.phone), normalizeString_(data.college), normalizeString_(data.department), normalizeString_(data.year), resolved.eventTitle, resolved.eventId, normalizeString_(data.registrationId) || ('VBHV-' + resolved.eventId.toUpperCase() + '-' + Math.floor(1000 + Math.random() * 9000)), paymentId, paymentLink, normalizeString_(data.teamName), normalizeString_(data.teamMembers), normalizeString_(data.registrationType) || (normalizeString_(data.teamName) ? 'Group' : 'Solo')
       ];
 
-      sheet.getRange(sheet.getLastRow() + 1, 1, 1, row.length).setValues([row]);
-
-      // Copy to the main combined spreadsheet
-      if (MAIN_SPREADSHEET_ID && MAIN_SPREADSHEET_ID !== 'YOUR_MAIN_SPREADSHEET_ID_HERE' && MAIN_SPREADSHEET_ID !== '') {
-        try {
-          const mainSheet = getSheet_(MAIN_SPREADSHEET_ID, DEFAULT_SHEET_NAME);
-          if (mainSheet) {
-            mainSheet.getRange(mainSheet.getLastRow() + 1, 1, 1, row.length).setValues([row]);
-          }
-        } catch (mainSheetError) {
-          console.error("Failed to append to main spreadsheet: " + mainSheetError);
-        }
+      const sheetKey = resolved.spreadsheetId + ':' + resolved.sheetName;
+      if (!eventSheetWrites[sheetKey]) {
+        eventSheetWrites[sheetKey] = { sheet: getSheet_(resolved.spreadsheetId, resolved.sheetName), rows: [] };
       }
+      eventSheetWrites[sheetKey].rows.push(row);
 
-      insertedEvents.push({
-        id: resolved.eventId,
-        title: resolved.eventTitle,
-        date: EVENT_ID_TO_DATE[resolved.eventId] || EVENT_DATE_LABEL
-      });
+      if (useMainSheet) rowsToAppendToMainSheet.push(row);
+
+      insertedEvents.push({ id: resolved.eventId, title: resolved.eventTitle, date: EVENT_ID_TO_DATE[resolved.eventId] || EVENT_DATE_LABEL });
+      registeredSet.add(email + '|' + resolved.eventId.toLowerCase());
     });
 
-    if (insertedEvents.length === 0) {
-      return createJSONOutput_({
-        status: 'error',
-        message: 'You are already registered for the selected event(s).'
-      });
+    Object.keys(eventSheetWrites).forEach(key => {
+      const writeData = eventSheetWrites[key];
+      const targetSheet = writeData.sheet;
+      const lastRow = targetSheet.getLastRow();
+      targetSheet.getRange(lastRow + 1, 1, writeData.rows.length, writeData.rows[0].length).setValues(writeData.rows);
+    });
+
+    if (useMainSheet && rowsToAppendToMainSheet.length > 0) {
+      try {
+        const startRow = mainSheet.getLastRow() + 1;
+        mainSheet.getRange(startRow, 1, rowsToAppendToMainSheet.length, rowsToAppendToMainSheet[0].length)
+          .setValues(rowsToAppendToMainSheet);
+      } catch (mainSheetError) {
+        console.error("Failed to append to main spreadsheet: " + mainSheetError);
+      }
     }
+
+    if (insertedEvents.length === 0) return createJSONOutput_({ status: 'error', message: 'You are already registered for the selected event(s).' });
 
     updateUserRegistrationsIndex_(email, insertedEvents);
     clearRegistrationsCaches_(email);
     sendConfirmationEmail_(data, insertedEvents, skippedEvents);
 
-    const skippedCount = skippedEvents.length;
-    const message = skippedCount > 0
-      ? 'Registration successful for ' + insertedEvents.length + ' event(s). Skipped ' + skippedCount + ' already-registered event(s).'
+    const message = skippedEvents.length > 0
+      ? 'Registration successful for ' + insertedEvents.length + ' event(s). Skipped ' + skippedEvents.length + ' already-registered event(s).'
       : 'Registration successful for ' + insertedEvents.length + ' event(s).';
 
     return createJSONOutput_({ status: 'success', message: message });
@@ -355,16 +369,30 @@ function doPost(e) {
   }
 }
 
+function getSheet_(spreadsheetId, sheetName) {
+  const key = spreadsheetId + ":" + sheetName;
+  if (!globalSheetCache[key]) {
+    const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
+    const sheet = spreadsheet.getSheetByName(sheetName);
+    if (!sheet) throw new Error('Sheet "' + sheetName + '" not found in spreadsheet ' + spreadsheetId);
+    globalSheetCache[key] = sheet;
+  }
+  return globalSheetCache[key];
+}
+
+function isAdminAllowed_(adminEmail) {
+  if (!adminEmail) return false;
+  return ADMIN_ALLOWED_EMAILS_NORMALIZED.includes(normalizeString_(adminEmail).toLowerCase());
+}
+
 function normalizeEvents_(data) {
   const normalized = [];
-
   if (Array.isArray(data.selectedEvents)) {
     data.selectedEvents.forEach(function (item) {
       if (typeof item === 'string') {
         normalized.push({ id: '', title: normalizeString_(item) });
         return;
       }
-
       if (item && typeof item === 'object') {
         normalized.push({
           id: normalizeString_(item.id || item.eventId || item.selectedEventId),
@@ -373,27 +401,18 @@ function normalizeEvents_(data) {
       }
     });
   }
-
   const fallbackTitle = normalizeString_(data.selectedEvent || data.selectedEventTitle);
   const fallbackId = normalizeString_(data.selectedEventId || data.eventId);
-  if (fallbackTitle || fallbackId) {
-    normalized.push({ id: fallbackId, title: fallbackTitle });
-  }
-
+  if (fallbackTitle || fallbackId) normalized.push({ id: fallbackId, title: fallbackTitle });
   const seen = {};
   const unique = [];
   normalized.forEach(function (eventItem) {
     const key = (eventItem.id ? 'id:' + eventItem.id.toLowerCase() : 'title:' + normalizeKey_(eventItem.title));
-    if (!eventItem.id && !eventItem.title) {
-      return;
-    }
-    if (seen[key]) {
-      return;
-    }
+    if (!eventItem.id && !eventItem.title) return;
+    if (seen[key]) return;
     seen[key] = true;
     unique.push(eventItem);
   });
-
   return unique;
 }
 
@@ -402,17 +421,11 @@ function resolveEvent_(eventEntry) {
   const inputTitle = normalizeString_(eventEntry.title);
   const mappedByTitle = inputTitle ? EVENT_TITLE_TO_ID[normalizeKey_(inputTitle)] : '';
   const eventId = inputId || mappedByTitle;
-
   if (!eventId || !EVENT_SHEET_MAP[eventId]) {
-    console.log('Lookup Failed - inputId: ' + inputId + ', mappedByTitle: ' + mappedByTitle + ', inputTitle: ' + inputTitle);
     throw new Error('No spreadsheet configured for event: ' + (inputTitle || inputId || 'unknown'));
   }
-
   const config = EVENT_SHEET_MAP[eventId];
-  if (!isSpreadsheetConfigured_(config.spreadsheetId)) {
-    throw new Error('Spreadsheet ID not configured for event: ' + eventId);
-  }
-
+  if (!isSpreadsheetConfigured_(config.spreadsheetId)) throw new Error('Spreadsheet ID not configured for event: ' + eventId);
   return {
     eventId: eventId,
     eventTitle: inputTitle || EVENT_ID_TO_TITLE[eventId] || eventId,
@@ -421,55 +434,25 @@ function resolveEvent_(eventEntry) {
   };
 }
 
-function getSheet_(spreadsheetId, sheetName) {
-  const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
-  const sheet = spreadsheet.getSheetByName(sheetName);
-  if (!sheet) {
-    throw new Error('Sheet "' + sheetName + '" not found in spreadsheet ' + spreadsheetId);
-  }
-  return sheet;
-}
-
 function isSpreadsheetConfigured_(spreadsheetId) {
-  if (!spreadsheetId) {
-    return false;
-  }
+  if (!spreadsheetId) return false;
   return spreadsheetId.indexOf('PASTE_') !== 0;
 }
 
-function isAdminAllowed_(adminEmail) {
-  if (!adminEmail) {
-    return false;
-  }
-
-  const normalizedAllowed = ADMIN_ALLOWED_EMAILS.map(function (email) {
-    return normalizeString_(email).toLowerCase();
-  });
-
-  return normalizedAllowed.indexOf(adminEmail) !== -1;
-}
-
 function formatTimestamp_(value) {
-  if (Object.prototype.toString.call(value) === '[object Date]' && !isNaN(value.getTime())) {
-    return value.toISOString();
-  }
-
+  if (Object.prototype.toString.call(value) === '[object Date]' && !isNaN(value.getTime())) return value.toISOString();
   return normalizeString_(value);
 }
 
 function dedupeRegistrations_(rows) {
   const seen = {};
   const deduped = [];
-
   rows.forEach(function (entry) {
     const key = (entry.id || '') + '|' + normalizeKey_(entry.title || '');
-    if (seen[key]) {
-      return;
-    }
+    if (seen[key]) return;
     seen[key] = true;
     deduped.push(entry);
   });
-
   return deduped;
 }
 
@@ -479,42 +462,27 @@ function getUserIndexPropertyKey_(email) {
 
 function readUserRegistrationsIndex_(email) {
   const key = getUserIndexPropertyKey_(email);
-  if (!key) {
-    return null;
-  }
-
+  if (!key) return null;
   try {
     const raw = PropertiesService.getScriptProperties().getProperty(key);
-    if (!raw) {
-      return null;
-    }
-
+    if (!raw) return null;
     const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) {
-      return null;
-    }
-
+    if (!Array.isArray(parsed)) return null;
     return dedupeRegistrations_(parsed.map(function (entry) {
       return {
         id: normalizeString_(entry && entry.id),
         title: normalizeString_(entry && entry.title),
         date: normalizeString_(entry && entry.date)
       };
-    })).filter(function (entry) {
-      return !!entry.id || !!entry.title;
-    });
+    })).filter(entry => !!entry.id || !!entry.title);
   } catch (error) {
-    console.log('User index read error: ' + error);
     return null;
   }
 }
 
 function writeUserRegistrationsIndex_(email, rows) {
   const key = getUserIndexPropertyKey_(email);
-  if (!key) {
-    return;
-  }
-
+  if (!key) return;
   try {
     const normalizedRows = dedupeRegistrations_((rows || []).map(function (entry) {
       return {
@@ -522,14 +490,9 @@ function writeUserRegistrationsIndex_(email, rows) {
         title: normalizeString_(entry && entry.title),
         date: normalizeString_(entry && entry.date)
       };
-    })).filter(function (entry) {
-      return !!entry.id || !!entry.title;
-    });
-
+    })).filter(entry => !!entry.id || !!entry.title);
     PropertiesService.getScriptProperties().setProperty(key, JSON.stringify(normalizedRows));
-  } catch (error) {
-    console.log('User index write error: ' + error);
-  }
+  } catch (error) { }
 }
 
 function updateUserRegistrationsIndex_(email, insertedEvents) {
@@ -542,7 +505,6 @@ function updateUserRegistrationsIndex_(email, insertedEvents) {
       date: normalizeString_(eventItem && eventItem.date) || EVENT_ID_TO_DATE[eventId] || EVENT_DATE_LABEL
     };
   });
-
   writeUserRegistrationsIndex_(email, existing.concat(normalizedInserted));
 }
 
@@ -551,33 +513,20 @@ function getUserRegistrationsCacheKey_(email) {
 }
 
 function readScriptCacheJSON_(key) {
-  if (!key) {
-    return null;
-  }
-
+  if (!key) return null;
   try {
-    const cache = CacheService.getScriptCache();
-    const raw = cache.get(key);
-    if (!raw) {
-      return null;
-    }
-    return JSON.parse(raw);
+    const raw = CacheService.getScriptCache().get(key);
+    return raw ? JSON.parse(raw) : null;
   } catch (error) {
-    console.log('Cache read error: ' + error);
     return null;
   }
 }
 
 function writeScriptCacheJSON_(key, value, ttlSeconds) {
-  if (!key) {
-    return;
-  }
-
+  if (!key) return;
   try {
     CacheService.getScriptCache().put(key, JSON.stringify(value), ttlSeconds);
-  } catch (error) {
-    console.log('Cache write error: ' + error);
-  }
+  } catch (error) { }
 }
 
 function clearRegistrationsCaches_(email) {
@@ -585,99 +534,27 @@ function clearRegistrationsCaches_(email) {
     const cache = CacheService.getScriptCache();
     cache.remove(getUserRegistrationsCacheKey_(email));
     cache.remove(ADMIN_REGISTRATIONS_CACHE_KEY);
-  } catch (error) {
-    console.log('Cache clear error: ' + error);
-  }
+  } catch (error) { }
 }
 
 function getFirstMatchingRegistrationRow_(sheet, lastRow, email) {
-  if (lastRow < 2) {
-    return null;
-  }
-
-  const emailRange = sheet.getRange(2, 3, lastRow - 1, 1);
-  const match = emailRange
-    .createTextFinder(email)
-    .matchEntireCell(true)
-    .matchCase(false)
-    .findNext();
-
-  if (!match) {
-    return null;
-  }
-
-  return sheet.getRange(match.getRow(), 1, 1, 9).getValues()[0];
+  if (lastRow < 2) return null;
+  const match = sheet.getRange(2, 3, lastRow - 1, 1).createTextFinder(email).matchEntireCell(true).matchCase(false).findNext();
+  return match ? sheet.getRange(match.getRow(), 1, 1, 9).getValues()[0] : null;
 }
 
 function hasEmailInSheet_(sheet, lastRow, email) {
-  if (lastRow < 2) {
-    return false;
-  }
-
-  const emailRange = sheet.getRange(2, 3, lastRow - 1, 1);
-  const match = emailRange
-    .createTextFinder(email)
-    .matchEntireCell(true)
-    .matchCase(false)
-    .findNext();
-
-  return !!match;
-}
-
-function rebuildAllUserIndexes_() {
-  const registrationsByEmail = {};
-  const eventIds = Object.keys(EVENT_SHEET_MAP);
-
-  eventIds.forEach(function (eventId) {
-    const config = EVENT_SHEET_MAP[eventId];
-    if (!config || !isSpreadsheetConfigured_(config.spreadsheetId)) {
-      return;
-    }
-
-    const sheet = getSheet_(config.spreadsheetId, config.sheetName || DEFAULT_SHEET_NAME);
-    const lastRow = sheet.getLastRow();
-    if (lastRow < 2) {
-      return;
-    }
-
-    const rows = sheet.getRange(2, 1, lastRow - 1, 9).getValues();
-    rows.forEach(function (row) {
-      const email = normalizeString_(row[2]).toLowerCase();
-      if (!email) {
-        return;
-      }
-
-      if (!registrationsByEmail[email]) {
-        registrationsByEmail[email] = [];
-      }
-
-      registrationsByEmail[email].push({
-        id: normalizeString_(row[8]) || eventId,
-        title: normalizeString_(row[7]) || EVENT_ID_TO_TITLE[eventId] || eventId,
-        date: EVENT_ID_TO_DATE[eventId] || EVENT_DATE_LABEL
-      });
-    });
-  });
-
-  Object.keys(registrationsByEmail).forEach(function (email) {
-    writeUserRegistrationsIndex_(email, registrationsByEmail[email]);
-  });
+  if (lastRow < 2) return false;
+  return !!sheet.getRange(2, 3, lastRow - 1, 1).createTextFinder(email).matchEntireCell(true).matchCase(false).findNext();
 }
 
 function createJSONOutput_(payload, callback) {
-  if (callback) {
-    return ContentService
-      .createTextOutput(callback + '(' + JSON.stringify(payload) + ')')
-      .setMimeType(ContentService.MimeType.JAVASCRIPT);
-  }
-  return ContentService
-    .createTextOutput(JSON.stringify(payload))
-    .setMimeType(ContentService.MimeType.JSON);
+  if (callback) return ContentService.createTextOutput(callback + '(' + JSON.stringify(payload) + ')').setMimeType(ContentService.MimeType.JAVASCRIPT);
+  return ContentService.createTextOutput(JSON.stringify(payload)).setMimeType(ContentService.MimeType.JSON);
 }
 
 function normalizeString_(value) {
-  if (value === null || value === undefined) return '';
-  return String(value).trim();
+  return (value === null || value === undefined) ? '' : String(value).trim();
 }
 
 function normalizeKey_(value) {
@@ -692,174 +569,111 @@ function isTruthy_(value) {
 function sendConfirmationEmail_(data, eventTitles, skippedEvents) {
   try {
     const email = normalizeString_(data.email);
-    if (!email) {
-      return;
-    }
-
+    if (!email) return;
     const fullName = normalizeString_(data.fullName) || 'Participant';
     const regId = normalizeString_(data.registrationId) || '';
     const paymentId = normalizeString_(data.razorpayPaymentId) || '';
     const phone = normalizeString_(data.phone) || '';
     const college = normalizeString_(data.college) || '';
+    const teamName = normalizeString_(data.teamName);
+    const teamMembers = normalizeString_(data.teamMembers);
+    const registrationType = normalizeString_(data.registrationType) || (teamName ? 'Group' : 'Solo');
 
-    const subject = "🎆 Access Granted: You're Officially In for Vaibhav 2K26!";
+    // Links & Assets
+    const logoUrl = 'https://www.vaibhav2k26.online/JGI-logo-removebg-preview.png';
+    const websiteUrl = 'https://www.vaibhav2k26.online';
 
-    // Build event cards HTML
+    const subject = "🎟️ YOUR DIGITAL PASS: Vaibhav 2K26 Registration Confirmed!";
+
     var eventCardsHtml = '';
     eventTitles.forEach(function (eventItem) {
       var title = typeof eventItem === 'string' ? eventItem : eventItem.title;
       var date = typeof eventItem === 'string' ? EVENT_DATE_LABEL : (eventItem.date || EVENT_DATE_LABEL);
-      eventCardsHtml += '<tr><td style="padding:6px 0;">'
-        + '<table width="100%" cellpadding="0" cellspacing="0" style="background:#1a0a2e;border:1px solid rgba(255,0,85,0.25);border-radius:12px;border-left:4px solid #FF0055;">'
-        + '<tr><td style="padding:16px 20px;">'
+      eventCardsHtml += '<tr><td style="padding:8px 0;">'
+        + '<table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(255,0,85,0.05);border:1px solid rgba(255,0,85,0.3);border-radius:12px;overflow:hidden;">'
+        + '<tr><td style="padding:16px 20px;border-left:4px solid #FF0055;background:linear-gradient(90deg, rgba(255,0,85,0.1) 0%, transparent 100%);">'
         + '<table width="100%" cellpadding="0" cellspacing="0"><tr>'
-        + '<td style="font-size:16px;font-weight:700;color:#ffffff;font-family:\'Segoe UI\',Arial,sans-serif;">' + title + '</td>'
-        + '<td align="right" style="font-size:12px;color:#00FFFF;font-weight:600;font-family:\'Segoe UI\',Arial,sans-serif;white-space:nowrap;">📅 ' + date + '</td>'
+        + '<td style="font-size:16px;font-weight:800;color:#ffffff;font-family:\'Segoe UI\',Roboto,Helvetica,Arial,sans-serif;letter-spacing:0.5px;">' + title.toUpperCase() + '</td>'
+        + '<td align="right" style="font-size:12px;color:#00FFFF;font-weight:700;font-family:\'Segoe UI\',sans-serif;white-space:nowrap;">📅 ' + date + '</td>'
         + '</tr></table>'
         + '</td></tr></table>'
         + '</td></tr>';
     });
 
-    // Build skipped events HTML (already registered)
     var skippedHtml = '';
     if (skippedEvents && skippedEvents.length > 0) {
-      skippedHtml += '<tr><td style="padding:12px 32px 8px;">'
-        + '<p style="margin:0 0 10px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#999;font-weight:700;">✅ ALREADY REGISTERED</p>';
+      skippedHtml += '<tr><td style="padding:24px 32px 8px;">'
+        + '<p style="margin:0 0 10px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#555;font-weight:800;">ALREADY SECURED</p>';
       skippedEvents.forEach(function (title) {
-        skippedHtml += '<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:6px;background:#0f0020;border:1px solid rgba(255,255,255,0.06);border-radius:10px;border-left:4px solid #22c55e;">'
-          + '<tr><td style="padding:12px 16px;font-size:14px;color:#999;font-family:\'Segoe UI\',Arial,sans-serif;">'
-          + title + ' <span style="font-size:11px;color:#22c55e;font-weight:600;">(already confirmed)</span>'
-          + '</td></tr></table>';
+        skippedHtml += '<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:8px;background:#05000A;border:1px solid rgba(255,255,255,0.05);border-radius:10px;">'
+          + '<tr><td style="padding:12px 16px;font-size:13px;color:#666;font-family:\'Segoe UI\',sans-serif;">' + title + ' <span style="color:#22c55e;font-size:11px;font-weight:600;">(Previously Confirmed)</span>' + '</td></tr></table>';
       });
       skippedHtml += '</td></tr>';
     }
 
-    // Build info rows
-    var infoRowsHtml = '';
-    if (regId) {
-      infoRowsHtml += '<tr>'
-        + '<td style="padding:10px 16px;font-size:13px;color:#999;font-family:\'Segoe UI\',Arial,sans-serif;border-bottom:1px solid rgba(255,255,255,0.05);">Registration ID</td>'
-        + '<td style="padding:10px 16px;font-size:13px;color:#FF0055;font-weight:700;font-family:\'Courier New\',monospace;border-bottom:1px solid rgba(255,255,255,0.05);text-align:right;">' + regId + '</td>'
-        + '</tr>';
-    }
-    if (paymentId) {
-      infoRowsHtml += '<tr>'
-        + '<td style="padding:10px 16px;font-size:13px;color:#999;font-family:\'Segoe UI\',Arial,sans-serif;border-bottom:1px solid rgba(255,255,255,0.05);">Payment ID</td>'
-        + '<td style="padding:10px 16px;font-size:13px;color:#22c55e;font-weight:600;font-family:\'Courier New\',monospace;border-bottom:1px solid rgba(255,255,255,0.05);text-align:right;">'
-        + '<a href="https://dashboard.razorpay.com/app/payments/' + paymentId + '" style="color:#22c55e;text-decoration:none;">' + paymentId + ' 🔗</a>'
-        + '</td>'
-        + '</tr>';
-    }
-    if (college) {
-      infoRowsHtml += '<tr>'
-        + '<td style="padding:10px 16px;font-size:13px;color:#999;font-family:\'Segoe UI\',Arial,sans-serif;border-bottom:1px solid rgba(255,255,255,0.05);">College</td>'
-        + '<td style="padding:10px 16px;font-size:13px;color:#e2e2e2;font-weight:500;font-family:\'Segoe UI\',Arial,sans-serif;border-bottom:1px solid rgba(255,255,255,0.05);text-align:right;">' + college + '</td>'
-        + '</tr>';
-    }
-    if (phone) {
-      infoRowsHtml += '<tr>'
-        + '<td style="padding:10px 16px;font-size:13px;color:#999;font-family:\'Segoe UI\',Arial,sans-serif;border-bottom:1px solid rgba(255,255,255,0.05);">Phone</td>'
-        + '<td style="padding:10px 16px;font-size:13px;color:#e2e2e2;font-weight:500;font-family:\'Segoe UI\',Arial,sans-serif;border-bottom:1px solid rgba(255,255,255,0.05);text-align:right;">' + phone + '</td>'
-        + '</tr>';
-    }
-    const teamName = normalizeString_(data.teamName);
-    const teamMembers = normalizeString_(data.teamMembers);
-    const registrationType = normalizeString_(data.registrationType) || (teamName ? 'Group' : 'Solo');
+    var htmlBody = '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>'
+      + '<body style="margin:0;padding:0;background-color:#05000A;font-family:\'Segoe UI\',Tahoma,Geneva,Verdana,sans-serif;-webkit-font-smoothing:antialiased;">'
+      + '<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#05000A;padding:40px 10px;"><tr><td align="center">'
+      + '<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#0a0015;border:1px solid rgba(255,0,85,0.2);border-radius:24px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,0.8);">'
 
-    infoRowsHtml += '<tr>'
-      + '<td style="padding:10px 16px;font-size:13px;color:#999;font-family:\'Segoe UI\',Arial,sans-serif;border-bottom:1px solid rgba(255,255,255,0.05);">Registration Mode</td>'
-      + '<td style="padding:10px 16px;font-size:13px;color:#00FFFF;font-weight:700;font-family:\'Segoe UI\',Arial,sans-serif;border-bottom:1px solid rgba(255,255,255,0.05);text-align:right;">' + (registrationType.toUpperCase()) + '</td>'
-      + '</tr>';
-
-    if (teamName) {
-      infoRowsHtml += '<tr>'
-        + '<td style="padding:10px 16px;font-size:13px;color:#999;font-family:\'Segoe UI\',Arial,sans-serif;border-bottom:1px solid rgba(255,255,255,0.05);">Team Name</td>'
-        + '<td style="padding:10px 16px;font-size:13px;color:#FF0055;font-weight:700;font-family:\'Segoe UI\',Arial,sans-serif;border-bottom:1px solid rgba(255,255,255,0.05);text-align:right;">' + teamName + '</td>'
-        + '</tr>';
-    }
-    if (teamMembers) {
-      infoRowsHtml += '<tr>'
-        + '<td style="padding:10px 16px;font-size:13px;color:#999;font-family:\'Segoe UI\',Arial,sans-serif;">Members</td>'
-        + '<td style="padding:10px 16px;font-size:13px;color:#e2e2e2;font-weight:500;font-family:\'Segoe UI\',Arial,sans-serif;text-align:right;">' + teamMembers + '</td>'
-        + '</tr>';
-    }
-
-    // QR Code for the overall registration (using the first one as primary ID for the pass)
-
-
-
-    var htmlBody = '<!DOCTYPE html>'
-      + '<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>'
-      + '<body style="margin:0;padding:0;background:#05000A;font-family:\'Segoe UI\',Tahoma,Geneva,Verdana,sans-serif;">'
-
-      // Outer wrapper
-      + '<table width="100%" cellpadding="0" cellspacing="0" style="background:#05000A;padding:32px 16px;">'
-      + '<tr><td align="center">'
-      + '<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">'
-
-      // ── Logo Header ──
-      + '<tr><td align="center" style="padding:24px 0 20px;">'
-      + '<img src="https://www.vaibhav2k26.online/LOGO.png" alt="Vaibhav 2K26" width="120" height="120" style="display:block;border:none;outline:none;" />'
+      // Header
+      + '<tr><td style="background:linear-gradient(135deg, #1a0033 0%, #05000A 100%);padding:40px 32px;text-align:center;border-bottom:1px solid rgba(255,0,85,0.1);">'
+      + '<img src="' + logoUrl + '" alt="JGI Logo" width="100" style="margin-bottom:15px;filter:drop-shadow(0 0 10px rgba(255,255,255,0.2));">'
+      + '<h1 style="margin:0;font-size:36px;color:#ffffff;letter-spacing:6px;text-transform:uppercase;font-weight:900;line-height:1;">VAIBHAV<span style="color:#FF0055;">2K26</span></h1>'
+      + '<div style="margin-top:10px;display:inline-block;padding:4px 12px;background:rgba(0,255,255,0.1);border:1px solid rgba(0,255,255,0.3);border-radius:20px;">'
+      + '<p style="margin:0;color:#00FFFF;font-size:10px;letter-spacing:3px;font-weight:800;text-transform:uppercase;">OFFICIAL DIGITAL PASS</p>'
+      + '</div>'
       + '</td></tr>'
 
-      // ── Main Card ──
-      + '<tr><td>'
-      + '<table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(180deg,#120024 0%,#0d001a 100%);border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;">'
-
-      // ── Hero Banner ──
-      + '<tr><td style="background:linear-gradient(135deg,#FF0055 0%,#cc0044 50%,#990033 100%);padding:36px 32px;text-align:center;">'
-      + '<p style="margin:0 0 4px;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.8);font-weight:600;">MARCH 27-28, 2026</p>'
-      + '<h1 style="margin:0;font-size:32px;font-weight:900;color:#ffffff;letter-spacing:-0.5px;font-family:\'Segoe UI\',Arial,sans-serif;">ACCESS GRANTED ✅</h1>'
-      + '<p style="margin:8px 0 0;font-size:14px;color:rgba(255,255,255,0.85);">Your registration for Vaibhav 2K26 is confirmed</p>'
+      // User Welcome
+      + '<tr><td style="padding:40px 40px 10px;">'
+      + '<p style="margin:0;font-size:24px;color:#ffffff;font-weight:800;">Access Granted, ' + fullName.split(' ')[0] + '!</p>'
+      + '<p style="margin:12px 0 0;font-size:15px;color:#aaa;line-height:1.6;">Your journey to the most awaited tech-fest begins here. We\'ve reserved your spot among the innovators.</p>'
       + '</td></tr>'
 
-      // ── Greeting ──
-      + '<tr><td style="padding:32px 32px 8px;">'
-      + '<p style="margin:0;font-size:18px;color:#ffffff;font-weight:600;">Hey ' + fullName + '! 👋</p>'
-      + '<p style="margin:10px 0 0;font-size:14px;color:#aaa;line-height:1.6;">You\'re officially locked in. Here\'s your event lineup — save this email as your digital pass.</p>'
-      + '</td></tr>'
-
-
-
-      // ── Event Cards Section ──
-      + '<tr><td style="padding:20px 32px 8px;">'
-      + '<p style="margin:0 0 12px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#00FFFF;font-weight:700;">🎯 YOUR EVENT LINEUP</p>'
-      + '<table width="100%" cellpadding="0" cellspacing="0">'
-      + eventCardsHtml
+      // Pass Section
+      + '<tr><td style="padding:20px 40px;">'
+      + '<table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(145deg, #110022 0%, #05000a 100%);border:1px dashed rgba(255,0,85,0.4);border-radius:20px;padding:25px;">'
+      + '<tr>'
+      + '<td valign="middle">'
+      + '<p style="margin:0 0 5px;font-size:11px;color:#555;font-weight:800;letter-spacing:2px;text-transform:uppercase;">OFFICIAL ID</p>'
+      + '<p style="margin:0 0 15px;font-size:16px;color:#FF0055;font-weight:800;font-family:monospace;letter-spacing:1px;">' + regId + '</p>'
+      + '<p style="margin:0 0 5px;font-size:11px;color:#555;font-weight:800;letter-spacing:2px;text-transform:uppercase;">HOLDER</p>'
+      + '<p style="margin:0 0 15px;font-size:16px;color:#fff;font-weight:700;">' + fullName + '</p>'
+      + '<p style="margin:0 0 5px;font-size:11px;color:#555;font-weight:800;letter-spacing:2px;text-transform:uppercase;">MODE</p>'
+      + '<p style="margin:0 0 15px;font-size:16px;color:#00FFFF;font-weight:700;">' + registrationType + '</p>'
+      + '<p style="margin:0 0 5px;font-size:11px;color:#555;font-weight:800;letter-spacing:2px;text-transform:uppercase;">COLLEGE</p>'
+      + '<p style="margin:0;font-size:13px;color:#eee;font-weight:600;">' + college + '</p>'
+      + '</td>'
+      + '</tr>'
       + '</table>'
       + '</td></tr>'
 
-      // ── Skipped Events (if any) ──
+      // Events Lineup
+      + '<tr><td style="padding:20px 40px 10px;">'
+      + '<p style="margin:0 0 15px;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#00FFFF;font-weight:800;">📍 YOUR SCHEDULED BATTLES</p>'
+      + '<table width="100%" cellpadding="0" cellspacing="0">' + eventCardsHtml + '</table>'
+      + '</td></tr>'
+
       + skippedHtml
 
-      // ── Details Section ──
-      + '<tr><td style="padding:24px 32px;">'
-      + '<table width="100%" cellpadding="0" cellspacing="0" style="background:#0f0020;border:1px solid rgba(255,255,255,0.06);border-radius:12px;overflow:hidden;">'
-      + infoRowsHtml
+      // Details Grid
+      + '<tr><td style="padding:30px 40px;">'
+      + '<table width="100%" cellpadding="15" cellspacing="0" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:15px;">'
+      + (paymentId ? '<tr><td style="border-bottom:1px solid rgba(255,255,255,0.05);color:#555;font-size:12px;font-weight:700;text-transform:uppercase;">Payment ID</td><td style="border-bottom:1px solid rgba(255,255,255,0.05);color:#22c55e;font-size:12px;font-weight:700;text-align:right;font-family:monospace;">' + paymentId + '</td></tr>' : '')
+      + (teamName ? '<tr><td style="border-bottom:1px solid rgba(255,255,255,0.05);color:#555;font-size:12px;font-weight:700;text-transform:uppercase;">Team Name</td><td style="border-bottom:1px solid rgba(255,255,255,0.05);color:#FF0055;font-size:13px;font-weight:800;text-align:right;">' + teamName.toUpperCase() + '</td></tr>' : '')
+      + '<tr><td style="color:#555;font-size:12px;font-weight:700;text-transform:uppercase;">Venue</td><td style="color:#fff;font-size:12px;font-weight:600;text-align:right;">Jain College (JCET) Hubballi</td></tr>'
       + '</table>'
       + '</td></tr>'
 
-      // ── Venue Card ──
-      + '<tr><td style="padding:0 32px 24px;">'
-      + '<table width="100%" cellpadding="0" cellspacing="0" style="background:#0f0020;border:1px solid rgba(0,255,255,0.15);border-radius:12px;overflow:hidden;">'
-      + '<tr><td style="padding:20px;">'
-      + '<p style="margin:0 0 4px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#00FFFF;font-weight:700;">📍 VENUE</p>'
-      + '<p style="margin:6px 0 0;font-size:16px;color:#ffffff;font-weight:600;">Jain College of Engineering & Technology</p>'
-      + '<p style="margin:4px 0 0;font-size:13px;color:#999;">Machhe, Belgaum Road, Hubballi - 580044</p>'
+      // Footer
+      + '<tr><td style="padding:0 40px 40px;text-align:center;">'
+      + '<p style="margin:0;font-size:13px;color:#444;">Questions? Reach us at <a href="mailto:vaibhav2k26jcet@gmail.com" style="color:#FF0055;text-decoration:none;">vaibhav2k26jcet@gmail.com</a></p>'
+      + '<p style="margin:15px 0 0;font-size:11px;color:#222;text-transform:uppercase;letter-spacing:2px;">&copy; 2026 VAIBHAV JCET HUBBALLI. ALL RIGHTS RESERVED.</p>'
+      + '</td></tr>'
+
+      + '</table>'
       + '</td></tr></table>'
-      + '</td></tr>'
-
-      // ── Footer ──
-      + '<tr><td style="padding:0 32px 40px;text-align:center;">'
-      + '<p style="margin:0;font-size:13px;color:#666;">Need help? Reply to this email or visit our <a href="https://www.vaibhav2k26.online" style="color:#FF0055;text-decoration:none;">website</a>.</p>'
-      + '<p style="margin:12px 0 0;font-size:11px;color:#444;text-transform:uppercase;letter-spacing:1px;">&copy; 2026 Vaibhav JCET. All rights reserved.</p>'
-      + '</td></tr>'
-
-      + '</table>' // End Main Card background table
-      + '</td></tr>'
-      + '</table>' // End max-width table
-      + '</td></tr>'
-      + '</table>' // End outer wrapper
       + '</body></html>';
 
     MailApp.sendEmail({
@@ -867,7 +681,8 @@ function sendConfirmationEmail_(data, eventTitles, skippedEvents) {
       subject: subject,
       htmlBody: htmlBody
     });
+
   } catch (error) {
-    console.log('Email error: ' + error);
+    console.error('Email Dispatch Error: ' + error.toString());
   }
 }
