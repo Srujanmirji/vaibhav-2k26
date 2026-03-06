@@ -150,7 +150,7 @@ function doGet(e) {
           return;
         }
 
-        const rows = sheet.getRange(2, 1, lastRow - 1, 12).getValues();
+        const rows = sheet.getRange(2, 1, lastRow - 1, 15).getValues();
         rows.forEach(function (row) {
           const eventTitle = normalizeString_(row[7]) || EVENT_ID_TO_TITLE[eventId] || eventId;
           allRows.push({
@@ -166,6 +166,9 @@ function doGet(e) {
             eventDate: EVENT_ID_TO_DATE[eventId] || EVENT_DATE_LABEL,
             registrationId: normalizeString_(row[9]),
             razorpayPaymentId: normalizeString_(row[10]),
+            teamName: normalizeString_(row[12]),
+            teamMembers: normalizeString_(row[13]),
+            registrationType: normalizeString_(row[14]) || (normalizeString_(row[12]) ? 'Group' : 'Solo'),
           });
         });
       });
@@ -301,7 +304,10 @@ function doPost(e) {
         resolved.eventId,
         normalizeString_(data.registrationId) || ('VBHV-' + resolved.eventId.toUpperCase() + '-' + Math.floor(1000 + Math.random() * 9000)),
         paymentId,
-        paymentLink
+        paymentLink,
+        normalizeString_(data.teamName),
+        normalizeString_(data.teamMembers),
+        normalizeString_(data.registrationType) || (normalizeString_(data.teamName) ? 'Group' : 'Solo')
       ];
 
       sheet.getRange(sheet.getLastRow() + 1, 1, 1, row.length).setValues([row]);
@@ -752,8 +758,29 @@ function sendConfirmationEmail_(data, eventTitles, skippedEvents) {
     }
     if (phone) {
       infoRowsHtml += '<tr>'
-        + '<td style="padding:10px 16px;font-size:13px;color:#999;font-family:\'Segoe UI\',Arial,sans-serif;">Phone</td>'
-        + '<td style="padding:10px 16px;font-size:13px;color:#e2e2e2;font-weight:500;font-family:\'Segoe UI\',Arial,sans-serif;text-align:right;">' + phone + '</td>'
+        + '<td style="padding:10px 16px;font-size:13px;color:#999;font-family:\'Segoe UI\',Arial,sans-serif;border-bottom:1px solid rgba(255,255,255,0.05);">Phone</td>'
+        + '<td style="padding:10px 16px;font-size:13px;color:#e2e2e2;font-weight:500;font-family:\'Segoe UI\',Arial,sans-serif;border-bottom:1px solid rgba(255,255,255,0.05);text-align:right;">' + phone + '</td>'
+        + '</tr>';
+    }
+    const teamName = normalizeString_(data.teamName);
+    const teamMembers = normalizeString_(data.teamMembers);
+    const registrationType = normalizeString_(data.registrationType) || (teamName ? 'Group' : 'Solo');
+
+    infoRowsHtml += '<tr>'
+      + '<td style="padding:10px 16px;font-size:13px;color:#999;font-family:\'Segoe UI\',Arial,sans-serif;border-bottom:1px solid rgba(255,255,255,0.05);">Registration Mode</td>'
+      + '<td style="padding:10px 16px;font-size:13px;color:#00FFFF;font-weight:700;font-family:\'Segoe UI\',Arial,sans-serif;border-bottom:1px solid rgba(255,255,255,0.05);text-align:right;">' + (registrationType.toUpperCase()) + '</td>'
+      + '</tr>';
+
+    if (teamName) {
+      infoRowsHtml += '<tr>'
+        + '<td style="padding:10px 16px;font-size:13px;color:#999;font-family:\'Segoe UI\',Arial,sans-serif;border-bottom:1px solid rgba(255,255,255,0.05);">Team Name</td>'
+        + '<td style="padding:10px 16px;font-size:13px;color:#FF0055;font-weight:700;font-family:\'Segoe UI\',Arial,sans-serif;border-bottom:1px solid rgba(255,255,255,0.05);text-align:right;">' + teamName + '</td>'
+        + '</tr>';
+    }
+    if (teamMembers) {
+      infoRowsHtml += '<tr>'
+        + '<td style="padding:10px 16px;font-size:13px;color:#999;font-family:\'Segoe UI\',Arial,sans-serif;">Members</td>'
+        + '<td style="padding:10px 16px;font-size:13px;color:#e2e2e2;font-weight:500;font-family:\'Segoe UI\',Arial,sans-serif;text-align:right;">' + teamMembers + '</td>'
         + '</tr>';
     }
 

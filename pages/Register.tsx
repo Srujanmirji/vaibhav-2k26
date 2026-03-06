@@ -21,7 +21,30 @@ const Register: React.FC = () => {
     department: '',
     year: '1',
     selectedEvents: [],
+    registrationType: 'Solo',
+    teamName: '',
+    teamMembers: '',
   });
+
+  const selectedEventObjects = formData.selectedEvents.map(title =>
+    EVENTS.find(e => e.title === title)
+  ).filter(Boolean);
+
+  const allowsGroup = selectedEventObjects.some(event =>
+    event && event.teamSize && event.teamSize.toLowerCase().includes('group') ||
+    (event && event.teamSize && event.teamSize.toLowerCase().includes('members')) ||
+    (event && event.teamSize && event.teamSize.toLowerCase().includes('team'))
+  );
+
+  const forceGroup = selectedEventObjects.some(event =>
+    event && event.teamSize && !event.teamSize.toLowerCase().includes('solo') &&
+    !event.teamSize.toLowerCase().includes('individual') &&
+    (event.teamSize.toLowerCase().includes('team') || event.teamSize.toLowerCase().includes('members'))
+  );
+
+  const showRegistrationTypeSelector = allowsGroup && !forceGroup;
+
+  const isGroupRegistration = forceGroup || (allowsGroup && formData.registrationType === 'Group');
 
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
@@ -208,14 +231,15 @@ const Register: React.FC = () => {
 
   const validateForm = () => {
     if (
-      !formData.fullName ||
-      !formData.email ||
-      !formData.phone ||
-      !formData.college ||
       !formData.department ||
-      formData.selectedEvents.length === 0
+      formData.selectedEvents.length === 0 ||
+      (isGroupRegistration && !formData.teamName)
     ) {
-      setMessage("Please fill in all required fields and select at least one event.");
+      if (isGroupRegistration && !formData.teamName) {
+        setMessage("Please provide a Team Name for the selected group event(s).");
+      } else {
+        setMessage("Please fill in all required fields and select at least one event.");
+      }
       setStatus('error');
       return false;
     }
@@ -237,7 +261,9 @@ const Register: React.FC = () => {
   const calculateTotalFee = () => {
     return formData.selectedEvents.reduce((total, title) => {
       const event = EVENTS.find(e => e.title === title);
-      return total + (event?.fee || 0);
+      const isGroup = formData.registrationType === 'Group' || forceGroup;
+      const appliedFee = (isGroup && event?.groupFee !== undefined) ? event.groupFee : (event?.fee || 0);
+      return total + appliedFee;
     }, 0);
   };
 
@@ -283,6 +309,9 @@ const Register: React.FC = () => {
           department: '',
           year: '1',
           selectedEvents: [],
+          registrationType: 'Solo',
+          teamName: '',
+          teamMembers: '',
         }));
         setCollegeSelection('');
         fetchRegisteredEvents(formData.email, true);
@@ -323,6 +352,7 @@ const Register: React.FC = () => {
                 const ev = EVENTS.find(e => e.title === title);
                 return ev?.id || '';
               }).filter(Boolean),
+              registrationType: formData.registrationType,
               currency: 'INR',
               email: formData.email,
               phone: formData.phone,
@@ -390,6 +420,8 @@ const Register: React.FC = () => {
                     department: '',
                     year: '1',
                     selectedEvents: [],
+                    teamName: '',
+                    teamMembers: '',
                   }));
                   setCollegeSelection('');
 
@@ -521,6 +553,8 @@ const Register: React.FC = () => {
                     department: '',
                     year: '1',
                     selectedEvents: [],
+                    teamName: '',
+                    teamMembers: '',
                   }));
                   setCollegeSelection('');
                 }}
@@ -686,7 +720,76 @@ const Register: React.FC = () => {
                     </div>
                   </div>
 
+                  {/* Registration Mode Selector (Solo or Group) */}
+                  {showRegistrationTypeSelector && (
+                    <div className="space-y-3 animate-fade-in-up">
+                      <label className="text-xs font-bold text-secondary uppercase tracking-wider block">Registration Mode</label>
+                      <div className="flex gap-4">
+                        <button
+                          type="button"
+                          onClick={() => setFormData(prev => ({ ...prev, registrationType: 'Solo' }))}
+                          className={`flex-1 py-3 px-4 rounded-xl border font-bold transition-all flex items-center justify-center gap-2 ${formData.registrationType === 'Solo'
+                            ? 'bg-primary/20 border-primary text-white shadow-[0_0_15px_rgba(255,0,85,0.2)]'
+                            : 'bg-black/40 border-white/5 text-gray-400 hover:border-primary/50'
+                            }`}
+                        >
+                          <User className="w-4 h-4" /> SOLO
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setFormData(prev => ({ ...prev, registrationType: 'Group' }))}
+                          className={`flex-1 py-3 px-4 rounded-xl border font-bold transition-all flex items-center justify-center gap-2 ${formData.registrationType === 'Group'
+                            ? 'bg-primary/20 border-primary text-white shadow-[0_0_15px_rgba(255,0,85,0.2)]'
+                            : 'bg-black/40 border-white/5 text-gray-400 hover:border-primary/50'
+                            }`}
+                        >
+                          <Sparkles className="w-4 h-4" /> GROUP
+                        </button>
+                      </div>
+                      <p className="text-[10px] text-gray-500 italic">This event allows both Solo and Group participation. Choose your preference.</p>
+                    </div>
+                  )}
 
+                  {/* Team Details (Conditional) */}
+                  {isGroupRegistration && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-primary/5 border border-primary/20 rounded-xl animate-fade-in-up">
+                      <div className="md:col-span-2">
+                        <h3 className="text-primary font-bold text-sm uppercase tracking-widest flex items-center gap-2">
+                          <Sparkles className="w-4 h-4" /> {forceGroup ? 'Required' : ''} Team Information
+                        </h3>
+                        <p className="text-gray-500 text-[10px] mt-1">
+                          {forceGroup
+                            ? 'One or more selected events require team registration.'
+                            : 'You have selected Group mode for this registration.'}
+                        </p>
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-secondary uppercase tracking-wider">Team Name *</label>
+                        <input
+                          type="text"
+                          name="teamName"
+                          value={formData.teamName}
+                          onChange={handleChange}
+                          placeholder="Enter your team name"
+                          required={isGroupRegistration}
+                          className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-gray-600"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-secondary uppercase tracking-wider">Member Names</label>
+                        <input
+                          type="text"
+                          name="teamMembers"
+                          value={formData.teamMembers}
+                          onChange={handleChange}
+                          placeholder="e.g. John, Jane, Mike"
+                          className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-gray-600"
+                        />
+                      </div>
+                    </div>
+                  )}
 
                   {/* Event Selection - Multi-select */}
                   <div className="space-y-4">

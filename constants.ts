@@ -113,7 +113,7 @@ export const EVENTS: EventDetails[] = [
     "time": "10:00 AM",
     "venue": "A112",
     "image": "https://loremflickr.com/800/600/artificial-intelligence,robot",
-    "teamSize": "Individual",
+    "teamSize": "Team of 4",
     "department": "CSE",
     "fee": 200,
     "rulesPdf": "/rules/VAIBHAV 2K26(AI PROMPT BATTLE).pdf"
@@ -214,7 +214,7 @@ export const EVENTS: EventDetails[] = [
     "time": "12:30 PM",
     "venue": "Electrical Lab",
     "image": "https://loremflickr.com/800/600/tasting,food",
-    "teamSize": "Individual",
+    "teamSize": "Solo or Team of 2",
     "department": "ME",
     "fee": 100,
     "rulesPdf": "/rules/Blind Fold Taste.pdf"
@@ -558,7 +558,7 @@ export const EVENTS: EventDetails[] = [
     "time": "03:00 PM",
     "venue": "A208",
     "image": "https://loremflickr.com/800/600/standup,comedy",
-    "teamSize": "Individual",
+    "teamSize": "Team of 4",
     "department": "CSE",
     "fee": 200,
     "rulesPdf": "/rules/laugh-logic-loot VAIBHAV 2K26.pdf"
@@ -726,7 +726,7 @@ export const EVENTS: EventDetails[] = [
     "time": "03:30 PM",
     "venue": "Seminar Hall",
     "image": "https://loremflickr.com/800/600/stopwatch,clock",
-    "teamSize": "Individual",
+    "teamSize": "Team of 2",
     "department": "BS",
     "fee": 100,
     "rulesPdf": "/rules/Rules of art gallery and minute master.pdf"

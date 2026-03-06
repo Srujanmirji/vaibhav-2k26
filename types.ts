@@ -14,6 +14,7 @@ export interface EventDetails {
   teamSize: string;
   department?: 'CSE' | 'ECE' | 'CVE' | 'ME' | 'BS' | 'General' | 'All';
   fee?: number; // Fee in INR
+  groupFee?: number; // Fee in INR for group registration
   registrationClosed?: boolean;
   rulesPdf?: string;
 }
@@ -26,6 +27,9 @@ export interface RegistrationFormData {
   department: string;
   year: string;
   selectedEvents: string[];
+  registrationType: 'Solo' | 'Group';
+  teamName?: string;
+  teamMembers?: string;
   razorpayPaymentId?: string; // Optional field for payment ID
 }
 
@@ -45,6 +49,9 @@ export interface AdminRegistrationRecord {
   eventTitle: string;
   eventId: string;
   eventDate: string;
+  registrationType: 'Solo' | 'Group';
+  teamName?: string;
+  teamMembers?: string;
   registrationId?: string;
   razorpayPaymentId?: string;
 }
