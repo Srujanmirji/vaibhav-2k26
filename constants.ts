@@ -549,12 +549,11 @@ export const EVENTS: EventDetails[] = [
   },
   {
     "id": "e23",
-    "title": "Melody Mania & Dance Infusion",
+    "title": "Melody Mania",
     "category": "Cultural",
-    "description": "A spectacular showcase of vocal talent and rhythmic dance performances, both solo and group.",
+    "description": "A spectacular showcase of vocal talent. Compete in solo or group singing categories.",
     "rules": [
-      "Solo Dance & Singing: 3-6 mins.",
-      "Group Dance: 3-6 mins, max 8 people.",
+      "Solo Singing: 3-6 mins.",
       "Group Singing: 4-7 mins.",
       "Tracks must be in mp3 format.",
       "No hazardous props allowed on stage."
@@ -567,7 +566,39 @@ export const EVENTS: EventDetails[] = [
       {
         "name": "Prof. Anitha U",
         "phone": "-"
+      }
+    ],
+    "studentCoordinators": [
+      {
+        "name": "Satvik (CSE)",
+        "phone": "9743045805"
       },
+      {
+        "name": "Anush (CSE)",
+        "phone": "7619266419"
+      }
+    ],
+    "date": "March 28, 2026",
+    "time": "05:30 PM",
+    "venue": "Quadrangle",
+    "image": "https://loremflickr.com/800/600/singing,music",
+    "teamSize": "Solo or Group",
+    "department": "General",
+    "fee": 350,
+    "rulesPdf": "/rules/dance jcet.pdf"
+  },
+  {
+    "id": "e25",
+    "title": "Dance Mania",
+    "category": "Cultural",
+    "description": "Rhythmic dance performances. Show your moves in solo or group dance categories.",
+    "rules": [
+      "Solo Dance: 3-6 mins.",
+      "Group Dance: 3-6 mins, max 8 people.",
+      "Tracks must be in mp3 format.",
+      "No hazardous props allowed on stage."
+    ],
+    "facultyCoordinators": [
       {
         "name": "Prof. Pooja Patil",
         "phone": "-"
@@ -579,14 +610,6 @@ export const EVENTS: EventDetails[] = [
     ],
     "studentCoordinators": [
       {
-        "name": "Satvik (CSE)",
-        "phone": "9743045805"
-      },
-      {
-        "name": "Anush (CSE)",
-        "phone": "7619266419"
-      },
-      {
         "name": "Arpitha M Udoji",
         "phone": "8105262158"
       },
@@ -596,9 +619,9 @@ export const EVENTS: EventDetails[] = [
       }
     ],
     "date": "March 28, 2026",
-    "time": "05:30 PM",
+    "time": "06:30 PM",
     "venue": "Quadrangle",
-    "image": "https://loremflickr.com/800/600/dance,music",
+    "image": "https://loremflickr.com/800/600/dance,stage",
     "teamSize": "Solo or Group",
     "department": "General",
     "fee": 350,
@@ -809,9 +832,9 @@ export const EVENTS: EventDetails[] = [
   },
   {
     "id": "e16",
-    "title": "Social Media Awareness Contest",
+    "title": "Awareness In Cinematic Campus Video (Social Cause)",
     "category": "Competition",
-    "description": "Create a short social awareness video on a real-world challenge. Inspire positive change through digital storytelling.",
+    "description": "Create a short cinematic social awareness video on a real-world challenge. Inspire positive change through digital storytelling.",
     "rules": [
       "Team of 2-4 members.",
       "Topics: Road Safety, Environment, Mental Health, Cyber Security, etc.",
@@ -1029,7 +1052,7 @@ export const SCHEDULE = [
       { time: '10:00 AM - 10:30 AM', title: 'AI Prompt Battle' },
       { time: '10:30 AM - 11:30 AM', title: 'Tallest Tower Challenge' },
       { time: '10:30 AM - 11:30 AM', title: 'Buildathon' },
-      { time: '11:30 AM - 12:00 PM', title: 'Social Media Awareness Contest' },
+      { time: '11:30 AM - 12:00 PM', title: 'Awareness In Cinematic Campus Video (Social Cause)' },
       { time: '12:00 PM - 01:00 PM', title: 'Meme Challenge' },
       { time: '01:00 PM - 02:00 PM', title: 'Lunch Break' },
       { time: '02:00 PM - 03:00 PM', title: 'Game Zone' },
@@ -1038,7 +1061,8 @@ export const SCHEDULE = [
       { time: '03:30 PM - 04:30 PM', title: 'Minute Master' },
       { time: '04:30 PM - 05:00 PM', title: 'Short Break' },
       { time: '05:00 PM - 05:30 PM', title: 'Valedictory' },
-      { time: '05:30 PM - 07:30 PM', title: 'Melody Mania & Dance Infusion' },
+      { time: '05:30 PM - 06:30 PM', title: 'Melody Mania' },
+      { time: '06:30 PM - 07:30 PM', title: 'Dance Mania' },
       { time: '07:30 PM - 08:30 PM', title: 'DJ Night' },
     ]
   }

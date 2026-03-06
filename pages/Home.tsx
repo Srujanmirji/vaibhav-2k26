@@ -63,7 +63,7 @@ const Home: React.FC = () => {
             <img
               src="/LOGO.png"
               alt="Vaibhav 2K26 official logo"
-              className="relative w-80 sm:w-96 md:w-[48rem] h-auto animate-float drop-shadow-[0_0_25px_rgba(255,215,0,0.5)] transition-transform duration-500 hover:scale-105"
+              className="relative w-72 sm:w-96 md:w-[32rem] lg:w-[40rem] h-auto animate-float drop-shadow-[0_0_25px_rgba(255,215,0,0.5)] transition-transform duration-500 hover:scale-105"
               fetchPriority="high"
               decoding="async"
             />
@@ -73,11 +73,9 @@ const Home: React.FC = () => {
             March 27-28, 2026
           </div>
 
-          <h1 className="text-fluid-hero font-black text-white mb-3 font-mono tracking-tight uppercase leading-[0.9]">
-            Vaibhav <span className="text-primary">2K26</span>
-          </h1>
+          <h1 className="sr-only">Vaibhav 2K26</h1>
 
-          <p className="text-fluid-p text-gray-300 mb-4 md:mb-6 max-w-2xl mx-auto font-light border-l-2 border-primary pl-4 text-left md:text-center md:border-none md:pl-0 bg-black/20 md:bg-transparent p-2 md:p-0 rounded-r-lg">
+          <p className="text-fluid-p text-gray-300 mt-2 md:mt-6 mb-4 md:mb-8 max-w-2xl mx-auto font-light border-l-2 border-primary pl-4 text-left md:text-center md:border-none md:pl-0 bg-black/20 md:bg-transparent p-2 md:p-0 rounded-r-lg">
             The ultimate convergence of code, creativity, and chaos.
             <br className="hidden md:block" /> Join the revolution at Vaibhav 2K26.
           </p>

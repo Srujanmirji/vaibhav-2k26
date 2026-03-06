@@ -29,7 +29,7 @@ const EVENT_SHEET_MAP = {
   e2: { spreadsheetId: '1VnBiox2fD8hO3M4cQH90TozkEEHNAk8Z_AHVcxCe7w8', sheetName: 'Sheet1' },
   e3: { spreadsheetId: '1_Jppe15kIt6rgPFm9z9Z8KJBHfyGbdfjZR7zJXTb9LU', sheetName: 'Sheet1' },
   e4: { spreadsheetId: '1o31pM9TWeixE6vPcYUVrvb_PbhM7bmf0xSsl2PhkSBM', sheetName: 'Sheet1' },
-  e5: { spreadsheetId: '1oRCLdP4drIT_aPdUILhW-9AfNzsynFGdDxiufLycQ9Y', sheetName: 'Sheet1' },
+  e5: { spreadsheetId: '1m_5csngk1Y5CG7CW_0VbRlSpOIwUpfxkHpaupOBqfIo', sheetName: 'Sheet1' },
   e6: { spreadsheetId: '17BAD5CBBtcMHNJEazb-epppJoazGsKd62vZuL_9-cuc', sheetName: 'Sheet1' },
   e7: { spreadsheetId: '1JxcVaYAbMFPCmtC61PqapNoqXUogIs_Ab22dLc1PQjs', sheetName: 'Sheet1' },
   e8: { spreadsheetId: '12zsrckESHgKTrg804KEENUmAMCMR86d2vKem8jD0OYc', sheetName: 'Sheet1' },
@@ -43,7 +43,8 @@ const EVENT_SHEET_MAP = {
   e19: { spreadsheetId: '1Ep8YGX4YyeQuHT8joopBV5l7zW67bMcy6b2m9mY7iZ0', sheetName: 'Sheet1' },
   e20: { spreadsheetId: '1jZ5GXfeuqNZK4hdSdSPLycFEWJP1goe3T9_C3u9USyU', sheetName: 'Sheet1' },
   e21: { spreadsheetId: '1a2QtQ9UpD6gCICtll_9HS0aeVuSwsAv7mbEMfFIlaQo', sheetName: 'Sheet1' },
-  e23: { spreadsheetId: '1DPwxrchkyrDlytQouSlsihyHS1uCDOIF2-XLCnQ6x1M', sheetName: 'Sheet1' }
+  e23: { spreadsheetId: '1DPwxrchkyrDlytQouSlsihyHS1uCDOIF2-XLCnQ6x1M', sheetName: 'Sheet1' },
+  e25: { spreadsheetId: '1DPwxrchkyrDlytQouSlsihyHS1uCDOIF2-XLCnQ6x1M', sheetName: 'Dance Mania' }
 };
 
 const EVENT_ID_TO_TITLE = {
@@ -58,13 +59,14 @@ const EVENT_ID_TO_TITLE = {
   e13: 'AI Prompt Battle',
   e14: 'Tallest Tower Challenge',
   e15: 'Buildathon',
-  e16: 'Social Awareness Video Contest',
+  e16: 'Awareness In Cinematic Campus Video (Social Cause)',
   e17: 'Meme Challenge',
   e18: 'Game Zone',
   e19: 'Circuit Mania',
   e20: 'Dialogue Delivery Battle',
   e21: 'Minute Master',
-  e23: 'Melody Mania & Dance Infusion'
+  e23: 'Melody Mania',
+  e25: 'Dance Mania'
 };
 
 const EVENT_ID_TO_DATE = {
@@ -85,7 +87,8 @@ const EVENT_ID_TO_DATE = {
   e19: 'March 28, 2026',
   e20: 'March 28, 2026',
   e21: 'March 28, 2026',
-  e23: 'March 28, 2026'
+  e23: 'March 28, 2026',
+  e25: 'March 28, 2026'
 };
 
 const EVENT_TITLE_TO_ID = {
@@ -101,6 +104,7 @@ const EVENT_TITLE_TO_ID = {
   tallesttowerchallenge: 'e14',
   buildathon: 'e15',
   socialawarenessvideocontest: 'e16',
+  awarenessincinematiccampusvideosocialcause: 'e16',
   memechallenge: 'e17',
   gamezone: 'e18',
   circuitmania: 'e19',
@@ -108,7 +112,8 @@ const EVENT_TITLE_TO_ID = {
   dialoguedeliverybattle: 'e20',
   minutemaster: 'e21',
   melodymaniaanddanceinfusion: 'e23',
-  mealodymaniaanddanceinfusion: 'e23'
+  melodymania: 'e23',
+  dancemania: 'e25'
 };
 
 function doGet(e) {
