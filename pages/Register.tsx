@@ -26,21 +26,27 @@ const Register: React.FC = () => {
     teamMembers: '',
   });
 
-  const selectedEventObjects = formData.selectedEvents.map(title =>
-    EVENTS.find(e => e.title === title)
-  ).filter(Boolean);
+  const selectedEventObjects = React.useMemo(() => {
+    return formData.selectedEvents.map(title =>
+      EVENTS.find(e => e.title === title)
+    ).filter(Boolean);
+  }, [formData.selectedEvents]);
 
-  const allowsGroup = selectedEventObjects.some(event =>
-    event && event.teamSize && event.teamSize.toLowerCase().includes('group') ||
-    (event && event.teamSize && event.teamSize.toLowerCase().includes('members')) ||
-    (event && event.teamSize && event.teamSize.toLowerCase().includes('team'))
-  );
+  const allowsGroup = React.useMemo(() => {
+    return selectedEventObjects.some(event =>
+      event && event.teamSize && event.teamSize.toLowerCase().includes('group') ||
+      (event && event.teamSize && event.teamSize.toLowerCase().includes('members')) ||
+      (event && event.teamSize && event.teamSize.toLowerCase().includes('team'))
+    );
+  }, [selectedEventObjects]);
 
-  const forceGroup = selectedEventObjects.some(event =>
-    event && event.teamSize && !event.teamSize.toLowerCase().includes('solo') &&
-    !event.teamSize.toLowerCase().includes('individual') &&
-    (event.teamSize.toLowerCase().includes('team') || event.teamSize.toLowerCase().includes('members'))
-  );
+  const forceGroup = React.useMemo(() => {
+    return selectedEventObjects.some(event =>
+      event && event.teamSize && !event.teamSize.toLowerCase().includes('solo') &&
+      !event.teamSize.toLowerCase().includes('individual') &&
+      (event.teamSize.toLowerCase().includes('team') || event.teamSize.toLowerCase().includes('members'))
+    );
+  }, [selectedEventObjects]);
 
   const showRegistrationTypeSelector = allowsGroup && !forceGroup;
 
@@ -98,7 +104,10 @@ const Register: React.FC = () => {
     }
 
     setFormData((prev) => {
-      if (prev.selectedEvents.includes(preselectedEvent.title)) {
+      const alreadySelected = prev.selectedEvents.includes(preselectedEvent.title);
+      const alreadyRegistered = registeredEventSet.has(normalizeTitleKey(preselectedEvent.title));
+
+      if (alreadySelected || alreadyRegistered) {
         return prev;
       }
 
@@ -107,7 +116,7 @@ const Register: React.FC = () => {
         selectedEvents: [preselectedEvent.title],
       };
     });
-  }, [location.search, location.state, registeredEventKeys]);
+  }, [location.search, location.state, registeredEventKeys.length]);
 
   const handleCredentialResponse = (response: any) => {
     const authUser = getAuthUserFromToken(response.credential);
@@ -143,8 +152,12 @@ const Register: React.FC = () => {
       setFormData(prev => ({
         ...prev,
         fullName: storedUser.name || '',
-        email: storedUser.email || ''
+        email: storedUser.email || '',
+        phone: localStorage.getItem('vbhv_phone') || '',
+        college: localStorage.getItem('vbhv_college') || '',
+        department: localStorage.getItem('vbhv_department') || '',
       }));
+      setCollegeSelection(localStorage.getItem('vbhv_college_type') || '');
       setIsGoogleSignedIn(true);
       if (storedUser.picture) {
         setUserProfilePicture(storedUser.picture);
@@ -216,6 +229,11 @@ const Register: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+
+    // Auto-save key profile fields to speed up future registrations
+    if (['phone', 'college', 'department'].includes(name)) {
+      localStorage.setItem(`vbhv_${name}`, value);
+    }
   };
 
   const handleEventToggle = (eventTitle: string) => {
@@ -284,45 +302,37 @@ const Register: React.FC = () => {
   };
 
   const processRegistration = async (paymentId?: string) => {
-    setStatus('submitting');
-    setMessage('');
+    // 1. Show SUCCESS IMMEDIATELY (Optimistic UI)
+    const uniqueId = `VBHV-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+    setGeneratedRegId(uniqueId);
+    setStatus('success');
+    setMessage('Registration confirmed! Check your email.');
 
-    try {
-      // Generate a unique registration ID (e.g., VBHV-A1B2C3)
-      const uniqueId = `VBHV-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-
-      const payload: any = { ...formData, registrationId: uniqueId };
-      if (paymentId) {
-        payload.razorpayPaymentId = paymentId;
-      }
-
-      const response = await submitRegistration(payload);
-      if (response.status === 'success') {
-        setStatus('success');
-        setGeneratedRegId(uniqueId);
-        setMessage(response.message || 'Registration successful!');
-        // Don't reset full name/email as they are from Google
-        setFormData(prev => ({
-          ...prev,
-          phone: '',
-          college: '',
-          department: '',
-          year: '1',
-          selectedEvents: [],
-          registrationType: 'Solo',
-          teamName: '',
-          teamMembers: '',
-        }));
-        setCollegeSelection('');
-        fetchRegisteredEvents(formData.email, true);
-      } else {
-        setStatus('error');
-        setMessage(response.message || 'Registration failed.');
-      }
-    } catch (error) {
-      setStatus('error');
-      setMessage('An unexpected error occurred. Please try again.');
+    // 2. Clear inputs immediately so user knows it's done
+    const payload: any = { ...formData, registrationId: uniqueId };
+    if (paymentId) {
+      payload.razorpayPaymentId = paymentId;
     }
+
+    setFormData(prev => ({
+      ...prev,
+      phone: '',
+      college: '',
+      department: '',
+      year: '1',
+      selectedEvents: [],
+      registrationType: 'Solo',
+      teamName: '',
+      teamMembers: '',
+    }));
+    setCollegeSelection('');
+
+    // 3. Background Sync (Crucially non-blocking)
+    submitRegistration(payload)
+      .then(() => fetchRegisteredEvents(formData.email, true))
+      .catch(error => {
+        console.error('Background Sync Failed:', error);
+      });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -399,13 +409,12 @@ const Register: React.FC = () => {
                 const verificationData = await verifyResponse.json();
 
                 if (verificationData.success) {
-                  // 4. Show success INSTANTLY after verification
+                  // Instant Success View
                   const uniqueId = `VBHV-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
                   setGeneratedRegId(uniqueId);
                   setStatus('success');
-                  setMessage('Payment verified & registration confirmed!');
+                  setMessage('Payment verified! Registration is live.');
 
-                  // Capture current form data before resetting
                   const registrationPayload: any = {
                     ...formData,
                     registrationId: uniqueId,
@@ -425,10 +434,10 @@ const Register: React.FC = () => {
                   }));
                   setCollegeSelection('');
 
-                  // Save to Google Sheets in background (non-blocking)
+                  // Background Sync
                   submitRegistration(registrationPayload)
-                    .then(() => fetchRegisteredEvents(formData.email, true))
-                    .catch(err => console.error('Background registration save failed:', err));
+                    .then(() => fetchRegisteredEvents(registrationPayload.email, true))
+                    .catch(err => console.error('Background registration failed:', err));
                 } else {
                   setStatus('error');
                   setMessage('Payment verification failed! Potential tampering detected.');
@@ -655,9 +664,13 @@ const Register: React.FC = () => {
                         <select
                           value={collegeSelection}
                           onChange={(e) => {
-                            setCollegeSelection(e.target.value);
-                            if (e.target.value !== 'Other') {
-                              setFormData(prev => ({ ...prev, college: e.target.value }));
+                            const val = e.target.value;
+                            setCollegeSelection(val);
+                            localStorage.setItem('vbhv_college_type', val);
+                            if (val !== 'Other') {
+                              const collegeName = val === 'Jain College of Engineering & Technology Hubballi' ? 'JCET Hubballi' : val;
+                              setFormData(prev => ({ ...prev, college: collegeName }));
+                              localStorage.setItem('vbhv_college', collegeName);
                             } else {
                               setFormData(prev => ({ ...prev, college: '' }));
                             }
