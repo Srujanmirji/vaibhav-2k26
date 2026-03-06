@@ -149,7 +149,7 @@ const Home: React.FC = () => {
           <button
             type="button"
             onClick={handleScrollDown}
-            className="mt-4 md:mt-10 min-h-[44px] min-w-[44px] inline-flex flex-col items-center text-gray-400 hover:text-secondary transition-colors duration-300 group pb-2 md:pb-0"
+            className="mt-6 md:mt-10 min-h-[44px] min-w-[44px] inline-flex flex-col items-center text-gray-400 hover:text-secondary transition-colors duration-300 group pb-24 md:pb-0"
             aria-label="Scroll down to next section"
           >
             <span className="text-[10px] md:text-xs font-bold tracking-[0.25em] uppercase">Scroll</span>
