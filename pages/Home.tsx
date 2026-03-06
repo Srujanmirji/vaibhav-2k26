@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Calendar, ChevronDown, MapPin, Users } from 'lucide-react';
+import { ArrowRight, Calendar, ChevronDown, MapPin, Users, Trophy } from 'lucide-react';
 import { motion } from 'framer-motion';
 import About from '../components/About';
 import CyberpunkTerrain from '../components/CyberpunkTerrain';
@@ -246,13 +246,13 @@ const Home: React.FC = () => {
             </div>
             <div className="p-8 bg-card/50 backdrop-blur-sm border border-white/5 hover:border-secondary/50 transition-all duration-500 group hover:-translate-y-2 rounded-xl">
               <Users className="w-12 h-12 text-secondary mx-auto mb-4 group-hover:scale-110 transition-transform drop-shadow-[0_0_8px_rgba(0,255,255,0.8)]" />
-              <h3 className="text-fluid-h3 font-bold text-white mb-2 font-mono">1000+ Students</h3>
+              <h3 className="text-fluid-h3 font-bold text-white mb-2 font-mono">500+ Students</h3>
               <p className="text-gray-400">Elite participants only</p>
             </div>
             <div className="p-8 bg-card/50 backdrop-blur-sm border border-white/5 hover:border-tertiary/50 transition-all duration-500 group hover:-translate-y-2 rounded-xl">
-              <MapPin className="w-12 h-12 text-tertiary mx-auto mb-4 group-hover:scale-110 transition-transform drop-shadow-[0_0_8px_rgba(255,211,0,0.8)]" />
-              <h3 className="text-fluid-h3 font-bold text-white mb-2 font-mono">10+ Venues</h3>
-              <p className="text-gray-400">State of the art labs</p>
+              <Trophy className="w-12 h-12 text-tertiary mx-auto mb-4 group-hover:scale-110 transition-transform drop-shadow-[0_0_8px_rgba(255,211,0,0.8)]" />
+              <h3 className="text-fluid-h3 font-bold text-white mb-2 font-mono">20+ Events</h3>
+              <p className="text-gray-400">Technical & Cultural Battles</p>
             </div>
           </div>
         </div>
