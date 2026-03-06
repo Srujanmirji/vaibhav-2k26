@@ -34,7 +34,7 @@ const EVENT_SHEET_MAP = {
   e2: { spreadsheetId: '1VnBiox2fD8hO3M4cQH90TozkEEHNAk8Z_AHVcxCe7w8', sheetName: 'Sheet1' },
   e3: { spreadsheetId: '1_Jppe15kIt6rgPFm9z9Z8KJBHfyGbdfjZR7zJXTb9LU', sheetName: 'Sheet1' },
   e4: { spreadsheetId: '1o31pM9TWeixE6vPcYUVrvb_PbhM7bmf0xSsl2PhkSBM', sheetName: 'Sheet1' },
-  e5: { spreadsheetId: '1m_5csngk1Y5CG7CW_0VbRlSpOIwUpfxkHpaupOBqfIo', sheetName: 'Sheet1' },
+  e5: { spreadsheetId: '1oRCLdP4drIT_aPdUILhW-9AfNzsynFGdDxiufLycQ9Y', sheetName: 'Sheet1' },
   e6: { spreadsheetId: '17BAD5CBBtcMHNJEazb-epppJoazGsKd62vZuL_9-cuc', sheetName: 'Sheet1' },
   e7: { spreadsheetId: '1JxcVaYAbMFPCmtC61PqapNoqXUogIs_Ab22dLc1PQjs', sheetName: 'Sheet1' },
   e8: { spreadsheetId: '12zsrckESHgKTrg804KEENUmAMCMR86d2vKem8jD0OYc', sheetName: 'Sheet1' },
@@ -49,7 +49,7 @@ const EVENT_SHEET_MAP = {
   e20: { spreadsheetId: '1jZ5GXfeuqNZK4hdSdSPLycFEWJP1goe3T9_C3u9USyU', sheetName: 'Sheet1' },
   e21: { spreadsheetId: '1a2QtQ9UpD6gCICtll_9HS0aeVuSwsAv7mbEMfFIlaQo', sheetName: 'Sheet1' },
   e23: { spreadsheetId: '1DPwxrchkyrDlytQouSlsihyHS1uCDOIF2-XLCnQ6x1M', sheetName: 'Sheet1' },
-  e25: { spreadsheetId: '1DPwxrchkyrDlytQouSlsihyHS1uCDOIF2-XLCnQ6x1M', sheetName: 'Dance Mania' }
+  e25: { spreadsheetId: '11xUntqxbKpXPFlyIokODolk_7QRExPZ7Ox35jR_Ylss', sheetName: 'Dance Mania' }
 };
 
 const EVENT_ID_TO_TITLE = {

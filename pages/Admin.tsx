@@ -2,8 +2,9 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { GOOGLE_CLIENT_ID, ADMIN_ALLOWED_EMAILS, EVENTS } from '../constants';
 import { getAllRegistrationsForAdmin } from '../services/googleSheets';
 import { clearAuthToken, getAuthUserFromToken, getStoredAuthUser, persistAuthToken, type AuthUser } from '../services/authSession';
-import { AlertCircle, Loader2, LogOut, Shield, Users, RefreshCcw, Download, DollarSign, TrendingUp, UserCheck, CreditCard, Filter, Search, ChevronDown } from 'lucide-react';
+import { AlertCircle, Loader2, LogOut, Shield, Users, RefreshCcw, Download, DollarSign, TrendingUp, UserCheck, CreditCard, Filter, Search, ChevronDown, LayoutDashboard, Table } from 'lucide-react';
 import type { AdminRegistrationRecord } from '../types';
+import AdminAnalyticsDashboard from '../components/AdminAnalyticsDashboard';
 
 declare const google: any;
 
@@ -16,6 +17,7 @@ const Admin: React.FC = () => {
   const [message, setMessage] = useState('');
   const [search, setSearch] = useState('');
   const [eventFilter, setEventFilter] = useState('all');
+  const [viewMode, setViewMode] = useState<'table' | 'analytics'>('analytics');
 
   const isAuthorized = !!user && normalizedAllowedEmails.includes((user.email || '').toLowerCase());
 
@@ -167,6 +169,30 @@ const Admin: React.FC = () => {
               Command <span className="text-primary text-glow">Center</span>
             </h1>
             <p className="text-gray-400 mt-3 text-sm md:text-base">Real-time overview of all registrations and revenue.</p>
+
+            {/* View Toggle */}
+            <div className="flex items-center p-1 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl mt-6 w-fit">
+              <button
+                onClick={() => setViewMode('analytics')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all duration-300 ${viewMode === 'analytics'
+                  ? 'bg-primary text-white shadow-[0_0_15px_rgba(255,0,85,0.4)]'
+                  : 'text-gray-400 hover:text-white'
+                  }`}
+              >
+                <LayoutDashboard className="w-4 h-4" />
+                ANALYTICS
+              </button>
+              <button
+                onClick={() => setViewMode('table')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all duration-300 ${viewMode === 'table'
+                  ? 'bg-secondary text-black shadow-[0_0_15px_rgba(0,240,255,0.4)]'
+                  : 'text-gray-400 hover:text-white'
+                  }`}
+              >
+                <Table className="w-4 h-4" />
+                REGISTRATIONS
+              </button>
+            </div>
           </div>
 
           {user && (
@@ -344,143 +370,146 @@ const Admin: React.FC = () => {
               </div>
             </div>
 
-            {/* ── Data ── */}
-            <div className="bg-card/30 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.4)]">
-              {loading ? (
-                <div className="flex flex-col items-center justify-center py-24 gap-4">
-                  <div className="relative">
-                    <div className="w-16 h-16 rounded-full border-2 border-primary/20 border-t-primary animate-spin" />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Shield className="w-6 h-6 text-primary/60" />
+            {/* ── View Content ── */}
+            {viewMode === 'analytics' ? (
+              <AdminAnalyticsDashboard data={filteredRows} />
+            ) : (
+              <div className="bg-card/30 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.4)]">
+                {loading ? (
+                  <div className="flex flex-col items-center justify-center py-24 gap-4">
+                    <div className="relative">
+                      <div className="w-16 h-16 rounded-full border-2 border-primary/20 border-t-primary animate-spin" />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <Shield className="w-6 h-6 text-primary/60" />
+                      </div>
                     </div>
+                    <p className="text-sm text-gray-400 font-mono">Loading registrations...</p>
                   </div>
-                  <p className="text-sm text-gray-400 font-mono">Loading registrations...</p>
-                </div>
-              ) : filteredRows.length === 0 && !message ? (
-                <div className="flex flex-col items-center justify-center py-24 text-center">
-                  <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-4">
-                    <Users className="w-8 h-8 text-gray-600" />
+                ) : filteredRows.length === 0 && !message ? (
+                  <div className="flex flex-col items-center justify-center py-24 text-center">
+                    <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-4">
+                      <Users className="w-8 h-8 text-gray-600" />
+                    </div>
+                    <p className="text-gray-400 text-sm">No records match your filters.</p>
+                    <button onClick={() => { setSearch(''); setEventFilter('all'); }} className="mt-3 text-xs text-primary hover:text-white transition-colors font-bold">
+                      Clear Filters
+                    </button>
                   </div>
-                  <p className="text-gray-400 text-sm">No records match your filters.</p>
-                  <button onClick={() => { setSearch(''); setEventFilter('all'); }} className="mt-3 text-xs text-primary hover:text-white transition-colors font-bold">
-                    Clear Filters
-                  </button>
-                </div>
-              ) : (
-                <>
-                  {/* Mobile Cards */}
-                  <div className="space-y-3 p-4 md:hidden custom-scrollbar max-h-[70vh] overflow-y-auto">
-                    {filteredRows.map((row, index) => {
-                      const details = [
-                        { label: 'Phone', value: row.phone },
-                        { label: 'College', value: row.college },
-                        { label: 'Branch', value: row.department },
-                        { label: 'Year', value: row.year },
-                        { label: 'Event Date', value: row.eventDate },
-                        { label: 'Reg ID', value: row.registrationId },
-                        { label: 'Payment ID', value: row.razorpayPaymentId },
-                        { label: 'Timestamp', value: row.timestamp },
-                      ];
+                ) : (
+                  <>
+                    {/* Mobile Cards */}
+                    <div className="space-y-3 p-4 md:hidden custom-scrollbar max-h-[70vh] overflow-y-auto">
+                      {filteredRows.map((row, index) => {
+                        const details = [
+                          { label: 'Phone', value: row.phone },
+                          { label: 'College', value: row.college },
+                          { label: 'Branch', value: row.department },
+                          { label: 'Year', value: row.year },
+                          { label: 'Event Date', value: row.eventDate },
+                          { label: 'Reg ID', value: row.registrationId },
+                          { label: 'Payment ID', value: row.razorpayPaymentId },
+                          { label: 'Timestamp', value: row.timestamp },
+                        ];
 
-                      return (
-                        <article
-                          key={`${row.email}-${row.eventId}-${index}`}
-                          className="rounded-xl border border-white/5 bg-black/30 p-4 hover:border-primary/30 transition-all duration-300"
-                        >
-                          <div className="flex items-start justify-between gap-3 mb-3">
-                            <div className="min-w-0">
-                              <p className="text-sm font-bold text-white">{row.fullName || '-'}</p>
-                              <p className="text-xs text-secondary/80 break-all font-mono">{row.email || '-'}</p>
-                            </div>
-                            <div className="flex flex-col items-end gap-1.5 shrink-0">
-                              <span className="rounded-lg border border-primary/30 bg-primary/10 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-primary">
-                                {row.eventTitle || '-'}
-                              </span>
-                              {row.razorpayPaymentId ? (
-                                <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-green-500/15 text-green-400 border border-green-500/25 px-2 py-0.5 rounded-lg shadow-[0_0_8px_rgba(34,197,94,0.15)]">
-                                  <CreditCard className="w-3 h-3" /> PAID
-                                </span>
-                              ) : (
-                                <span className="text-[10px] font-bold bg-gray-500/15 text-gray-400 border border-gray-500/20 px-2 py-0.5 rounded-lg">FREE</span>
-                              )}
-                            </div>
-                          </div>
-                          <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs border-t border-white/5 pt-3">
-                            {details.map((d) => (
-                              <div key={d.label} className="min-w-0">
-                                <dt className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">{d.label}</dt>
-                                <dd className="text-gray-300 break-words mt-0.5">{d.value || '-'}</dd>
-                              </div>
-                            ))}
-                          </dl>
-                        </article>
-                      );
-                    })}
-                  </div>
-
-                  {/* Desktop Table */}
-                  <div className="hidden md:block overflow-x-auto custom-scrollbar">
-                    <table className="min-w-full text-sm">
-                      <thead>
-                        <tr className="bg-black/60 border-b border-white/10">
-                          {['Timestamp', 'Name', 'Email', 'Event', 'Reg ID', 'Status'].map((header) => (
-                            <th key={header} className="px-4 py-3.5 text-left text-[10px] font-bold text-gray-400 uppercase tracking-[0.15em]">
-                              {header}
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {filteredRows.map((row, index) => (
-                          <tr
+                        return (
+                          <article
                             key={`${row.email}-${row.eventId}-${index}`}
-                            className="border-t border-white/[0.03] text-gray-300 hover:bg-white/[0.03] transition-colors duration-200"
+                            className="rounded-xl border border-white/5 bg-black/30 p-4 hover:border-primary/30 transition-all duration-300"
                           >
-                            <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-500">{row.timestamp || '-'}</td>
-                            <td className="px-4 py-3 whitespace-nowrap font-semibold text-white">
-                              <div className="flex flex-col">
-                                <span>{row.fullName || '-'}</span>
-                                <span className="text-[10px] text-gray-500">{row.phone || '-'}</span>
+                            <div className="flex items-start justify-between gap-3 mb-3">
+                              <div className="min-w-0">
+                                <p className="text-sm font-bold text-white">{row.fullName || '-'}</p>
+                                <p className="text-xs text-secondary/80 break-all font-mono">{row.email || '-'}</p>
                               </div>
-                            </td>
-                            <td className="px-4 py-3 whitespace-nowrap font-mono text-xs text-secondary/70">
-                              <div className="flex flex-col">
-                                <span>{row.email || '-'}</span>
-                                <span className="text-[10px] text-gray-600 truncate max-w-[120px]">{row.college || '-'}</span>
-                              </div>
-                            </td>
-                            <td className="px-4 py-3 whitespace-nowrap">
-                              <span className="inline-block px-2 py-0.5 rounded-md bg-primary/10 border border-primary/20 text-primary text-xs font-bold">
-                                {row.eventTitle || '-'}
-                              </span>
-                            </td>
-                            <td className="px-4 py-3 whitespace-nowrap">
-                              <span className="font-mono text-xs text-primary/80">{row.registrationId || '-'}</span>
-                            </td>
-                            <td className="px-4 py-3 whitespace-nowrap">
-                              {row.razorpayPaymentId ? (
-                                <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-green-500/15 text-green-400 border border-green-500/25 px-2 py-0.5 rounded-lg shadow-[0_0_6px_rgba(34,197,94,0.1)]">
-                                  <CreditCard className="w-3 h-3" /> PAID
+                              <div className="flex flex-col items-end gap-1.5 shrink-0">
+                                <span className="rounded-lg border border-primary/30 bg-primary/10 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-primary">
+                                  {row.eventTitle || '-'}
                                 </span>
-                              ) : (
-                                <span className="text-[10px] font-bold bg-gray-500/15 text-gray-400 border border-gray-500/20 px-2 py-0.5 rounded-lg">FREE</span>
-                              )}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </>
-              )}
+                                {row.razorpayPaymentId ? (
+                                  <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-green-500/15 text-green-400 border border-green-500/25 px-2 py-0.5 rounded-lg shadow-[0_0_8px_rgba(34,197,94,0.15)]">
+                                    <CreditCard className="w-3 h-3" /> PAID
+                                  </span>
+                                ) : (
+                                  <span className="text-[10px] font-bold bg-gray-500/15 text-gray-400 border border-gray-500/20 px-2 py-0.5 rounded-lg">FREE</span>
+                                )}
+                              </div>
+                            </div>
+                            <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs border-t border-white/5 pt-3">
+                              {details.map((d) => (
+                                <div key={d.label} className="min-w-0">
+                                  <dt className="text-[10px] text-gray-500 uppercase tracking-wider font-bold">{d.label}</dt>
+                                  <dd className="text-gray-300 break-words mt-0.5">{d.value || '-'}</dd>
+                                </div>
+                              ))}
+                            </dl>
+                          </article>
+                        );
+                      })}
+                    </div>
 
-              {message && (
-                <div className="m-4 flex items-center gap-2 text-red-300 bg-red-500/10 border border-red-500/20 rounded-xl p-4">
-                  <AlertCircle className="w-4 h-4 shrink-0" />
-                  <p className="text-sm">{message}</p>
-                </div>
-              )}
-            </div>
+                    {/* Desktop Table */}
+                    <div className="hidden md:block overflow-x-auto custom-scrollbar">
+                      <table className="min-w-full text-sm">
+                        <thead>
+                          <tr className="bg-black/60 border-b border-white/10">
+                            {['Timestamp', 'Name', 'Email', 'Event', 'Reg ID', 'Status'].map((header) => (
+                              <th key={header} className="px-4 py-3.5 text-left text-[10px] font-bold text-gray-400 uppercase tracking-[0.15em]">
+                                {header}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {filteredRows.map((row, index) => (
+                            <tr
+                              key={`${row.email}-${row.eventId}-${index}`}
+                              className="border-t border-white/[0.03] text-gray-300 hover:bg-white/[0.03] transition-colors duration-200"
+                            >
+                              <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-500">{row.timestamp || '-'}</td>
+                              <td className="px-4 py-3 whitespace-nowrap font-semibold text-white">
+                                <div className="flex flex-col">
+                                  <span>{row.fullName || '-'}</span>
+                                  <span className="text-[10px] text-gray-500">{row.phone || '-'}</span>
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 whitespace-nowrap font-mono text-xs text-secondary/70">
+                                <div className="flex flex-col">
+                                  <span>{row.email || '-'}</span>
+                                  <span className="text-[10px] text-gray-600 truncate max-w-[120px]">{row.college || '-'}</span>
+                                </div>
+                              </td>
+                              <td className="px-4 py-3 whitespace-nowrap">
+                                <span className="inline-block px-2 py-0.5 rounded-md bg-primary/10 border border-primary/20 text-primary text-xs font-bold">
+                                  {row.eventTitle || '-'}
+                                </span>
+                              </td>
+                              <td className="px-4 py-3 whitespace-nowrap">
+                                <span className="font-mono text-xs text-primary/80">{row.registrationId || '-'}</span>
+                              </td>
+                              <td className="px-4 py-3 whitespace-nowrap">
+                                {row.razorpayPaymentId ? (
+                                  <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-green-500/15 text-green-400 border border-green-500/25 px-2 py-0.5 rounded-lg shadow-[0_0_6px_rgba(34,197,94,0.1)]">
+                                    <CreditCard className="w-3 h-3" /> PAID
+                                  </span>
+                                ) : (
+                                  <span className="text-[10px] font-bold bg-gray-500/15 text-gray-400 border border-gray-500/20 px-2 py-0.5 rounded-lg">FREE</span>
+                                )}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+            {message && (
+              <div className="m-4 flex items-center gap-2 text-red-300 bg-red-500/10 border border-red-500/20 rounded-xl p-4">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <p className="text-sm">{message}</p>
+              </div>
+            )}
           </div>
         )}
       </div>
