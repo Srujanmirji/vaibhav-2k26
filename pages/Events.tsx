@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { EVENTS, DEPARTMENTS } from '../constants';
-import { Calendar, MapPin, Users, ArrowUpRight } from 'lucide-react';
+import { Calendar, MapPin, Users, ArrowUpRight, X, Phone, ShieldCheck, Info, FileText, Download } from 'lucide-react';
+import { EventDetails } from '../types';
 
 import { motion } from 'framer-motion';
 
@@ -15,6 +16,8 @@ const Events: React.FC = () => {
   const isTechEvent = (category: string) => {
     return ['AI/Tech', 'Innovation', 'Competition'].includes(category);
   };
+
+  const [selectedEventForModal, setSelectedEventForModal] = React.useState<EventDetails | null>(null);
 
   const filteredEvents = EVENTS.filter(event => {
     const matchesTrack =
@@ -47,7 +50,7 @@ const Events: React.FC = () => {
           </p>
 
           {/* Track Filters */}
-          <div className="flex justify-start md:justify-center gap-3 mb-4 overflow-x-auto pb-2 scrollbar-hide px-1">
+          <div className="flex justify-start md:justify-center gap-3 mb-4 overflow-x-auto pb-2 mobile-hide-scrollbar px-1">
             {tracks.map((track) => (
               <button
                 key={track}
@@ -63,7 +66,7 @@ const Events: React.FC = () => {
           </div>
 
           {/* Department Filters */}
-          <div className="flex justify-start md:justify-center gap-3 mb-8 overflow-x-auto pb-2 scrollbar-hide px-1">
+          <div className="flex justify-start md:justify-center gap-3 mb-8 overflow-x-auto pb-2 mobile-hide-scrollbar px-1">
             {departments.map((dept) => (
               <button
                 key={dept}
@@ -124,18 +127,185 @@ const Events: React.FC = () => {
                   </div>
                 </div>
 
-                <Link
-                  to={`/register?event=${encodeURIComponent(event.id)}`}
-                  state={{ preselectedEventId: event.id }}
-                  className="w-full block text-center bg-white/5 hover:bg-primary hover:text-white text-white font-bold py-3.5 rounded-xl transition-all border border-white/10 hover:border-primary group-hover:shadow-[0_0_15px_rgba(255,0,85,0.4)] flex items-center justify-center gap-2"
+                <button
+                  onClick={() => setSelectedEventForModal(event)}
+                  className="w-full mb-3 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white font-bold py-3.5 rounded-xl transition-all border border-white/10"
                 >
-                  REGISTER <ArrowUpRight className="w-4 h-4" />
-                </Link>
+                  VIEW DETAILS <Info className="w-4 h-4" />
+                </button>
+
+                {!event.registrationClosed && (
+                  <Link
+                    to={`/register?event=${encodeURIComponent(event.id)}`}
+                    state={{ preselectedEventId: event.id }}
+                    className="w-full block text-center bg-white/5 hover:bg-primary hover:text-white text-white font-bold py-3.5 rounded-xl transition-all border border-white/10 hover:border-primary group-hover:shadow-[0_0_15px_rgba(255,0,85,0.4)] flex items-center justify-center gap-2"
+                  >
+                    REGISTER <ArrowUpRight className="w-4 h-4" />
+                  </Link>
+                )}
               </div>
             </motion.div>
           ))}
         </div>
       </div>
+
+      {/* Detail Modal */}
+      {selectedEventForModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 mb-10">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedEventForModal(null)}
+            className="absolute inset-0 bg-black/80 backdrop-blur-md"
+          ></motion.div>
+
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            className="relative w-full max-w-2xl bg-card border border-white/10 rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] max-h-[90dvh] flex flex-col"
+          >
+            {/* Modal Header/Image */}
+            <div className="relative h-48 sm:h-64 shrink-0">
+              <img
+                src={selectedEventForModal.image}
+                alt={selectedEventForModal.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent"></div>
+              <button
+                onClick={() => setSelectedEventForModal(null)}
+                className="absolute top-4 right-4 p-2 bg-black/50 hover:bg-primary text-white rounded-full transition-colors z-20"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              <div className="absolute bottom-4 left-6 z-10">
+                <span className="px-3 py-1 bg-primary text-white text-xs font-bold uppercase rounded mb-2 inline-block">
+                  {selectedEventForModal.category}
+                </span>
+                <h2 className="text-2xl sm:text-3xl font-black text-white font-mono">{selectedEventForModal.title}</h2>
+              </div>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6 overflow-y-auto custom-scrollbar space-y-8">
+              {/* Core Info Grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
+                  <p className="text-secondary text-[10px] uppercase font-bold tracking-widest mb-1">Schedule</p>
+                  <p className="text-white text-sm font-semibold">{selectedEventForModal.date}</p>
+                  <p className="text-gray-400 text-xs">{selectedEventForModal.time}</p>
+                </div>
+                <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
+                  <p className="text-secondary text-[10px] uppercase font-bold tracking-widest mb-1">Location</p>
+                  <p className="text-white text-sm font-semibold">{selectedEventForModal.venue}</p>
+                  <p className="text-gray-400 text-xs">{selectedEventForModal.department} Dept</p>
+                </div>
+                {selectedEventForModal.rulesPdf && (
+                  <a
+                    href={selectedEventForModal.rulesPdf}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-primary/10 p-4 rounded-2xl border border-primary/20 flex flex-col items-center justify-center group hover:bg-primary/20 transition-all text-center"
+                  >
+                    <p className="text-primary text-[10px] uppercase font-bold tracking-widest mb-1">Event Rules</p>
+                    <div className="flex items-center gap-2 text-white">
+                      <FileText className="w-5 h-5 text-primary" />
+                      <span className="text-sm font-semibold group-hover:text-primary transition-colors">VIEW PDF</span>
+                    </div>
+                  </a>
+                )}
+              </div>
+
+              {/* Rules Section */}
+              {selectedEventForModal.rules && (
+                <div className="space-y-4">
+                  <h4 className="text-white font-bold flex items-center gap-2 text-lg">
+                    <ShieldCheck className="w-5 h-5 text-primary" /> Rules & Regulations
+                  </h4>
+                  <ul className="grid grid-cols-1 gap-3">
+                    {selectedEventForModal.rules.map((rule, i) => (
+                      <li key={i} className="flex gap-3 text-sm text-gray-400 bg-white/5 p-3 rounded-xl border border-white/5">
+                        <span className="text-primary font-bold">0{i + 1}</span>
+                        {rule}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Faculty Coordinators Section */}
+              {selectedEventForModal.facultyCoordinators && selectedEventForModal.facultyCoordinators.length > 0 && (
+                <div className="space-y-4">
+                  <h4 className="text-white font-bold flex items-center gap-2 text-lg">
+                    <ShieldCheck className="w-5 h-5 text-primary" /> Faculty Coordinators
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {selectedEventForModal.facultyCoordinators.map((coord, i) => (
+                      <div key={i} className="bg-primary/5 p-4 rounded-2xl border border-primary/10 flex items-center justify-between group hover:border-primary/50 transition-colors">
+                        <div>
+                          <p className="text-white font-bold text-sm">{coord.name}</p>
+                          <p className="text-gray-500 text-[10px] uppercase font-bold tracking-wider mt-1">FACULTY</p>
+                          {coord.phone !== '-' && <p className="text-gray-400 text-xs mt-0.5">{coord.phone}</p>}
+                        </div>
+                        {coord.phone !== '-' && coord.phone !== 'Principal' && (
+                          <a href={`tel:${coord.phone}`} className="p-2 bg-primary/10 text-primary rounded-full hover:bg-primary hover:text-white transition-all">
+                            <Phone className="w-4 h-4" />
+                          </a>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Student Coordinators Section */}
+              {selectedEventForModal.studentCoordinators && selectedEventForModal.studentCoordinators.length > 0 && (
+                <div className="space-y-4">
+                  <h4 className="text-white font-bold flex items-center gap-2 text-lg">
+                    <Users className="w-5 h-5 text-secondary" /> Student Coordinators
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {selectedEventForModal.studentCoordinators.map((coord, i) => (
+                      <div key={i} className="bg-secondary/5 p-4 rounded-2xl border border-secondary/10 flex items-center justify-between group hover:border-secondary/50 transition-colors">
+                        <div>
+                          <p className="text-white font-bold text-sm">{coord.name}</p>
+                          <p className="text-gray-500 text-[10px] uppercase font-bold tracking-wider mt-1">STUDENT</p>
+                          {coord.phone !== '-' && <p className="text-gray-400 text-xs mt-0.5">{coord.phone}</p>}
+                        </div>
+                        {coord.phone !== '-' && (
+                          <a href={`tel:${coord.phone}`} className="p-2 bg-secondary/10 text-secondary rounded-full hover:bg-secondary hover:text-darker transition-all">
+                            <Phone className="w-4 h-4" />
+                          </a>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Action Buttons in Modal */}
+              <div className="pt-4 flex flex-col gap-3">
+                {!selectedEventForModal.registrationClosed && (
+                  <Link
+                    to={`/register?event=${encodeURIComponent(selectedEventForModal.id)}`}
+                    state={{ preselectedEventId: selectedEventForModal.id }}
+                    className="w-full py-4 bg-primary text-white font-black uppercase tracking-widest rounded-2xl text-center hover:bg-white hover:text-primary transition-all shadow-[0_0_20px_rgba(255,0,85,0.4)]"
+                  >
+                    REGISTER FOR ₹{selectedEventForModal.fee === 1 ? '100' : selectedEventForModal.fee}
+                  </Link>
+                )}
+                <button
+                  onClick={() => setSelectedEventForModal(null)}
+                  className="w-full py-4 bg-white/5 text-gray-400 font-bold uppercase tracking-widest rounded-2xl hover:text-white hover:bg-white/10 transition-all"
+                >
+                  CLOSE PREVIEW
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };

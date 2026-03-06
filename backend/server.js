@@ -43,11 +43,28 @@ const saveDB = () => {
 };
 
 // Server-side event fee map (single source of truth for pricing)
+// Fees extracted from official event rules documents
 const EVENT_FEES = {
-    e1: 1, e2: 1, e3: 1, e4: 1, e5: 1,
-    e6: 1, e7: 1, e8: 1, e9: 1, e10: 1,
-    e11: 1, e12: 1, e13: 1, e14: 1, e15: 1,
+    e2: 100,  // Project Pitch Day
+    e3: 100,  // AI in EV
+    e4: 100,  // Cooking Without Fire
+    e5: 100,  // Blind Fold Taste Test
+    e6: 100,  // Survey Hunt
+    e7: 100,  // Art Gallery
+    e8: 100,  // Spot Acting Battle
+    e9: 200,  // Laugh Logic Loot - Rs 200/team
+    e13: 200, // AI Prompt Battle - Rs 200/team
+    e14: 100, // Tallest Tower Challenge
+    e15: 250, // Buildathon - Rs 250/team
+    e16: 100, // Social Media Awareness Contest
+    e17: 100, // Meme Challenge
+    e18: 200, // Game Zone - Rs 200/team
+    e19: 100, // Circuit Mania
+    e20: 100, // Dialogue Delivery Battle
+    e21: 100, // Minute Master
+    e23: 350, // Melody Mania & Dance - Rs 350/group
 };
+
 
 /**
  * 1. CREATE ORDER

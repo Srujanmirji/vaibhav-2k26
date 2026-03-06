@@ -2,13 +2,6 @@
  * GOOGLE APPS SCRIPT CODE (MULTI-SHEET BY EVENT)
  *
  * Each event writes to its own Google Spreadsheet.
- *
- * Setup:
- * 1. Create one Google Sheet per event with headers in row 1:
- *    Timestamp, Full Name, Email, Phone, College, Department, Year, Event, Event ID, Registration ID, Payment ID
- * 2. Paste each spreadsheet ID in EVENT_SHEET_MAP.
- * 3. Deploy as Web App (Execute as: Me, Access: Anyone).
- * 4. Use deployed URL as GOOGLE_SCRIPT_URL in frontend constants.ts.
  */
 
 const DEFAULT_SHEET_NAME = 'Sheet1';
@@ -28,76 +21,91 @@ const ADMIN_ALLOWED_EMAILS = [
   'sachitsarangamath44@gmail.com'
 ];
 
+
 const EVENT_SHEET_MAP = {
-  e1: { spreadsheetId: '1VnBiox2fD8hO3M4cQH90TozkEEHNAk8Z_AHVcxCe7w8', sheetName: DEFAULT_SHEET_NAME },
-  e2: { spreadsheetId: '1CLTK4aMGGdGzaXg9qk_WwJa5-W0s92r_XUPx4BVsIsA', sheetName: DEFAULT_SHEET_NAME },
-  e3: { spreadsheetId: '1DPwxrchkyrDlytQouSlsihyHS1uCDOIF2-XLCnQ6x1M', sheetName: DEFAULT_SHEET_NAME },
-  e4: { spreadsheetId: '17K8E1UST2adSAIGGwXOlO54XTCuUtx4W0HHIGyaTrvM', sheetName: DEFAULT_SHEET_NAME },
-  e5: { spreadsheetId: '1m_5csngk1Y5CG7CW_0VbRlSpOIwUpfxkHpaupOBqfIo', sheetName: DEFAULT_SHEET_NAME },
-  e6: { spreadsheetId: '17BAD5CBBtcMHNJEazb-epppJoazGsKd62vZuL_9-cuc', sheetName: DEFAULT_SHEET_NAME },
-  e7: { spreadsheetId: '1JxcVaYAbMFPCmtC61PqapNoqXUogIs_Ab22dLc1PQjs', sheetName: DEFAULT_SHEET_NAME },
-  e8: { spreadsheetId: '12zsrckESHgKTrg804KEENUmAMCMR86d2vKem8jD0OYc', sheetName: DEFAULT_SHEET_NAME },
-  e9: { spreadsheetId: '1PrbQ5-CedLDepaHAAzRK5BRDfNdDp2yTgBoNfbZfvJs', sheetName: DEFAULT_SHEET_NAME },
-  e10: { spreadsheetId: '1wiokWotdzXmcdVSLzblY6VfhbwmlvPHRd2p_uaBCEpw', sheetName: DEFAULT_SHEET_NAME },
-  e11: { spreadsheetId: '1KMIwBMDWeheeoocVV7bOtoiEbap4jO87vS4sDcTzbkM', sheetName: DEFAULT_SHEET_NAME },
-  e12: { spreadsheetId: '1hVXYSe4IJbbfFVkPG2Xv_PTe_mUizHGqBcZrssMZtLI', sheetName: DEFAULT_SHEET_NAME },
-  e13: { spreadsheetId: '1X3cJt_vKRPZJJ16wWsGbzF0lmWG8cIUIQap_MU6wzHw', sheetName: DEFAULT_SHEET_NAME },
-  e14: { spreadsheetId: '1jZ5GXfeuqNZK4hdSdSPLycFEWJP1goe3T9_C3u9USyU', sheetName: DEFAULT_SHEET_NAME },
-  e15: { spreadsheetId: '1a2QtQ9UpD6gCICtll_9HS0aeVuSwsAv7mbEMfFIlaQo', sheetName: DEFAULT_SHEET_NAME }
+  e2: { spreadsheetId: '1VnBiox2fD8hO3M4cQH90TozkEEHNAk8Z_AHVcxCe7w8', sheetName: 'Project Pitch Day' },
+  e3: { spreadsheetId: '1_Jppe15kIt6rgPFm9z9Z8KJBHfyGbdfjZR7zJXTb9LU', sheetName: 'AI in EV' },
+  e4: { spreadsheetId: '1o31pM9TWeixE6vPcYUVrvb_PbhM7bmf0xSsl2PhkSBM', sheetName: 'Cooking Without Fire' },
+  e5: { spreadsheetId: '1oRCLdP4drIT_aPdUILhW-9AfNzsynFGdDxiufLycQ9Y', sheetName: 'Blind Fold Taste Test' },
+  e6: { spreadsheetId: '17BAD5CBBtcMHNJEazb-epppJoazGsKd62vZuL_9-cuc', sheetName: 'Survey Hunt' },
+  e7: { spreadsheetId: '1JxcVaYAbMFPCmtC61PqapNoqXUogIs_Ab22dLc1PQjs', sheetName: 'Art Gallery' },
+  e8: { spreadsheetId: '12zsrckESHgKTrg804KEENUmAMCMR86d2vKem8jD0OYc', sheetName: 'Spot Acting Battle' },
+  e9: { spreadsheetId: '1X3cJt_vKRPZJJ16wWsGbzF0lmWG8cIUIQap_MU6wzHw', sheetName: 'Laugh Logic Loot' },
+  e13: { spreadsheetId: '1CLTK4aMGGdGzaXg9qk_WwJa5-W0s92r_XUPx4BVsIsA', sheetName: 'AI Prompt Battle' },
+  e14: { spreadsheetId: '1wiokWotdzXmcdVSLzblY6VfhbwmlvPHRd2p_uaBCEpw', sheetName: 'Tallest Tower Challenge' },
+  e15: { spreadsheetId: '1OfeY3JCuNQFmACNluKG7QmRORY8WFptcgQjD2eZK1vQ', sheetName: 'Buildathon' },
+  e16: { spreadsheetId: '1sX7T4aN324NJpSc5gnAoZYeOzAEAY-y_nhV-Ki37ySo', sheetName: 'Social Awareness Video Contest' },
+  e17: { spreadsheetId: '1hVXYSe4IJbbfFVkPG2Xv_PTe_mUizHGqBcZrssMZtLI', sheetName: 'Meme Challenge' },
+  e18: { spreadsheetId: '1PrbQ5-CedLDepaHAAzRK5BRDfNdDp2yTgBoNfbZfvJs', sheetName: 'Game Zone' },
+  e19: { spreadsheetId: '1Ep8YGX4YyeQuHT8joopBV5l7zW67bMcy6b2m9mY7iZ0', sheetName: 'Circuit Mania' },
+  e20: { spreadsheetId: '1jZ5GXfeuqNZK4hdSdSPLycFEWJP1goe3T9_C3u9USyU', sheetName: 'Dialogue Delivery Battle' },
+  e21: { spreadsheetId: '1a2QtQ9UpD6gCICtll_9HS0aeVuSwsAv7mbEMfFIlaQo', sheetName: 'Minute Master' },
+  e23: { spreadsheetId: '1DPwxrchkyrDlytQouSlsihyHS1uCDOIF2-XLCnQ6x1M', sheetName: 'Melody Mania & Dance Infusion' }
 };
 
 const EVENT_ID_TO_TITLE = {
-  e1: 'Project Pitch Day',
-  e2: 'AI Prompt Battle',
-  e3: 'Melody Mania & Dance Infusion',
+  e2: 'Project Pitch Day',
+  e3: 'AI in EV',
   e4: 'Cooking Without Fire',
   e5: 'Blind Fold Taste Test',
   e6: 'Survey Hunt',
   e7: 'Art Gallery',
   e8: 'Spot Acting Battle',
-  e9: 'Game Zone',
-  e10: 'Tallest Tower Challenge',
-  e11: 'Cinematic Campus Video',
-  e12: 'Meme Challenge',
-  e13: 'Laugh Logic Loot',
-  e14: 'Dialogue Delivery Battle',
-  e15: 'Minute Master'
+  e9: 'Laugh Logic Loot',
+  e13: 'AI Prompt Battle',
+  e14: 'Tallest Tower Challenge',
+  e15: 'Buildathon',
+  e16: 'Social Awareness Video Contest',
+  e17: 'Meme Challenge',
+  e18: 'Game Zone',
+  e19: 'Circuit Mania',
+  e20: 'Dialogue Delivery Battle',
+  e21: 'Minute Master',
+  e23: 'Melody Mania & Dance Infusion'
 };
 
 const EVENT_ID_TO_DATE = {
-  e1: 'March 27, 2026',
-  e2: 'March 28, 2026',
-  e3: 'March 28, 2026',
+  e2: 'March 27, 2026',
+  e3: 'March 27, 2026',
   e4: 'March 27, 2026',
   e5: 'March 27, 2026',
   e6: 'March 27, 2026',
   e7: 'March 27, 2026',
   e8: 'March 27, 2026',
   e9: 'March 27, 2026',
-  e10: 'March 28, 2026',
-  e11: 'March 28, 2026',
-  e12: 'March 28, 2026',
   e13: 'March 28, 2026',
   e14: 'March 28, 2026',
-  e15: 'March 28, 2026'
+  e15: 'March 28, 2026',
+  e16: 'March 28, 2026',
+  e17: 'March 28, 2026',
+  e18: 'March 28, 2026',
+  e19: 'March 28, 2026',
+  e20: 'March 28, 2026',
+  e21: 'March 28, 2026',
+  e23: 'March 28, 2026'
 };
 
 const EVENT_TITLE_TO_ID = {
-  projectpitchday: 'e1',
-  aipromptbattle: 'e2',
-  melodymaniaanddanceinfusion: 'e3',
+  projectpitchday: 'e2',
+  aiinev: 'e3',
   cookingwithoutfire: 'e4',
   blindfoldtastetest: 'e5',
   surveyhunt: 'e6',
   artgallery: 'e7',
   spotactingbattle: 'e8',
-  gamezone: 'e9',
-  tallesttowerchallenge: 'e10',
-  cinematiccampusvideo: 'e11',
-  memechallenge: 'e12',
-  laughlogicloot: 'e13',
-  dialoguedeliverybattle: 'e14',
-  minutemaster: 'e15'
+  laughlogicloot: 'e9',
+  aipromptbattle: 'e13',
+  tallesttowerchallenge: 'e14',
+  buildathon: 'e15',
+  socialawarenessvideocontest: 'e16',
+  memechallenge: 'e17',
+  gamezone: 'e18',
+  circuitmania: 'e19',
+  circuitmaina: 'e19',
+  dialoguedeliverybattle: 'e20',
+  minutemaster: 'e21',
+  melodymaniaanddanceinfusion: 'e23',
+  mealodymaniaanddanceinfusion: 'e23'
 };
 
 function doGet(e) {
@@ -134,7 +142,7 @@ function doGet(e) {
           return;
         }
 
-        const rows = sheet.getRange(2, 1, lastRow - 1, 11).getValues();
+        const rows = sheet.getRange(2, 1, lastRow - 1, 12).getValues();
         rows.forEach(function (row) {
           const eventTitle = normalizeString_(row[7]) || EVENT_ID_TO_TITLE[eventId] || eventId;
           allRows.push({
@@ -149,7 +157,7 @@ function doGet(e) {
             eventId: normalizeString_(row[8]) || eventId,
             eventDate: EVENT_ID_TO_DATE[eventId] || EVENT_DATE_LABEL,
             registrationId: normalizeString_(row[9]),
-            razorpayPaymentId: normalizeString_(row[10])
+            razorpayPaymentId: normalizeString_(row[10]),
           });
         });
       });
@@ -369,6 +377,7 @@ function resolveEvent_(eventEntry) {
   const eventId = inputId || mappedByTitle;
 
   if (!eventId || !EVENT_SHEET_MAP[eventId]) {
+    console.log('Lookup Failed - inputId: ' + inputId + ', mappedByTitle: ' + mappedByTitle + ', inputTitle: ' + inputTitle);
     throw new Error('No spreadsheet configured for event: ' + (inputTitle || inputId || 'unknown'));
   }
 
@@ -398,7 +407,7 @@ function isSpreadsheetConfigured_(spreadsheetId) {
   if (!spreadsheetId) {
     return false;
   }
-  return spreadsheetId.indexOf('PASTE_SPREADSHEET_ID_FOR_') !== 0;
+  return spreadsheetId.indexOf('PASTE_') !== 0;
 }
 
 function isAdminAllowed_(adminEmail) {
@@ -727,6 +736,10 @@ function sendConfirmationEmail_(data, eventTitles, skippedEvents) {
         + '</tr>';
     }
 
+    // QR Code for the overall registration (using the first one as primary ID for the pass)
+    var qrCodeUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent(regId || email);
+
+
     var htmlBody = '<!DOCTYPE html>'
       + '<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>'
       + '<body style="margin:0;padding:0;background:#05000A;font-family:\'Segoe UI\',Tahoma,Geneva,Verdana,sans-serif;">'
@@ -758,6 +771,14 @@ function sendConfirmationEmail_(data, eventTitles, skippedEvents) {
       + '<p style="margin:10px 0 0;font-size:14px;color:#aaa;line-height:1.6;">You\'re officially locked in. Here\'s your event lineup — save this email as your digital pass.</p>'
       + '</td></tr>'
 
+      // ── Digital Pass / QR Code ──
+      + '<tr><td align="center" style="padding:20px 32px;">'
+      + '<table cellpadding="0" cellspacing="0" style="background:#ffffff;padding:12px;border-radius:12px;">'
+      + '<tr><td><img src="' + qrCodeUrl + '" alt="Digital Pass QR" width="150" height="150" style="display:block;" /></td></tr>'
+      + '</table>'
+      + '<p style="margin:12px 0 0;font-size:12px;color:#00FFFF;font-weight:bold;letter-spacing:1px;">SHOW THIS QR AT THE VENUE</p>'
+      + '</td></tr>'
+
       // ── Event Cards Section ──
       + '<tr><td style="padding:20px 32px 8px;">'
       + '<p style="margin:0 0 12px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#00FFFF;font-weight:700;">🎯 YOUR EVENT LINEUP</p>'
@@ -786,53 +807,22 @@ function sendConfirmationEmail_(data, eventTitles, skippedEvents) {
       + '</td></tr></table>'
       + '</td></tr>'
 
-      // ── Important Notes ──
-      + '<tr><td style="padding:0 32px 28px;">'
-      + '<table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(255,211,0,0.08);border:1px solid rgba(255,211,0,0.2);border-radius:12px;">'
-      + '<tr><td style="padding:16px 20px;">'
-      + '<p style="margin:0 0 6px;font-size:13px;font-weight:700;color:#FFD300;">⚠️ IMPORTANT</p>'
-      + '<p style="margin:0;font-size:13px;color:#ccc;line-height:1.6;">• Bring your college ID card for entry<br>• Arrive 15 minutes early for check-in<br>• Show this email at the registration desk</p>'
-      + '</td></tr></table>'
-      + '</td></tr>'
-
-      // ── CTA Button ──
-      + '<tr><td align="center" style="padding:0 32px 32px;">'
-      + '<a href="https://www.vaibhav2k26.online/#/dashboard" style="display:inline-block;background:#FF0055;color:#ffffff;text-decoration:none;padding:14px 40px;border-radius:8px;font-size:14px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;">View Dashboard →</a>'
-      + '</td></tr>'
-
-      + '</table>' // end main card
-      + '</td></tr>'
-
       // ── Footer ──
-      + '<tr><td style="padding:28px 0;text-align:center;">'
-      + '<p style="margin:0 0 8px;font-size:13px;color:#666;">Made with 🔥 by the Vaibhav 2K26 Team</p>'
-      + '<p style="margin:0;font-size:12px;color:#444;">Jain College of Engineering & Technology, Hubballi</p>'
-      + '<p style="margin:12px 0 0;font-size:11px;color:#333;">This is an automated confirmation. Do not reply to this email.</p>'
+      + '<tr><td style="padding:0 32px 40px;text-align:center;">'
+      + '<p style="margin:0;font-size:13px;color:#666;">Need help? Reply to this email or visit our <a href="https://www.vaibhav2k26.online" style="color:#FF0055;text-decoration:none;">website</a>.</p>'
+      + '<p style="margin:12px 0 0;font-size:11px;color:#444;text-transform:uppercase;letter-spacing:1px;">&copy; 2026 Vaibhav JCET. All rights reserved.</p>'
       + '</td></tr>'
 
-      + '</table>' // end inner
-      + '</td></tr></table>' // end outer
+      + '</table>' // End Main Card background table
+      + '</td></tr>'
+      + '</table>' // End max-width table
+      + '</td></tr>'
+      + '</table>' // End outer wrapper
       + '</body></html>';
-
-    // Plain text fallback for clients that don't support HTML
-    var eventLines = eventTitles.map(function (eventItem) {
-      if (typeof eventItem === 'string') return '- ' + eventItem;
-      return '- ' + eventItem.title + ' (' + eventItem.date + ')';
-    });
-    var plainBody = 'Hi ' + fullName + ',\n\n'
-      + 'Your registration for Vaibhav 2K26 is confirmed!\n\n'
-      + 'Your Event Lineup:\n' + eventLines.join('\n') + '\n\n'
-      + (regId ? 'Registration ID: ' + regId + '\n' : '')
-      + (paymentId ? 'Payment ID: ' + paymentId + '\n' : '')
-      + '\nVenue: Jain College of Engineering & Technology, Hubballi\n'
-      + 'Date: March 27-28, 2026\n\n'
-      + 'Bring your college ID card for entry.\n\n'
-      + 'See you at the fest!\nVaibhav 2K26 Team';
 
     MailApp.sendEmail({
       to: email,
       subject: subject,
-      body: plainBody,
       htmlBody: htmlBody
     });
   } catch (error) {

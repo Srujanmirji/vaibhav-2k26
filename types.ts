@@ -1,15 +1,21 @@
 export interface EventDetails {
   id: string;
   title: string;
-  category: 'Coding' | 'Gaming' | 'Quiz' | 'Workshop' | 'Presentation' | 'Innovation' | 'AI/Tech' | 'Cultural' | 'Ceremony' | 'Fun' | 'Competition';
+  category: 'Coding' | 'Gaming' | 'Quiz' | 'Workshop' | 'Presentation' | 'Innovation' | 'AI/Tech' | 'Tech' | 'Cultural' | 'Ceremony' | 'Fun' | 'Competition' | 'General';
   description: string;
+  longDescription?: string;
+  rules?: string[];
+  facultyCoordinators?: { name: string; phone: string }[];
+  studentCoordinators?: { name: string; phone: string }[];
   date: string;
   time: string;
   venue: string;
   image: string;
   teamSize: string;
-  department?: 'CSE' | 'ECE' | 'CVE' | 'ME' | 'BS' | 'General';
+  department?: 'CSE' | 'ECE' | 'CVE' | 'ME' | 'BS' | 'General' | 'All';
   fee?: number; // Fee in INR
+  registrationClosed?: boolean;
+  rulesPdf?: string;
 }
 
 export interface RegistrationFormData {

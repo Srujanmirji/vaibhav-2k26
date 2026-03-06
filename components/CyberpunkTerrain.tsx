@@ -4,8 +4,9 @@ import * as THREE from 'three';
 
 const Terrain = () => {
     const meshRef = useRef<THREE.Mesh>(null);
-    const size = 300;
-    const segments = 100;
+    const isMobile = useMemo(() => /Mobi|Android|iPhone/i.test(navigator.userAgent), []);
+    const size = isMobile ? 200 : 300;
+    const segments = isMobile ? 50 : 100;
 
     const geometry = useMemo(() => {
         const geo = new THREE.PlaneGeometry(size, size, segments, segments);
@@ -54,8 +55,9 @@ const Terrain = () => {
 // Second terrain overlay for dual-color chaotic vibe (faint cyan lines over purple)
 const TerrainOverlay = () => {
     const meshRef = useRef<THREE.Mesh>(null);
-    const size = 300;
-    const segments = 100;
+    const isMobile = useMemo(() => /Mobi|Android|iPhone/i.test(navigator.userAgent), []);
+    const size = isMobile ? 200 : 300;
+    const segments = isMobile ? 50 : 100;
 
     const geometry = useMemo(() => {
         const geo = new THREE.PlaneGeometry(size, size, segments, segments);

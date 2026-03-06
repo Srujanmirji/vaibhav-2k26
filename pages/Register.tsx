@@ -20,7 +20,7 @@ const Register: React.FC = () => {
     college: '',
     department: '',
     year: '1',
-    selectedEvents: [] // Changed from selectedEvent string to array
+    selectedEvents: [],
   });
 
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
@@ -32,7 +32,7 @@ const Register: React.FC = () => {
   const [loadingRegisteredEvents, setLoadingRegisteredEvents] = useState(false);
   const [registeredEventKeys, setRegisteredEventKeys] = useState<string[]>([]);
   const registeredEventSet = new Set(registeredEventKeys);
-  const availableEvents = EVENTS.filter((event) => !registeredEventSet.has(normalizeTitleKey(event.title)));
+  const availableEvents = EVENTS.filter((event) => !event.registrationClosed && !registeredEventSet.has(normalizeTitleKey(event.title)));
 
   const fetchRegisteredEvents = async (email: string, forceRefresh = false) => {
     if (!email) {
@@ -67,7 +67,7 @@ const Register: React.FC = () => {
     }
 
     const preselectedEvent = EVENTS.find((event) => event.id === eventId);
-    if (!preselectedEvent) {
+    if (!preselectedEvent || preselectedEvent.registrationClosed) {
       return;
     }
     if (registeredEventSet.has(normalizeTitleKey(preselectedEvent.title))) {
@@ -282,7 +282,7 @@ const Register: React.FC = () => {
           college: '',
           department: '',
           year: '1',
-          selectedEvents: []
+          selectedEvents: [],
         }));
         setCollegeSelection('');
         fetchRegisteredEvents(formData.email, true);
@@ -389,7 +389,7 @@ const Register: React.FC = () => {
                     college: '',
                     department: '',
                     year: '1',
-                    selectedEvents: []
+                    selectedEvents: [],
                   }));
                   setCollegeSelection('');
 
@@ -476,8 +476,8 @@ const Register: React.FC = () => {
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px]"></div>
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/10 rounded-full blur-[120px]"></div>
 
-      <div className="w-full max-w-4xl bg-card/60 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.5)] p-4 sm:p-6 md:p-10 relative z-10">
-        <div className="text-center mb-6 md:mb-8">
+      <div className="w-full max-w-4xl glass-card rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.5)] p-4 sm:p-5 md:p-10 relative z-10">
+        <div className="text-center mb-5 md:mb-8">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-2 font-mono tracking-tighter uppercase">
             Secure Your <span className="text-primary">Spot</span>
           </h1>
@@ -520,7 +520,7 @@ const Register: React.FC = () => {
                     college: '',
                     department: '',
                     year: '1',
-                    selectedEvents: []
+                    selectedEvents: [],
                   }));
                   setCollegeSelection('');
                 }}
@@ -686,6 +686,8 @@ const Register: React.FC = () => {
                     </div>
                   </div>
 
+
+
                   {/* Event Selection - Multi-select */}
                   <div className="space-y-4">
                     <label className="text-xs font-bold text-secondary uppercase tracking-wider block">
@@ -697,32 +699,52 @@ const Register: React.FC = () => {
                           <Loader2 className="w-5 h-5 animate-spin mr-2" />
                           Loading available events...
                         </div>
-                      ) : availableEvents.length === 0 ? (
-                        <div className="col-span-full text-center py-8 text-gray-400">
-                          You are already registered for all events.
-                        </div>
-                      ) : availableEvents.map(event => {
+                      ) : EVENTS.map(event => {
+                        const isRegistered = registeredEventSet.has(normalizeTitleKey(event.title));
                         const isSelected = formData.selectedEvents.includes(event.title);
+                        const isClosed = event.registrationClosed;
+
+                        if (isClosed && !isRegistered) return null;
+
                         return (
                           <div
                             key={event.id}
-                            onClick={() => handleEventToggle(event.title)}
-                            className={`cursor-pointer p-4 rounded-lg border transition-all duration-300 flex items-center justify-between group ${isSelected
-                              ? 'bg-primary/20 border-primary shadow-[0_0_15px_rgba(255,0,85,0.2)]'
-                              : 'bg-black/40 border-white/5 hover:border-primary/50 hover:bg-white/5'
+                            onClick={() => !isRegistered && !isClosed && handleEventToggle(event.title)}
+                            className={`p-4 rounded-lg border transition-all duration-300 flex items-center justify-between group ${isRegistered
+                              ? 'bg-green-500/5 border-green-500/20 opacity-80 cursor-default'
+                              : isClosed
+                                ? 'bg-gray-800/10 border-white/5 opacity-50 cursor-not-allowed'
+                                : isSelected
+                                  ? 'bg-primary/20 border-primary shadow-[0_0_15px_rgba(255,0,85,0.2)] cursor-pointer'
+                                  : 'bg-black/40 border-white/5 hover:border-primary/50 hover:bg-white/5 cursor-pointer'
                               }`}
                           >
-                            <div>
-                              <p className={`font-bold text-sm ${isSelected ? 'text-white' : 'text-gray-400 group-hover:text-white'}`}>
+                            <div className="min-w-0 pr-2">
+                              <p className={`font-bold text-sm truncate ${isRegistered ? 'text-green-400/80' : isSelected ? 'text-white' : 'text-gray-400 group-hover:text-white'
+                                }`}>
                                 {event.title}
                               </p>
-                              <p className="text-xs text-gray-500">{event.category} | {event.date}</p>
+                              <p className="text-[10px] text-gray-500 uppercase tracking-tighter">
+                                {event.category} | {event.date}
+                              </p>
+                              {isRegistered && (
+                                <span className="inline-block mt-1 px-1.5 py-0.5 bg-green-500/20 text-green-400 text-[9px] font-black rounded uppercase border border-green-500/30">
+                                  ALREADY REGISTERED
+                                </span>
+                              )}
+                              {isClosed && !isRegistered && (
+                                <span className="inline-block mt-1 px-1.5 py-0.5 bg-red-500/20 text-red-400 text-[9px] font-black rounded uppercase border border-red-500/30">
+                                  REGISTRATION CLOSED
+                                </span>
+                              )}
                             </div>
-                            <div className={`w-6 h-6 rounded-full border flex items-center justify-center transition-colors ${isSelected
-                              ? 'bg-primary border-primary text-white'
-                              : 'border-gray-600 group-hover:border-primary/50'
+                            <div className={`shrink-0 w-6 h-6 rounded-full border flex items-center justify-center transition-colors ${isRegistered
+                              ? 'bg-green-500 border-green-500 text-white'
+                              : isSelected
+                                ? 'bg-primary border-primary text-white'
+                                : 'border-gray-600 group-hover:border-primary/50'
                               }`}>
-                              {isSelected && <Check className="w-4 h-4" />}
+                              {(isSelected || isRegistered) && <Check className="w-4 h-4" />}
                             </div>
                           </div>
                         );

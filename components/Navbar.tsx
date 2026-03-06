@@ -105,7 +105,7 @@ const Navbar: React.FC = () => {
 
       {/* Mobile Menu Dropdown */}
       <div
-        className={`md:hidden absolute w-full h-screen overflow-y-auto bg-transparent backdrop-blur-md border-b border-primary/20 transition-all duration-300 ease-in-out ${isOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
+        className={`md:hidden absolute w-full h-[100dvh] overflow-y-auto bg-darker/95 backdrop-blur-xl border-b border-primary/20 transition-all duration-300 ease-in-out ${isOpen ? 'max-h-[100dvh] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
           }`}
       >
         <div className="px-4 pt-2 pb-6 space-y-2">

@@ -423,7 +423,7 @@ const Admin: React.FC = () => {
                     <table className="min-w-full text-sm">
                       <thead>
                         <tr className="bg-black/60 border-b border-white/10">
-                          {['Timestamp', 'Name', 'Email', 'Phone', 'College', 'Dept', 'Year', 'Event', 'Date', 'Reg ID', 'Payment', 'Status'].map((header) => (
+                          {['Timestamp', 'Name', 'Email', 'Event', 'Reg ID', 'Status'].map((header) => (
                             <th key={header} className="px-4 py-3.5 text-left text-[10px] font-bold text-gray-400 uppercase tracking-[0.15em]">
                               {header}
                             </th>
@@ -437,27 +437,25 @@ const Admin: React.FC = () => {
                             className="border-t border-white/[0.03] text-gray-300 hover:bg-white/[0.03] transition-colors duration-200"
                           >
                             <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-500">{row.timestamp || '-'}</td>
-                            <td className="px-4 py-3 whitespace-nowrap font-semibold text-white">{row.fullName || '-'}</td>
-                            <td className="px-4 py-3 whitespace-nowrap font-mono text-xs text-secondary/70">{row.email || '-'}</td>
-                            <td className="px-4 py-3 whitespace-nowrap">{row.phone || '-'}</td>
-                            <td className="px-4 py-3 whitespace-nowrap max-w-[140px] truncate" title={row.college}>{row.college || '-'}</td>
-                            <td className="px-4 py-3 whitespace-nowrap">{row.department || '-'}</td>
-                            <td className="px-4 py-3 whitespace-nowrap text-center">{row.year || '-'}</td>
+                            <td className="px-4 py-3 whitespace-nowrap font-semibold text-white">
+                              <div className="flex flex-col">
+                                <span>{row.fullName || '-'}</span>
+                                <span className="text-[10px] text-gray-500">{row.phone || '-'}</span>
+                              </div>
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap font-mono text-xs text-secondary/70">
+                              <div className="flex flex-col">
+                                <span>{row.email || '-'}</span>
+                                <span className="text-[10px] text-gray-600 truncate max-w-[120px]">{row.college || '-'}</span>
+                              </div>
+                            </td>
                             <td className="px-4 py-3 whitespace-nowrap">
                               <span className="inline-block px-2 py-0.5 rounded-md bg-primary/10 border border-primary/20 text-primary text-xs font-bold">
                                 {row.eventTitle || '-'}
                               </span>
                             </td>
-                            <td className="px-4 py-3 whitespace-nowrap text-xs">{row.eventDate || '-'}</td>
                             <td className="px-4 py-3 whitespace-nowrap">
                               <span className="font-mono text-xs text-primary/80">{row.registrationId || '-'}</span>
-                            </td>
-                            <td className="px-4 py-3 whitespace-nowrap">
-                              {row.razorpayPaymentId ? (
-                                <a href={`https://dashboard.razorpay.com/app/payments/${row.razorpayPaymentId}`} target="_blank" rel="noopener noreferrer" className="font-mono text-[11px] text-secondary/70 hover:text-secondary transition-colors" title="View on Razorpay">
-                                  {row.razorpayPaymentId} 🔗
-                                </a>
-                              ) : <span className="text-gray-600">-</span>}
                             </td>
                             <td className="px-4 py-3 whitespace-nowrap">
                               {row.razorpayPaymentId ? (
