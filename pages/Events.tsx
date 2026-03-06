@@ -82,7 +82,7 @@ const Events: React.FC = () => {
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
           {filteredEvents.map((event, index) => (
             <motion.div
               key={event.id}
@@ -92,7 +92,7 @@ const Events: React.FC = () => {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="bg-card/40 backdrop-blur-md border border-white/5 rounded-2xl overflow-hidden hover:border-primary/50 transition-all duration-300 group flex flex-col hover:shadow-[0_0_30px_rgba(255,0,85,0.15)] hover:-translate-y-2"
             >
-              <div className="relative h-56 overflow-hidden">
+              <div className="relative h-44 sm:h-56 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-t from-darker to-transparent z-10 opacity-80"></div>
                 <img
                   src={event.image}
@@ -101,48 +101,50 @@ const Events: React.FC = () => {
                   loading="lazy"
                   decoding="async"
                 />
-                <div className="absolute top-4 right-4 z-20">
-                  <span className="inline-block px-3 py-1 bg-black/50 backdrop-blur border border-primary/50 text-primary text-xs font-bold uppercase tracking-wider rounded">
+                <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20">
+                  <span className="inline-block px-2 py-0.5 sm:px-3 sm:py-1 bg-black/50 backdrop-blur border border-primary/50 text-primary text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded">
                     {event.category}
                   </span>
                 </div>
               </div>
 
-              <div className="p-6 flex-1 flex flex-col relative">
-                <h3 className="text-2xl font-bold text-white mb-3 font-mono group-hover:text-primary transition-colors">{event.title}</h3>
-                <p className="text-gray-400 text-sm mb-6 flex-1 leading-relaxed">{event.description}</p>
+              <div className="p-4 sm:p-6 flex-1 flex flex-col relative">
+                <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3 font-mono group-hover:text-primary transition-colors">{event.title}</h3>
+                <p className="text-gray-400 text-xs sm:text-sm mb-4 sm:mb-6 flex-1 leading-relaxed line-clamp-3 sm:line-clamp-none">{event.description}</p>
 
-                <div className="space-y-3 mb-8 border-t border-white/5 pt-4">
-                  <div className="flex items-center text-gray-400 text-sm">
-                    <Calendar className="w-4 h-4 mr-3 text-secondary" />
+                <div className="space-y-2 sm:space-y-3 mb-5 sm:mb-8 border-t border-white/5 pt-3 sm:pt-4">
+                  <div className="flex items-center text-gray-400 text-xs sm:text-sm">
+                    <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2 sm:mr-3 text-secondary shrink-0" />
                     {event.date} • {event.time}
                   </div>
-                  <div className="flex items-center text-gray-400 text-sm">
-                    <MapPin className="w-4 h-4 mr-3 text-secondary" />
-                    {event.venue}
+                  <div className="flex items-center text-gray-400 text-xs sm:text-sm">
+                    <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2 sm:mr-3 text-secondary shrink-0" />
+                    <span className="truncate">{event.venue}</span>
                   </div>
-                  <div className="flex items-center text-gray-400 text-sm">
-                    <Users className="w-4 h-4 mr-3 text-secondary" />
+                  <div className="flex items-center text-gray-400 text-xs sm:text-sm">
+                    <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2 sm:mr-3 text-secondary shrink-0" />
                     {event.teamSize}
                   </div>
                 </div>
 
-                <button
-                  onClick={() => setSelectedEventForModal(event)}
-                  className="w-full mb-3 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white font-bold py-3.5 rounded-xl transition-all border border-white/10"
-                >
-                  VIEW DETAILS <Info className="w-4 h-4" />
-                </button>
-
-                {!event.registrationClosed && (
-                  <Link
-                    to={`/register?event=${encodeURIComponent(event.id)}`}
-                    state={{ preselectedEventId: event.id }}
-                    className="w-full block text-center bg-white/5 hover:bg-primary hover:text-white text-white font-bold py-3.5 rounded-xl transition-all border border-white/10 hover:border-primary group-hover:shadow-[0_0_15px_rgba(255,0,85,0.4)] flex items-center justify-center gap-2"
+                <div className="mt-auto space-y-2 sm:space-y-3">
+                  <button
+                    onClick={() => setSelectedEventForModal(event)}
+                    className="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white text-xs sm:text-sm font-bold py-3 sm:py-3.5 rounded-xl transition-all border border-white/10"
                   >
-                    REGISTER <ArrowUpRight className="w-4 h-4" />
-                  </Link>
-                )}
+                    VIEW DETAILS <Info className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  </button>
+
+                  {!event.registrationClosed && (
+                    <Link
+                      to={`/register?event=${encodeURIComponent(event.id)}`}
+                      state={{ preselectedEventId: event.id }}
+                      className="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-primary hover:text-white text-white text-xs sm:text-sm font-bold py-3 sm:py-3.5 rounded-xl transition-all border border-white/10 hover:border-primary group-hover:shadow-[0_0_15px_rgba(255,0,85,0.4)]"
+                    >
+                      REGISTER <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    </Link>
+                  )}
+                </div>
               </div>
             </motion.div>
           ))}
