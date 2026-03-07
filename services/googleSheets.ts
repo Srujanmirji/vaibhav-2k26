@@ -33,6 +33,7 @@ const SIMULATED_DB: RegistrationFormData[] = [
     department: "Mechanical",
     year: "1",
     selectedEvents: ["Robo Wars", "Tech Quiz"],
+    registrationType: 'Solo',
     razorpayPaymentId: "pay_def_test789"
   }
 ];

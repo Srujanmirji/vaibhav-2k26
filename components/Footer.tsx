@@ -1,5 +1,5 @@
 import React from 'react';
-import { Github, Twitter, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
+import { Instagram, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
 
 const Footer: React.FC = () => {
   return (
@@ -20,13 +20,10 @@ const Footer: React.FC = () => {
               Join us for a thrilling college event filled with non-stop fun, excitement, and unforgettable memories! Get ready for games, music, and laughter with friends. Don't miss out on the ultimate campus experience! 🎉🎶🔥
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="p-2 min-h-[44px] min-w-[44px] inline-flex items-center justify-center bg-white/5 rounded-full text-gray-400 hover:text-white hover:bg-primary transition-all">
-                <Github className="h-5 w-5" />
+              <a href="https://www.instagram.com/jcet_hubballi?igsh=OXAxZGw5cXg0aXlq" target="_blank" rel="noopener noreferrer" className="p-2 min-h-[44px] min-w-[44px] inline-flex items-center justify-center bg-white/5 rounded-full text-gray-400 hover:text-white hover:bg-primary transition-all">
+                <Instagram className="h-5 w-5" />
               </a>
-              <a href="#" className="p-2 min-h-[44px] min-w-[44px] inline-flex items-center justify-center bg-white/5 rounded-full text-gray-400 hover:text-white hover:bg-secondary transition-all">
-                <Twitter className="h-5 w-5" />
-              </a>
-              <a href="#" className="p-2 min-h-[44px] min-w-[44px] inline-flex items-center justify-center bg-white/5 rounded-full text-gray-400 hover:text-white hover:bg-tertiary transition-all">
+              <a href="https://www.linkedin.com/in/jcet-hubballi-7035aa1b9?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" rel="noopener noreferrer" className="p-2 min-h-[44px] min-w-[44px] inline-flex items-center justify-center bg-white/5 rounded-full text-gray-400 hover:text-white hover:bg-tertiary transition-all">
                 <Linkedin className="h-5 w-5" />
               </a>
             </div>
