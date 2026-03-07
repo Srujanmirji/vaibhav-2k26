@@ -58,24 +58,24 @@ const Home: React.FC = () => {
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto flex flex-col items-center">
 
           {/* Animated Logo */}
-          <div className="mb-3 md:mb-8 mt-2 md:mt-16 relative group">
+          <div className="mb-2 md:mb-6 mt-2 md:mt-12 relative group">
             <div className="absolute inset-0 bg-tertiary/10 blur-[50px] rounded-full animate-pulse-slow"></div>
             <img
               src="/LOGO.png"
               alt="Vaibhav 2K26 official logo"
-              className="relative w-72 sm:w-96 md:w-[32rem] lg:w-[40rem] h-auto animate-float drop-shadow-[0_0_25px_rgba(255,215,0,0.5)] transition-transform duration-500 hover:scale-105"
+              className="relative w-60 sm:w-80 md:w-[28rem] lg:w-[36rem] h-auto animate-float drop-shadow-[0_0_25px_rgba(255,215,0,0.5)] transition-transform duration-500 hover:scale-105"
               fetchPriority="high"
               decoding="async"
             />
           </div>
 
-          <div className="inline-block mb-3 md:mb-4 px-4 py-1.5 rounded-full border border-secondary/50 bg-secondary/10 text-secondary text-sm font-bold tracking-widest uppercase shadow-[0_0_15px_rgba(0,255,255,0.3)] backdrop-blur-sm">
+          <div className="inline-block mb-2 md:mb-3 px-4 py-1.5 rounded-full border border-secondary/50 bg-secondary/10 text-secondary text-xs md:text-sm font-bold tracking-widest uppercase shadow-[0_0_15px_rgba(0,255,255,0.3)] backdrop-blur-sm">
             March 27-28, 2026
           </div>
 
           <h1 className="sr-only">Vaibhav 2K26</h1>
 
-          <p className="text-fluid-p text-gray-300 mt-2 md:mt-6 mb-4 md:mb-8 max-w-2xl mx-auto font-light border-l-2 border-primary pl-4 text-left md:text-center md:border-none md:pl-0 bg-black/20 md:bg-transparent p-2 md:p-0 rounded-r-lg">
+          <p className="text-sm md:text-base text-gray-300 mt-1 md:mt-4 mb-3 md:mb-6 max-w-2xl mx-auto font-light border-l-2 border-primary pl-4 text-left md:text-center md:border-none md:pl-0 bg-black/20 md:bg-transparent p-2 md:p-0 rounded-r-lg">
             The ultimate convergence of code, creativity, and chaos.
             <br className="hidden md:block" /> Join the revolution at Vaibhav 2K26.
           </p>
@@ -98,7 +98,7 @@ const Home: React.FC = () => {
             </Link>
           </div>
 
-          <div className="mt-4 md:mt-8 flex flex-wrap justify-center gap-2 md:gap-3">
+          <div className="mt-3 md:mt-6 flex flex-wrap justify-center gap-2 md:gap-3">
             {countdown.isLive ? (
               <div className="px-5 py-3 rounded-xl border border-emerald-400/60 bg-emerald-400/10 text-emerald-300 text-sm md:text-base font-bold uppercase tracking-wider shadow-[0_0_15px_rgba(52,211,153,0.35)]">
                 Event Is Live
@@ -127,7 +127,7 @@ const Home: React.FC = () => {
             )}
           </div>
 
-          <div className="mt-3 md:mt-4 inline-flex items-center gap-2 md:gap-3 px-3 md:px-5 py-2 md:py-2.5 rounded-full border border-primary/50 bg-primary/10 backdrop-blur-sm shadow-[0_0_18px_rgba(255,0,85,0.35)] animate-pulse">
+          <div className="mt-2 md:mt-3 inline-flex items-center gap-2 md:gap-3 px-3 md:px-5 py-2 md:py-2.5 rounded-full border border-primary/50 bg-primary/10 backdrop-blur-sm shadow-[0_0_18px_rgba(255,0,85,0.35)] animate-pulse">
             <span className="relative flex h-2 w-2 md:h-3 md:w-3">
               <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-75 animate-ping" />
               <span className="relative inline-flex h-2 w-2 md:h-3 md:w-3 rounded-full bg-primary" />
@@ -147,7 +147,7 @@ const Home: React.FC = () => {
           <button
             type="button"
             onClick={handleScrollDown}
-            className="mt-6 md:mt-10 min-h-[44px] min-w-[44px] inline-flex flex-col items-center text-gray-400 hover:text-secondary transition-colors duration-300 group pb-24 md:pb-0"
+            className="mt-4 md:mt-8 min-h-[44px] min-w-[44px] inline-flex flex-col items-center text-gray-400 hover:text-secondary transition-colors duration-300 group pb-16 md:pb-0"
             aria-label="Scroll down to next section"
           >
             <span className="text-[10px] md:text-xs font-bold tracking-[0.25em] uppercase">Scroll</span>
@@ -224,6 +224,46 @@ const Home: React.FC = () => {
               </article>
             ))}
           </div>
+        </div>
+      </motion.section>
+
+      {/* MBA Event Banner */}
+      <motion.section
+        className="py-12 bg-darker border-t border-secondary/10"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <a
+            href="https://www.ranatantra.online/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block group relative overflow-hidden rounded-2xl border border-secondary/30 bg-gradient-to-r from-[#0a0020] via-[#0f0025] to-[#0a0020] p-6 md:p-8 hover:border-secondary/60 transition-all duration-500 hover:-translate-y-1 shadow-[0_0_20px_rgba(0,255,255,0.08)] hover:shadow-[0_0_30px_rgba(0,255,255,0.2)]"
+          >
+            <div className="absolute top-0 right-0 w-64 h-64 bg-secondary/5 rounded-full blur-[80px] group-hover:bg-secondary/10 transition-all duration-500 pointer-events-none" />
+            <div className="relative flex flex-col items-center text-center md:flex-row md:items-center md:text-left md:justify-between gap-5">
+              <div className="flex flex-col items-center md:flex-row md:items-center gap-4 md:gap-5">
+                <img src="/MBA_LOGO.png" alt="Ranatantra MBA Logo" className="w-24 h-24 md:w-28 md:h-28 rounded-xl object-contain shrink-0 drop-shadow-[0_0_10px_rgba(0,255,255,0.3)]" />
+                <div>
+                  <div className="inline-block px-3 py-1 rounded-full border border-secondary/40 bg-secondary/10 text-secondary text-[10px] font-bold tracking-widest uppercase mb-2">
+                    MBA Department Events
+                  </div>
+                  <h3 className="text-lg md:text-2xl font-black text-white">
+                    Explore <span className="text-secondary">Ranatantra</span> — MBA Fest
+                  </h3>
+                  <p className="text-gray-400 text-xs md:text-sm mt-1 max-w-lg">
+                    Check out exclusive events organized by the MBA department. Register and compete in business, management & leadership challenges.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center justify-center gap-2 text-secondary font-bold text-sm uppercase tracking-wider group-hover:gap-3 transition-all whitespace-nowrap mt-1 md:mt-0">
+                Visit Site
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+          </a>
         </div>
       </motion.section>
 

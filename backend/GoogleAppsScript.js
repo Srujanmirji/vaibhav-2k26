@@ -619,63 +619,63 @@ function sendConfirmationEmail_(data, eventTitles, skippedEvents) {
 
     var htmlBody = '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>'
       + '<body style="margin:0;padding:0;background-color:#05000A;font-family:\'Segoe UI\',Tahoma,Geneva,Verdana,sans-serif;-webkit-font-smoothing:antialiased;">'
-      + '<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#05000A;padding:40px 10px;"><tr><td align="center">'
-      + '<table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#0a0015;border:1px solid rgba(255,0,85,0.2);border-radius:24px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,0.8);">'
+      + '<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#05000A;padding:20px 10px;"><tr><td align="center">'
+      + '<table width="500" cellpadding="0" cellspacing="0" style="max-width:500px;width:100%;background:#0a0015;border:1px solid rgba(255,0,85,0.2);border-radius:20px;overflow:hidden;box-shadow:0 15px 40px rgba(0,0,0,0.8);">'
 
       // Header
-      + '<tr><td style="background:linear-gradient(135deg, #1a0033 0%, #05000A 100%);padding:40px 32px;text-align:center;border-bottom:1px solid rgba(255,0,85,0.1);">'
-      + '<img src="' + logoUrl + '" alt="JGI Logo" width="100" style="margin-bottom:15px;filter:drop-shadow(0 0 10px rgba(255,255,255,0.2));">'
-      + '<h1 style="margin:0;font-size:36px;color:#ffffff;letter-spacing:6px;text-transform:uppercase;font-weight:900;line-height:1;">VAIBHAV<span style="color:#FF0055;">2K26</span></h1>'
-      + '<div style="margin-top:10px;display:inline-block;padding:4px 12px;background:rgba(0,255,255,0.1);border:1px solid rgba(0,255,255,0.3);border-radius:20px;">'
-      + '<p style="margin:0;color:#00FFFF;font-size:10px;letter-spacing:3px;font-weight:800;text-transform:uppercase;">OFFICIAL DIGITAL PASS</p>'
+      + '<tr><td style="background:linear-gradient(135deg, #1a0033 0%, #05000A 100%);padding:28px 24px;text-align:center;border-bottom:1px solid rgba(255,0,85,0.1);">'
+      + '<img src="' + logoUrl + '" alt="JGI Logo" width="70" style="margin-bottom:10px;filter:drop-shadow(0 0 10px rgba(255,255,255,0.2));">'
+      + '<h1 style="margin:0;font-size:26px;color:#ffffff;letter-spacing:5px;text-transform:uppercase;font-weight:900;line-height:1;">VAIBHAV<span style="color:#FF0055;">2K26</span></h1>'
+      + '<div style="margin-top:8px;display:inline-block;padding:3px 10px;background:rgba(0,255,255,0.1);border:1px solid rgba(0,255,255,0.3);border-radius:20px;">'
+      + '<p style="margin:0;color:#00FFFF;font-size:9px;letter-spacing:3px;font-weight:800;text-transform:uppercase;">OFFICIAL DIGITAL PASS</p>'
       + '</div>'
       + '</td></tr>'
 
       // User Welcome
-      + '<tr><td style="padding:40px 40px 10px;">'
-      + '<p style="margin:0;font-size:24px;color:#ffffff;font-weight:800;">Access Granted, ' + fullName.split(' ')[0] + '!</p>'
-      + '<p style="margin:12px 0 0;font-size:15px;color:#aaa;line-height:1.6;">Your journey to the most awaited tech-fest begins here. We\'ve reserved your spot among the innovators.</p>'
+      + '<tr><td style="padding:24px 24px 8px;">'
+      + '<p style="margin:0;font-size:20px;color:#ffffff;font-weight:800;">Access Granted, ' + fullName.split(' ')[0] + '!</p>'
+      + '<p style="margin:8px 0 0;font-size:13px;color:#aaa;line-height:1.5;">Your journey to the most awaited tech-fest begins here. We\'ve reserved your spot among the innovators.</p>'
       + '</td></tr>'
 
       // Pass Section
-      + '<tr><td style="padding:20px 40px;">'
-      + '<table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(145deg, #110022 0%, #05000a 100%);border:1px dashed rgba(255,0,85,0.4);border-radius:20px;padding:25px;">'
+      + '<tr><td style="padding:14px 24px;">'
+      + '<table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(145deg, #110022 0%, #05000a 100%);border:1px dashed rgba(255,0,85,0.4);border-radius:16px;padding:18px;">'
       + '<tr>'
       + '<td valign="middle">'
-      + '<p style="margin:0 0 5px;font-size:11px;color:#555;font-weight:800;letter-spacing:2px;text-transform:uppercase;">OFFICIAL ID</p>'
-      + '<p style="margin:0 0 15px;font-size:16px;color:#FF0055;font-weight:800;font-family:monospace;letter-spacing:1px;">' + regId + '</p>'
-      + '<p style="margin:0 0 5px;font-size:11px;color:#555;font-weight:800;letter-spacing:2px;text-transform:uppercase;">HOLDER</p>'
-      + '<p style="margin:0 0 15px;font-size:16px;color:#fff;font-weight:700;">' + fullName + '</p>'
-      + '<p style="margin:0 0 5px;font-size:11px;color:#555;font-weight:800;letter-spacing:2px;text-transform:uppercase;">MODE</p>'
-      + '<p style="margin:0 0 15px;font-size:16px;color:#00FFFF;font-weight:700;">' + registrationType + '</p>'
-      + '<p style="margin:0 0 5px;font-size:11px;color:#555;font-weight:800;letter-spacing:2px;text-transform:uppercase;">COLLEGE</p>'
-      + '<p style="margin:0;font-size:13px;color:#eee;font-weight:600;">' + college + '</p>'
+      + '<p style="margin:0 0 3px;font-size:10px;color:#555;font-weight:800;letter-spacing:2px;text-transform:uppercase;">OFFICIAL ID</p>'
+      + '<p style="margin:0 0 10px;font-size:14px;color:#FF0055;font-weight:800;font-family:monospace;letter-spacing:1px;">' + regId + '</p>'
+      + '<p style="margin:0 0 3px;font-size:10px;color:#555;font-weight:800;letter-spacing:2px;text-transform:uppercase;">HOLDER</p>'
+      + '<p style="margin:0 0 10px;font-size:14px;color:#fff;font-weight:700;">' + fullName + '</p>'
+      + '<p style="margin:0 0 3px;font-size:10px;color:#555;font-weight:800;letter-spacing:2px;text-transform:uppercase;">MODE</p>'
+      + '<p style="margin:0 0 10px;font-size:14px;color:#00FFFF;font-weight:700;">' + registrationType + '</p>'
+      + '<p style="margin:0 0 3px;font-size:10px;color:#555;font-weight:800;letter-spacing:2px;text-transform:uppercase;">COLLEGE</p>'
+      + '<p style="margin:0;font-size:12px;color:#eee;font-weight:600;">' + college + '</p>'
       + '</td>'
       + '</tr>'
       + '</table>'
       + '</td></tr>'
 
       // Events Lineup
-      + '<tr><td style="padding:20px 40px 10px;">'
-      + '<p style="margin:0 0 15px;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#00FFFF;font-weight:800;">📍 YOUR SCHEDULED BATTLES</p>'
+      + '<tr><td style="padding:14px 24px 8px;">'
+      + '<p style="margin:0 0 10px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#00FFFF;font-weight:800;">📍 YOUR SCHEDULED BATTLES</p>'
       + '<table width="100%" cellpadding="0" cellspacing="0">' + eventCardsHtml + '</table>'
       + '</td></tr>'
 
       + skippedHtml
 
       // Details Grid
-      + '<tr><td style="padding:30px 40px;">'
-      + '<table width="100%" cellpadding="15" cellspacing="0" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:15px;">'
-      + (paymentId ? '<tr><td style="border-bottom:1px solid rgba(255,255,255,0.05);color:#555;font-size:12px;font-weight:700;text-transform:uppercase;">Payment ID</td><td style="border-bottom:1px solid rgba(255,255,255,0.05);color:#22c55e;font-size:12px;font-weight:700;text-align:right;font-family:monospace;">' + paymentId + '</td></tr>' : '')
-      + (teamName ? '<tr><td style="border-bottom:1px solid rgba(255,255,255,0.05);color:#555;font-size:12px;font-weight:700;text-transform:uppercase;">Team Name</td><td style="border-bottom:1px solid rgba(255,255,255,0.05);color:#FF0055;font-size:13px;font-weight:800;text-align:right;">' + teamName.toUpperCase() + '</td></tr>' : '')
-      + '<tr><td style="color:#555;font-size:12px;font-weight:700;text-transform:uppercase;">Venue</td><td style="color:#fff;font-size:12px;font-weight:600;text-align:right;">Jain College (JCET) Hubballi</td></tr>'
+      + '<tr><td style="padding:20px 24px;">'
+      + '<table width="100%" cellpadding="12" cellspacing="0" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:12px;">'
+      + (paymentId ? '<tr><td style="border-bottom:1px solid rgba(255,255,255,0.05);color:#555;font-size:11px;font-weight:700;text-transform:uppercase;">Payment ID</td><td style="border-bottom:1px solid rgba(255,255,255,0.05);color:#22c55e;font-size:11px;font-weight:700;text-align:right;font-family:monospace;">' + paymentId + '</td></tr>' : '')
+      + (teamName ? '<tr><td style="border-bottom:1px solid rgba(255,255,255,0.05);color:#555;font-size:11px;font-weight:700;text-transform:uppercase;">Team Name</td><td style="border-bottom:1px solid rgba(255,255,255,0.05);color:#FF0055;font-size:12px;font-weight:800;text-align:right;">' + teamName.toUpperCase() + '</td></tr>' : '')
+      + '<tr><td style="color:#555;font-size:11px;font-weight:700;text-transform:uppercase;">Venue</td><td style="color:#fff;font-size:11px;font-weight:600;text-align:right;">Jain College (JCET) Hubballi</td></tr>'
       + '</table>'
       + '</td></tr>'
 
       // Footer
-      + '<tr><td style="padding:0 40px 40px;text-align:center;">'
-      + '<p style="margin:0;font-size:13px;color:#444;">Questions? Reach us at <a href="mailto:vaibhav2k26jcet@gmail.com" style="color:#FF0055;text-decoration:none;">vaibhav2k26jcet@gmail.com</a></p>'
-      + '<p style="margin:15px 0 0;font-size:11px;color:#222;text-transform:uppercase;letter-spacing:2px;">&copy; 2026 VAIBHAV JCET HUBBALLI. ALL RIGHTS RESERVED.</p>'
+      + '<tr><td style="padding:0 24px 28px;text-align:center;">'
+      + '<p style="margin:0;font-size:12px;color:#444;">Questions? Reach us at <a href="mailto:vaibhav2k26jcet@gmail.com" style="color:#FF0055;text-decoration:none;">vaibhav2k26jcet@gmail.com</a></p>'
+      + '<p style="margin:10px 0 0;font-size:10px;color:#222;text-transform:uppercase;letter-spacing:2px;">&copy; 2026 VAIBHAV JCET HUBBALLI. ALL RIGHTS RESERVED.</p>'
       + '</td></tr>'
 
       + '</table>'

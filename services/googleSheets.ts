@@ -11,6 +11,7 @@ const SIMULATED_DB: RegistrationFormData[] = [
     department: "Computer Science",
     year: "3",
     selectedEvents: ["Project Pitch Day", "Code Debugging"],
+    registrationType: 'Solo',
     razorpayPaymentId: "pay_xyz_test123"
   },
   {
@@ -21,6 +22,7 @@ const SIMULATED_DB: RegistrationFormData[] = [
     department: "Information Science",
     year: "3",
     selectedEvents: ["BGMI Tournament", "Treasure Hunt"],
+    registrationType: 'Solo',
     razorpayPaymentId: "pay_abc_test456"
   },
   {
