@@ -52,6 +52,13 @@ const Register: React.FC = () => {
 
   const isGroupRegistration = forceGroup || (allowsGroup && formData.registrationType === 'Group');
 
+  // Auto-set registrationType to 'Group' when forceGroup is true (selector is hidden)
+  useEffect(() => {
+    if (forceGroup && formData.registrationType !== 'Group') {
+      setFormData(prev => ({ ...prev, registrationType: 'Group' }));
+    }
+  }, [forceGroup]);
+
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
   const [isGoogleSignedIn, setIsGoogleSignedIn] = useState(false);
@@ -59,6 +66,20 @@ const Register: React.FC = () => {
   const [collegeSelection, setCollegeSelection] = useState<string>('');
   const [generatedRegId, setGeneratedRegId] = useState<string>('');
   const [loadingRegisteredEvents, setLoadingRegisteredEvents] = useState(false);
+  const [perEventTeamDetails, setPerEventTeamDetails] = useState<{ [eventId: string]: { teamName: string; teamMembers: string; registrationType?: string } }>({});
+
+  // Group events among selected events (for per-event team fields)
+  const groupEventObjects = React.useMemo(() => {
+    return selectedEventObjects.filter(event =>
+      event && event.teamSize && (
+        event.teamSize.toLowerCase().includes('group') ||
+        event.teamSize.toLowerCase().includes('members') ||
+        event.teamSize.toLowerCase().includes('team')
+      )
+    );
+  }, [selectedEventObjects]);
+
+  const multipleGroupEvents = isGroupRegistration && groupEventObjects.length > 1;
   const [registeredEventKeys, setRegisteredEventKeys] = useState<string[]>([]);
   const registeredEventSet = new Set(registeredEventKeys);
   const availableEvents = EVENTS.filter((event) => !event.registrationClosed && !registeredEventSet.has(normalizeTitleKey(event.title)));
@@ -250,16 +271,36 @@ const Register: React.FC = () => {
   const validateForm = () => {
     if (
       !formData.department ||
-      formData.selectedEvents.length === 0 ||
-      (isGroupRegistration && !formData.teamName)
+      formData.selectedEvents.length === 0
     ) {
-      if (isGroupRegistration && !formData.teamName) {
-        setMessage("Please provide a Team Name for the selected group event(s).");
-      } else {
-        setMessage("Please fill in all required fields and select at least one event.");
-      }
+      setMessage("Please fill in all required fields and select at least one event.");
       setStatus('error');
       return false;
+    }
+
+    // Validate team name(s) for group registrations
+    if (isGroupRegistration) {
+      if (multipleGroupEvents) {
+        const missingTeamNames = groupEventObjects.filter(event => {
+          if (!event) return false;
+          const det = perEventTeamDetails[event.id];
+          const ts = (event.teamSize || '').toLowerCase();
+          const eventAllowsSolo = ts.includes('solo') || ts.includes('individual');
+          const eventForcesGroup = !eventAllowsSolo;
+          const eventRegType = det?.registrationType || (eventForcesGroup ? 'Group' : 'Solo');
+          // Only require team name if this event is set to Group
+          return eventRegType === 'Group' && !det?.teamName?.trim();
+        });
+        if (missingTeamNames.length > 0) {
+          setMessage(`Please provide team names for: ${missingTeamNames.map(e => e!.title).join(', ')}`);
+          setStatus('error');
+          return false;
+        }
+      } else if (!formData.teamName) {
+        setMessage("Please provide a Team Name for the selected group event(s).");
+        setStatus('error');
+        return false;
+      }
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
@@ -313,6 +354,10 @@ const Register: React.FC = () => {
     if (paymentId) {
       payload.razorpayPaymentId = paymentId;
     }
+    // Attach per-event team details if multiple group events
+    if (multipleGroupEvents && Object.keys(perEventTeamDetails).length > 0) {
+      payload.perEventTeamDetails = perEventTeamDetails;
+    }
 
     setFormData(prev => ({
       ...prev,
@@ -326,6 +371,7 @@ const Register: React.FC = () => {
       teamMembers: '',
     }));
     setCollegeSelection('');
+    setPerEventTeamDetails({});
 
     // 3. Background Sync (Crucially non-blocking)
     submitRegistration(payload)
@@ -335,11 +381,19 @@ const Register: React.FC = () => {
       });
   };
 
+  // Events that require payment for ALL students (including JCET)
+  const PAID_FOR_ALL_EVENT_IDS = ['e23', 'e25']; // Melody Mania, Dance Mania
+
+  const hasPaidForAllEvent = formData.selectedEvents.some(title => {
+    const ev = EVENTS.find(e => e.title === title);
+    return ev && PAID_FOR_ALL_EVENT_IDS.includes(ev.id);
+  });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
 
-    if (collegeSelection === 'Other') {
+    if (collegeSelection === 'Other' || hasPaidForAllEvent) {
       const totalFee = calculateTotalFee();
       if (totalFee > 0) {
         setStatus('submitting');
@@ -420,6 +474,10 @@ const Register: React.FC = () => {
                     registrationId: uniqueId,
                     razorpayPaymentId: response.razorpay_payment_id
                   };
+                  // Attach per-event team details if multiple group events
+                  if (multipleGroupEvents && Object.keys(perEventTeamDetails).length > 0) {
+                    registrationPayload.perEventTeamDetails = perEventTeamDetails;
+                  }
 
                   // Reset form immediately
                   setFormData(prev => ({
@@ -433,6 +491,7 @@ const Register: React.FC = () => {
                     teamMembers: '',
                   }));
                   setCollegeSelection('');
+                  setPerEventTeamDetails({});
 
                   // Background Sync
                   submitRegistration(registrationPayload)
@@ -592,7 +651,7 @@ const Register: React.FC = () => {
 
             {isGoogleSignedIn && (
               <div className="animate-fade-in-up">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-primary/10 border border-primary/30 p-4 rounded-xl mb-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-primary/10 border border-primary/30 p-3 rounded-xl mb-4">
                   <div className="flex items-center gap-4 min-w-0">
                     {userProfilePicture ? (
                       <img src={userProfilePicture} alt="Profile" referrerPolicy="no-referrer" className="w-12 h-12 rounded-full border-2 border-primary" />
@@ -616,35 +675,35 @@ const Register: React.FC = () => {
                   </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
                     {/* Full Name */}
-                    <div className="space-y-2">
+                    <div className="space-y-1">
                       <label className="text-xs font-bold text-secondary uppercase tracking-wider">Full Name</label>
                       <input
                         type="text"
                         name="fullName"
                         value={formData.fullName}
                         onChange={handleChange}
-                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-gray-600"
+                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-gray-600"
                       />
                     </div>
 
                     {/* Email */}
-                    <div className="space-y-2">
+                    <div className="space-y-1">
                       <label className="text-xs font-bold text-secondary uppercase tracking-wider">Email Address</label>
                       <input
                         type="email"
                         name="email"
                         value={formData.email}
                         readOnly
-                        className="w-full bg-black/40 border border-white/5 rounded-lg px-4 py-3 text-gray-400 focus:outline-none cursor-not-allowed"
+                        className="w-full bg-black/40 border border-white/5 rounded-lg px-4 py-2.5 text-sm text-gray-400 focus:outline-none cursor-not-allowed"
                       />
                     </div>
 
                     {/* Phone */}
-                    <div className="space-y-2">
+                    <div className="space-y-1">
                       <label className="text-xs font-bold text-secondary uppercase tracking-wider">Phone Number *</label>
                       <input
                         type="tel"
@@ -652,7 +711,7 @@ const Register: React.FC = () => {
                         value={formData.phone}
                         onChange={handleChange}
                         placeholder="1234567890"
-                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-gray-600"
+                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-gray-600"
                       />
                     </div>
 
@@ -675,7 +734,7 @@ const Register: React.FC = () => {
                               setFormData(prev => ({ ...prev, college: '' }));
                             }
                           }}
-                          className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all appearance-none"
+                          className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all appearance-none"
                         >
                           <option value="" className="bg-darker text-gray-400">Select College</option>
                           <option value="Jain College of Engineering & Technology Hubballi" className="bg-darker text-white">Jain College of Engineering & Technology Hubballi</option>
@@ -699,7 +758,7 @@ const Register: React.FC = () => {
                     </div>
 
                     {/* Department (Courses) */}
-                    <div className="space-y-2">
+                    <div className="space-y-1">
                       <label className="text-xs font-bold text-secondary uppercase tracking-wider">Course Name *</label>
                       <input
                         type="text"
@@ -707,19 +766,19 @@ const Register: React.FC = () => {
                         value={formData.department}
                         onChange={handleChange}
                         placeholder="Enter your Course Name"
-                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-gray-600"
+                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-gray-600"
                       />
                     </div>
 
                     {/* Year */}
-                    <div className="space-y-2">
+                    <div className="space-y-1">
                       <label className="text-xs font-bold text-secondary uppercase tracking-wider">Year of Study</label>
                       <div className="relative">
                         <select
                           name="year"
                           value={formData.year}
                           onChange={handleChange}
-                          className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all appearance-none"
+                          className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all appearance-none"
                         >
                           <option value="1" className="bg-darker text-white">1st Year</option>
                           <option value="2" className="bg-darker text-white">2nd Year</option>
@@ -765,42 +824,122 @@ const Register: React.FC = () => {
 
                   {/* Team Details (Conditional) */}
                   {isGroupRegistration && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-primary/5 border border-primary/20 rounded-xl animate-fade-in-up">
-                      <div className="md:col-span-2">
+                    <div className="p-4 bg-primary/5 border border-primary/20 rounded-xl animate-fade-in-up space-y-3">
+                      <div>
                         <h3 className="text-primary font-bold text-sm uppercase tracking-widest flex items-center gap-2">
                           <Sparkles className="w-4 h-4" /> {forceGroup ? 'Required' : ''} Team Information
                         </h3>
                         <p className="text-gray-500 text-[10px] mt-1">
-                          {forceGroup
-                            ? 'One or more selected events require team registration.'
-                            : 'You have selected Group mode for this registration.'}
+                          {multipleGroupEvents
+                            ? 'Provide team details for each group event separately.'
+                            : forceGroup
+                              ? 'One or more selected events require team registration.'
+                              : 'You have selected Group mode for this registration.'}
                         </p>
                       </div>
 
-                      <div className="space-y-2">
-                        <label className="text-xs font-bold text-secondary uppercase tracking-wider">Team Name *</label>
-                        <input
-                          type="text"
-                          name="teamName"
-                          value={formData.teamName}
-                          onChange={handleChange}
-                          placeholder="Enter your team name"
-                          required={isGroupRegistration}
-                          className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-gray-600"
-                        />
-                      </div>
+                      {multipleGroupEvents ? (
+                        /* Per-event team fields */
+                        <div className="space-y-3">
+                          {groupEventObjects.map(event => {
+                            if (!event) return null;
+                            const details = perEventTeamDetails[event.id] || { teamName: '', teamMembers: '', registrationType: '' };
+                            // Check if this event allows both Solo and Group
+                            const ts = (event.teamSize || '').toLowerCase();
+                            const eventAllowsSolo = ts.includes('solo') || ts.includes('individual');
+                            const eventForcesGroup = !eventAllowsSolo;
+                            // Default to Group for forced-group events, Solo for events that allow both
+                            const eventRegType = details.registrationType || (eventForcesGroup ? 'Group' : 'Solo');
+                            const showTeamFields = eventRegType === 'Group';
 
-                      <div className="space-y-2">
-                        <label className="text-xs font-bold text-secondary uppercase tracking-wider">Member Names</label>
-                        <input
-                          type="text"
-                          name="teamMembers"
-                          value={formData.teamMembers}
-                          onChange={handleChange}
-                          placeholder="e.g. John, Jane, Mike"
-                          className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-gray-600"
-                        />
-                      </div>
+                            return (
+                              <div key={event.id} className="p-3 bg-black/30 border border-white/5 rounded-lg space-y-2">
+                                <div className="flex items-center justify-between">
+                                  <p className="text-xs font-bold text-secondary uppercase tracking-wider">{event.title}</p>
+                                  {!eventForcesGroup && (
+                                    <div className="flex gap-1">
+                                      <button
+                                        type="button"
+                                        onClick={() => setPerEventTeamDetails(prev => ({
+                                          ...prev,
+                                          [event.id]: { ...prev[event.id] || { teamName: '', teamMembers: '' }, registrationType: 'Solo' }
+                                        }))}
+                                        className={`px-3 py-1 rounded text-[10px] font-bold uppercase transition-all ${eventRegType === 'Solo' ? 'bg-primary text-white' : 'bg-black/40 border border-white/10 text-gray-400'}`}
+                                      >Solo</button>
+                                      <button
+                                        type="button"
+                                        onClick={() => setPerEventTeamDetails(prev => ({
+                                          ...prev,
+                                          [event.id]: { ...prev[event.id] || { teamName: '', teamMembers: '' }, registrationType: 'Group' }
+                                        }))}
+                                        className={`px-3 py-1 rounded text-[10px] font-bold uppercase transition-all ${eventRegType === 'Group' ? 'bg-primary text-white' : 'bg-black/40 border border-white/10 text-gray-400'}`}
+                                      >Group</button>
+                                    </div>
+                                  )}
+                                </div>
+                                {showTeamFields && (
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 animate-fade-in-up">
+                                    <div className="space-y-1">
+                                      <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Team Name *</label>
+                                      <input
+                                        type="text"
+                                        value={details.teamName}
+                                        onChange={(e) => setPerEventTeamDetails(prev => ({
+                                          ...prev,
+                                          [event.id]: { ...prev[event.id] || { teamName: '', teamMembers: '', registrationType: eventRegType }, teamName: e.target.value }
+                                        }))}
+                                        placeholder={`Team name for ${event.title}`}
+                                        required
+                                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-gray-600 text-sm"
+                                      />
+                                    </div>
+                                    <div className="space-y-1">
+                                      <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Member Names</label>
+                                      <input
+                                        type="text"
+                                        value={details.teamMembers}
+                                        onChange={(e) => setPerEventTeamDetails(prev => ({
+                                          ...prev,
+                                          [event.id]: { ...prev[event.id] || { teamName: '', teamMembers: '', registrationType: eventRegType }, teamMembers: e.target.value }
+                                        }))}
+                                        placeholder="e.g. John, Jane, Mike"
+                                        className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-gray-600 text-sm"
+                                      />
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        /* Single team fields (original) */
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <label className="text-xs font-bold text-secondary uppercase tracking-wider">Team Name *</label>
+                            <input
+                              type="text"
+                              name="teamName"
+                              value={formData.teamName}
+                              onChange={handleChange}
+                              placeholder="Enter your team name"
+                              required={isGroupRegistration}
+                              className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-gray-600"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-xs font-bold text-secondary uppercase tracking-wider">Member Names</label>
+                            <input
+                              type="text"
+                              name="teamMembers"
+                              value={formData.teamMembers}
+                              onChange={handleChange}
+                              placeholder="e.g. John, Jane, Mike"
+                              className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-gray-600"
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
 
@@ -883,7 +1022,7 @@ const Register: React.FC = () => {
                   <button
                     type="submit"
                     disabled={status === 'submitting' || loadingRegisteredEvents || availableEvents.length === 0}
-                    className="w-full bg-primary hover:bg-white hover:text-primary disabled:bg-gray-800 disabled:text-gray-500 text-white font-black uppercase tracking-widest py-4 rounded-lg transition-all transform hover:scale-[1.01] flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,0,85,0.4)] hover:shadow-[0_0_30px_rgba(255,0,85,0.6)]"
+                    className="w-full bg-primary hover:bg-white hover:text-primary disabled:bg-gray-800 disabled:text-gray-500 text-white font-black uppercase tracking-widest py-3 rounded-lg transition-all transform hover:scale-[1.01] flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,0,85,0.4)] hover:shadow-[0_0_30px_rgba(255,0,85,0.6)]"
                   >
                     {status === 'submitting' ? (
                       <>

@@ -62,7 +62,8 @@ const EVENT_FEES = {
     e19: 100, // Circuit Mania
     e20: 100, // Dialogue Delivery Battle
     e21: 100, // Minute Master
-    e23: 350, // Melody Mania & Dance - Rs 350/group
+    e23: 350, // Melody Mania - Rs 350/group
+    e25: 350, // Dance Mania - Rs 350/group
 };
 
 

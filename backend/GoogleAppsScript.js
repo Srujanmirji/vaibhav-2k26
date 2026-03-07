@@ -49,7 +49,7 @@ const EVENT_SHEET_MAP = {
   e20: { spreadsheetId: '1jZ5GXfeuqNZK4hdSdSPLycFEWJP1goe3T9_C3u9USyU', sheetName: 'Sheet1' },
   e21: { spreadsheetId: '1a2QtQ9UpD6gCICtll_9HS0aeVuSwsAv7mbEMfFIlaQo', sheetName: 'Sheet1' },
   e23: { spreadsheetId: '1DPwxrchkyrDlytQouSlsihyHS1uCDOIF2-XLCnQ6x1M', sheetName: 'Sheet1' },
-  e25: { spreadsheetId: '11xUntqxbKpXPFlyIokODolk_7QRExPZ7Ox35jR_Ylss', sheetName: 'Dance Mania' }
+  e25: { spreadsheetId: '11xUntqxbKpXPFlyIokODolk_7QRExPZ7Ox35jR_Ylss', sheetName: 'Sheet1' }
 };
 
 const EVENT_ID_TO_TITLE = {
@@ -318,8 +318,14 @@ function doPost(e) {
       const paymentId = normalizeString_(data.razorpayPaymentId) || '';
       const paymentLink = paymentId ? 'https://dashboard.razorpay.com/app/payments/' + paymentId : '';
 
+      // Per-event team details (fallback to global)
+      var eventTeam = (data.perEventTeamDetails && data.perEventTeamDetails[resolved.eventId]) || {};
+      var teamName = normalizeString_(eventTeam.teamName || data.teamName);
+      var teamMembers = normalizeString_(eventTeam.teamMembers || data.teamMembers);
+      var regType = normalizeString_(eventTeam.registrationType || data.registrationType) || (teamName ? 'Group' : 'Solo');
+
       const row = [
-        new Date(), normalizeString_(data.fullName), email, "'" + normalizeString_(data.phone), normalizeString_(data.college), normalizeString_(data.department), normalizeString_(data.year), resolved.eventTitle, resolved.eventId, normalizeString_(data.registrationId) || ('VBHV-' + resolved.eventId.toUpperCase() + '-' + Math.floor(1000 + Math.random() * 9000)), paymentId, paymentLink, normalizeString_(data.teamName), normalizeString_(data.teamMembers), normalizeString_(data.registrationType) || (normalizeString_(data.teamName) ? 'Group' : 'Solo')
+        new Date(), normalizeString_(data.fullName), email, "'" + normalizeString_(data.phone), normalizeString_(data.college), normalizeString_(data.department), normalizeString_(data.year), resolved.eventTitle, resolved.eventId, normalizeString_(data.registrationId) || ('VBHV-' + resolved.eventId.toUpperCase() + '-' + Math.floor(1000 + Math.random() * 9000)), paymentId, paymentLink, teamName, teamMembers, regType
       ];
 
       const sheetKey = resolved.spreadsheetId + ':' + resolved.sheetName;

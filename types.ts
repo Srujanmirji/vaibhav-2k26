@@ -31,6 +31,7 @@ export interface RegistrationFormData {
   teamName?: string;
   teamMembers?: string;
   razorpayPaymentId?: string; // Optional field for payment ID
+  perEventTeamDetails?: { [eventId: string]: { teamName: string; teamMembers: string; registrationType?: string } };
 }
 
 export interface ApiResponse {
