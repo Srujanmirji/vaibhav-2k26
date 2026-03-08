@@ -848,7 +848,8 @@ export const EVENTS: EventDetails[] = [
     "image": "https://loremflickr.com/800/600/business,meeting",
     "teamSize": "3-5 Members",
     "department": "CSE",
-    "fee": 100
+    "fee": 100,
+    "rulesPdf": "/rules/Project Pitch.pdf"
   },
   {
     "id": "e12",
