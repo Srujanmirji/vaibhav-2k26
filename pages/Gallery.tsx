@@ -1,6 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Camera, Image as ImageIcon } from 'lucide-react';
+import { Camera } from 'lucide-react';
 
 type PastEventPhoto = {
   src: string;
@@ -14,39 +13,75 @@ type PastEventPhoto = {
 // 2) Add new objects below with src like: '/gallery/your-photo.jpg'
 const PAST_EVENT_PHOTOS: PastEventPhoto[] = [
   {
-    src: '/clg.png',
-    title: 'Campus Highlights',
-    event: 'Vaibhav Memories',
+    src: '/Gallery/_DSC1051.JPG.jpeg',
+    title: 'Opening Ceremony Poses',
+    event: 'Cultural Inauguration',
     year: '2025',
   },
   {
-    src: '/clg.png',
-    title: 'Crowd Moments',
-    event: 'Cultural Evening',
+    src: '/Gallery/_DSC1050.JPG.jpeg',
+    title: 'Grand Entrance 2025',
+    event: 'Opening Procession',
     year: '2025',
   },
   {
-    src: '/clg.png',
-    title: 'Stage Energy',
-    event: 'DJ Night',
+    src: '/Gallery/_DSC0042.JPG.jpeg',
+    title: 'Vibrant Colors of Vaibhav',
+    event: 'Cultural Night',
     year: '2025',
   },
   {
-    src: '/clg.png',
-    title: 'Team Participation',
-    event: 'Tech Challenges',
+    src: '/Gallery/_DSC0021.JPG.jpeg',
+    title: 'Ethnic Elegance',
+    event: 'Sari & Lehenga Showcase',
+    year: '2025',
+  },
+  {
+    src: '/Gallery/_DSC0014.JPG.jpeg',
+    title: 'Collective Spirit',
+    event: 'Heritage Celebration',
+    year: '2025',
+  },
+  {
+    src: '/Gallery/IMG_4001.JPG.jpeg',
+    title: 'Culinary Arts Competition',
+    event: 'Cooking Challenge',
     year: '2024',
   },
   {
-    src: '/clg.png',
-    title: 'Inauguration Day',
-    event: 'Opening Ceremony',
+    src: '/Gallery/IMG_3981.JPG.jpeg',
+    title: 'Signature Desserts',
+    event: 'Food Innovation',
     year: '2024',
   },
   {
-    src: '/clg.png',
-    title: 'Winning Moments',
-    event: 'Prize Distribution',
+    src: '/Gallery/IMG_3980.JPG.jpeg',
+    title: 'Traditional Snacks Display',
+    event: 'Street Food Fest',
+    year: '2024',
+  },
+  {
+    src: '/Gallery/IMG_3978.JPG.jpeg',
+    title: 'Event Food Court',
+    event: 'Stall Management',
+    year: '2024',
+  },
+  {
+    src: '/Gallery/IMG_3602.JPG.jpeg',
+    title: 'Traditional Heritage Display',
+    event: 'Campus Highlights',
+    year: '2024',
+  },
+  {
+    src: '/Gallery/IMG_3577.JPG.jpeg',
+    title: 'Cultural Pride Group',
+    event: 'Theme Reveal',
+    year: '2024',
+  },
+  {
+    src: '/Gallery/68b273fb-ffa4-4eae-80e4-6e9ad25939e3.jpg.jpeg',
+    title: 'Flash Mob Energy',
+    event: 'Dance Performance',
     year: '2024',
   },
 ];
@@ -69,8 +104,7 @@ const Gallery: React.FC = () => {
               Relive <span className="text-primary">Vaibhav</span> Moments
             </h1>
             <p className="mt-5 text-gray-300 text-base md:text-lg leading-relaxed">
-              A snapshot collection from previous editions. Add your photos by updating the photo list in this page and placing files in
-              <span className="text-secondary font-semibold"> public/gallery</span>.
+              A snapshot collection from previous editions, capturing the energy and heritage of Vaibhav festivals.
             </p>
           </div>
         </div>
@@ -100,26 +134,7 @@ const Gallery: React.FC = () => {
             ))}
           </div>
 
-          <div className="mt-12 p-6 rounded-2xl border border-primary/30 bg-primary/10">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div>
-                <p className="text-white font-bold text-lg flex items-center gap-2">
-                  <ImageIcon className="w-5 h-5 text-secondary" />
-                  Want to add more photos?
-                </p>
-                <p className="text-gray-300 text-sm mt-1">
-                  Upload files to <span className="text-secondary font-semibold">public/gallery</span> and add entries in
-                  <span className="text-secondary font-semibold"> pages/Gallery.tsx</span>.
-                </p>
-              </div>
-              <Link
-                to="/register"
-                className="inline-flex items-center justify-center px-6 py-3 bg-primary hover:bg-white hover:text-primary text-white font-bold rounded-lg transition-colors"
-              >
-                Register For 2K26
-              </Link>
-            </div>
-          </div>
+
         </div>
       </section>
     </div>

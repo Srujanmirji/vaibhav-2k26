@@ -188,7 +188,7 @@ const Home: React.FC = () => {
                 Frames From <span className="text-primary">Previous Vaibhav</span>
               </h2>
               <p className="mt-3 text-fluid-p text-gray-300 max-w-3xl">
-                Glimpses of past events. You can add more past event photos in the Gallery page whenever needed.
+                Glimpses of past events capturing the vibrant energy and cultural heritage of our previous editions.
               </p>
             </div>
             <Link
@@ -202,16 +202,16 @@ const Home: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { title: 'Inauguration Highlights', tag: '2025' },
-              { title: 'Cultural Night Energy', tag: '2024' },
-              { title: 'Winners and Celebrations', tag: '2024' },
+              { title: 'Opening Ceremony Poses', tag: '2025', src: '/Gallery/_DSC1051.JPG.jpeg' },
+              { title: 'Grand Entrance 2025', tag: '2025', src: '/Gallery/_DSC1050.JPG.jpeg' },
+              { title: 'Vibrant Colors of Vaibhav', tag: '2025', src: '/Gallery/_DSC0042.JPG.jpeg' },
             ].map((photo) => (
               <article
                 key={photo.title}
                 className="relative overflow-hidden rounded-2xl border border-white/10 bg-card/40 backdrop-blur-sm group"
               >
                 <img
-                  src="/clg.png"
+                  src={photo.src}
                   alt={photo.title}
                   className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105"
                   loading="lazy"
@@ -289,7 +289,7 @@ const Home: React.FC = () => {
             </div>
             <div className="p-8 bg-card/50 backdrop-blur-sm border border-white/5 hover:border-tertiary/50 transition-all duration-500 group hover:-translate-y-2 rounded-xl">
               <Trophy className="w-12 h-12 text-tertiary mx-auto mb-4 group-hover:scale-110 transition-transform drop-shadow-[0_0_8px_rgba(255,211,0,0.8)]" />
-              <h3 className="text-fluid-h3 font-bold text-white mb-2 font-mono">20+ Events</h3>
+              <h3 className="text-fluid-h3 font-bold text-white mb-2 font-mono">15+ Events</h3>
               <p className="text-gray-400">Technical & Cultural Battles</p>
             </div>
           </div>

@@ -20,6 +20,9 @@ const Events: React.FC = () => {
   const [selectedEventForModal, setSelectedEventForModal] = React.useState<EventDetails | null>(null);
 
   const filteredEvents = EVENTS.filter(event => {
+    // Hide non-register events
+    if (event.registrationClosed) return false;
+
     const matchesTrack =
       selectedTrack === 'All'
         ? true
@@ -70,7 +73,13 @@ const Events: React.FC = () => {
             {departments.map((dept) => (
               <button
                 key={dept}
-                onClick={() => setSelectedDepartment(dept)}
+                onClick={() => {
+                  if (dept === 'MBA') {
+                    window.open('https://www.ranatantra.online/', '_blank');
+                  } else {
+                    setSelectedDepartment(dept);
+                  }
+                }}
                 className={`px-5 py-2 rounded-full font-bold transition-all duration-300 border whitespace-nowrap text-sm ${selectedDepartment === dept
                   ? 'bg-primary border-primary text-white shadow-[0_0_15px_rgba(255,0,85,0.4)]'
                   : 'bg-white/5 border-white/10 text-gray-400 hover:border-primary/50 hover:text-white'
@@ -82,7 +91,7 @@ const Events: React.FC = () => {
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {filteredEvents.map((event, index) => (
             <motion.div
               key={event.id}
@@ -92,7 +101,7 @@ const Events: React.FC = () => {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="bg-card/40 backdrop-blur-md border border-white/5 rounded-2xl overflow-hidden hover:border-primary/50 transition-all duration-300 group flex flex-col hover:shadow-[0_0_30px_rgba(255,0,85,0.15)] hover:-translate-y-2"
             >
-              <div className="relative h-44 sm:h-56 overflow-hidden">
+              <div className="relative h-40 sm:h-48 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-t from-darker to-transparent z-10 opacity-80"></div>
                 <img
                   src={event.image}
@@ -108,21 +117,21 @@ const Events: React.FC = () => {
                 </div>
               </div>
 
-              <div className="p-4 sm:p-6 flex-1 flex flex-col relative">
-                <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3 font-mono group-hover:text-primary transition-colors">{event.title}</h3>
-                <p className="text-gray-400 text-xs sm:text-sm mb-4 sm:mb-6 flex-1 leading-relaxed line-clamp-3 sm:line-clamp-none">{event.description}</p>
+              <div className="p-4 sm:p-5 flex-1 flex flex-col relative">
+                <h3 className="text-lg sm:text-xl font-bold text-white mb-1.5 sm:mb-2 font-mono group-hover:text-primary transition-colors">{event.title}</h3>
+                <p className="text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4 flex-1 leading-relaxed line-clamp-3 sm:line-clamp-none">{event.description}</p>
 
-                <div className="space-y-2 sm:space-y-3 mb-5 sm:mb-8 border-t border-white/5 pt-3 sm:pt-4">
-                  <div className="flex items-center text-gray-400 text-xs sm:text-sm">
-                    <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2 sm:mr-3 text-secondary shrink-0" />
+                <div className="space-y-1.5 sm:space-y-2 mb-4 sm:mb-6 border-t border-white/5 pt-3 sm:pt-4">
+                  <div className="flex items-center text-gray-400 text-[11px] sm:text-xs">
+                    <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-2 sm:mr-3 text-secondary shrink-0" />
                     {event.date} • {event.time}
                   </div>
-                  <div className="flex items-center text-gray-400 text-xs sm:text-sm">
-                    <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2 sm:mr-3 text-secondary shrink-0" />
+                  <div className="flex items-center text-gray-400 text-[11px] sm:text-xs">
+                    <MapPin className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-2 sm:mr-3 text-secondary shrink-0" />
                     <span className="truncate">{event.venue}</span>
                   </div>
-                  <div className="flex items-center text-gray-400 text-xs sm:text-sm">
-                    <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2 sm:mr-3 text-secondary shrink-0" />
+                  <div className="flex items-center text-gray-400 text-[11px] sm:text-xs">
+                    <Users className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-2 sm:mr-3 text-secondary shrink-0" />
                     {event.teamSize}
                   </div>
                 </div>
@@ -130,7 +139,7 @@ const Events: React.FC = () => {
                 <div className="mt-auto space-y-2 sm:space-y-3">
                   <button
                     onClick={() => setSelectedEventForModal(event)}
-                    className="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white text-xs sm:text-sm font-bold py-3 sm:py-3.5 rounded-xl transition-all border border-white/10"
+                    className="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white text-[10px] sm:text-xs font-bold py-2.5 sm:py-3 rounded-xl transition-all border border-white/10"
                   >
                     VIEW DETAILS <Info className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </button>
@@ -139,7 +148,7 @@ const Events: React.FC = () => {
                     <Link
                       to={`/register?event=${encodeURIComponent(event.id)}`}
                       state={{ preselectedEventId: event.id }}
-                      className="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-primary hover:text-white text-white text-xs sm:text-sm font-bold py-3 sm:py-3.5 rounded-xl transition-all border border-white/10 hover:border-primary group-hover:shadow-[0_0_15px_rgba(255,0,85,0.4)]"
+                      className="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-primary hover:text-white text-white text-[10px] sm:text-xs font-bold py-2.5 sm:py-3 rounded-xl transition-all border border-white/10 hover:border-primary group-hover:shadow-[0_0_15px_rgba(255,0,85,0.4)]"
                     >
                       REGISTER <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </Link>

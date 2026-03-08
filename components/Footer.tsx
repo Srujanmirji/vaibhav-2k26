@@ -34,6 +34,7 @@ const Footer: React.FC = () => {
             <h4 className="text-lg font-bold text-white mb-6 uppercase tracking-wider">Quick Links</h4>
             <ul className="space-y-1 text-sm">
               <li><a href="#/events" className="text-gray-500 hover:text-secondary transition-colors hover:pl-2 inline-block py-2">All Events</a></li>
+              <li><a href="https://www.ranatantra.online/" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-secondary transition-colors hover:pl-2 inline-block py-2">Ranatantra (MBA Website)</a></li>
               <li><a href="#/schedule" className="text-gray-500 hover:text-secondary transition-colors hover:pl-2 inline-block py-2">Event Schedule</a></li>
               <li><a href="#/register" className="text-gray-500 hover:text-secondary transition-colors hover:pl-2 inline-block py-2">Registration</a></li>
               <li><a href="#/contact" className="text-gray-500 hover:text-secondary transition-colors hover:pl-2 inline-block py-2">Contact Support</a></li>

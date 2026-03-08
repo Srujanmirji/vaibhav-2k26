@@ -83,6 +83,7 @@ const Navbar: React.FC = () => {
                 {link.name}
               </NavLink>
             ))}
+
             <NavLink
               to={actionLink.path}
               className="min-h-[44px] inline-flex items-center justify-center bg-primary hover:bg-white hover:text-primary text-white font-bold py-2 px-6 rounded-none skew-x-[-10deg] transition-all transform hover:scale-105 shadow-[0_0_10px_rgba(255,0,85,0.4)]"
@@ -121,6 +122,7 @@ const Navbar: React.FC = () => {
               {link.name}
             </NavLink>
           ))}
+
           <NavLink
             to={actionLink.path}
             className="block w-full text-center mt-4 bg-primary text-white font-bold py-3 uppercase tracking-wider shadow-[0_0_15px_rgba(255,0,85,0.4)]"

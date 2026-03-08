@@ -21,7 +21,7 @@ export const ADMIN_ALLOWED_EMAILS = [
 // Razorpay Keys (Frontend Checkout)
 export const RAZORPAY_KEY_ID = 'rzp_live_SMPLH5DFYeMquJ';
 
-export const DEPARTMENTS = ['All', 'CSE', 'ECE', 'CVE', 'ME', 'BS'];
+export const DEPARTMENTS = ['All', 'CSE', 'ECE', 'CVE', 'ME', 'BS', 'MBA'];
 export const EVENTS: EventDetails[] = [
   {
     "id": "e3",
