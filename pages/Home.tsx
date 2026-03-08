@@ -203,8 +203,8 @@ const Home: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               { title: 'Opening Ceremony Poses', tag: '2025', src: '/Gallery/_DSC1051.JPG.jpeg' },
+              { title: 'Dignitaries on Stage', tag: '2025', src: '/Gallery/WhatsApp Image 2026-03-08 at 6.16.53 PM.jpeg' },
               { title: 'Grand Entrance 2025', tag: '2025', src: '/Gallery/_DSC1050.JPG.jpeg' },
-              { title: 'Vibrant Colors of Vaibhav', tag: '2025', src: '/Gallery/_DSC0042.JPG.jpeg' },
             ].map((photo) => (
               <article
                 key={photo.title}

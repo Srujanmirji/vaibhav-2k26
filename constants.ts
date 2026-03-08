@@ -184,7 +184,7 @@ export const EVENTS: EventDetails[] = [
     ],
     "facultyCoordinators": [
       {
-        "name": "Prof. ME Dept",
+        "name": "Prof. Sucheet M. Gogeri",
         "phone": "-"
       }
     ],

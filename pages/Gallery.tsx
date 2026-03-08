@@ -79,6 +79,18 @@ const PAST_EVENT_PHOTOS: PastEventPhoto[] = [
     year: '2024',
   },
   {
+    src: '/Gallery/WhatsApp Image 2026-03-08 at 6.16.52 PM.jpeg',
+    title: 'Inspirations from the Stage',
+    event: 'Keynote Address',
+    year: '2025',
+  },
+  {
+    src: '/Gallery/WhatsApp Image 2026-03-08 at 6.16.53 PM.jpeg',
+    title: 'Dignitaries on Stage',
+    event: 'Inauguration Ceremony',
+    year: '2025',
+  },
+  {
     src: '/Gallery/68b273fb-ffa4-4eae-80e4-6e9ad25939e3.jpg.jpeg',
     title: 'Flash Mob Energy',
     event: 'Dance Performance',
