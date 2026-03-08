@@ -190,10 +190,6 @@ export const EVENTS: EventDetails[] = [
     ],
     "studentCoordinators": [
       {
-        "name": "Sucheet",
-        "phone": "-"
-      },
-      {
         "name": "Sanjay",
         "phone": "6360185670"
       },
@@ -239,8 +235,24 @@ export const EVENTS: EventDetails[] = [
     ],
     "studentCoordinators": [
       {
-        "name": "Student Team",
-        "phone": "-"
+        "name": "Ms. Madiha Mannangi (ECE)",
+        "phone": "8105669846"
+      },
+      {
+        "name": "Ms. Sinchana Kulkarni (ECE)",
+        "phone": "9483270923"
+      },
+      {
+        "name": "Mr. Md. Anas Khan (ME)",
+        "phone": "8217589739"
+      },
+      {
+        "name": "Mr. Kishan Bharade (ME)",
+        "phone": "6362928359"
+      },
+      {
+        "name": "Mr. Satvik Pandurangi (ECE)",
+        "phone": "8073623745"
       }
     ],
     "date": "March 28, 2026",
