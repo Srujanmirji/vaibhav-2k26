@@ -360,14 +360,26 @@ export const EVENTS: EventDetails[] = [
     ],
     "facultyCoordinators": [
       {
-        "name": "Prof. ME Dept",
+        "name": "Shivakant. M",
         "phone": "-"
       }
     ],
     "studentCoordinators": [
       {
-        "name": "Student Coordinator",
-        "phone": "-"
+        "name": "Omprakash T",
+        "phone": "8296893297"
+      },
+      {
+        "name": "Basavaraj K",
+        "phone": "9535725483"
+      },
+      {
+        "name": "Bhagyalaxmi K",
+        "phone": "9019247397"
+      },
+      {
+        "name": "Khushi C",
+        "phone": "8660968316"
       }
     ],
     "date": "March 28, 2026",
@@ -916,18 +928,18 @@ export const EVENTS: EventDetails[] = [
     ],
     "facultyCoordinators": [
       {
-        "name": "Prof. ME Dept",
+        "name": "Prof. Venkangoud H",
         "phone": "-"
       }
     ],
     "studentCoordinators": [
       {
-        "name": "Shreyas",
-        "phone": "9611014516"
+        "name": "Bhagyalaxmi K",
+        "phone": "9019247397"
       },
       {
-        "name": "Manikath",
-        "phone": "7411310976"
+        "name": "Khushi C",
+        "phone": "8660968316"
       }
     ],
     "date": "March 27, 2026",
