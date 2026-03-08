@@ -10,7 +10,7 @@ const SIMULATED_DB: RegistrationFormData[] = [
     college: "Jain College of Engineering and Technology",
     department: "Computer Science",
     year: "3",
-    selectedEvents: ["Project Pitch Day", "Code Debugging"],
+    selectedEvents: ["Project Pitch", "Code Debugging"],
     registrationType: 'Solo',
     razorpayPaymentId: "pay_xyz_test123"
   },

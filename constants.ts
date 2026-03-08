@@ -796,46 +796,57 @@ export const EVENTS: EventDetails[] = [
   },
   {
     "id": "e2",
-    "title": "Project Pitch Day",
+    "title": "Project Pitch",
     "category": "Innovation",
-    "description": "Showcase your ground-breaking ideas and projects to a panel of industry experts and investors.",
+    "description": "Showcase your ground-breaking ideas and present a Pitch Deck solving a niche problem.",
     "rules": [
-      "Max 2-3 members per team.",
-      "Paper must be in IEEE format (4-5 pages).",
-      "Presentation duration: 6-10 minutes + 2-3m Q&A.",
-      "Topic: Current tech or AI in EV.",
-      "Participants must bring their own PowerPoint (PPT).",
-      "Maximum 8-10 slides recommended."
+      "Team Size: 3 to 5 members (Cross-departmental teams encouraged).",
+      "Pre-registration required by 25th March 2026.",
+      "Submit a PPT covering: Problem, Target Audience, Solution, Feasibility, & Advantage.",
+      "Presentation: 8 mins Pitch + 2 mins Q&A (Strict timing).",
+      "Professionalism: ID cards and professional decorum required."
     ],
     "facultyCoordinators": [
       {
-        "name": "Mr. Deviprasad N Mirashi",
-        "phone": "9916095029"
+        "name": "Prof. Trupti Thite",
+        "phone": "8660421075"
+      },
+      {
+        "name": "Prof. Megha S",
+        "phone": "9663639663"
+      },
+      {
+        "name": "Prof. Vanitha G P",
+        "phone": "9538804078"
+      },
+      {
+        "name": "Mr. Narayan D",
+        "phone": "9986683129"
       }
     ],
     "studentCoordinators": [
       {
-        "name": "Priyadarshini (Civil)",
-        "phone": "8618382331"
+        "name": "Vadiraj Kulkarni",
+        "phone": "9686540253"
       },
       {
-        "name": "Ganga (Civil)",
-        "phone": "7760206244"
+        "name": "Gagan Shetty",
+        "phone": "9148785898"
       },
       {
-        "name": "Chetan Badiger (ME)",
-        "phone": "8867342344"
+        "name": "Nirali",
+        "phone": "7892776889"
       },
       {
-        "name": "Omprakash (ME)",
-        "phone": "8296893297"
+        "name": "Tejaswini V S",
+        "phone": "7483574498"
       }
     ],
     "date": "March 27, 2026",
     "time": "10:30 AM",
     "venue": "A208",
     "image": "https://loremflickr.com/800/600/business,meeting",
-    "teamSize": "2-4 Members",
+    "teamSize": "3-5 Members",
     "department": "CSE",
     "fee": 100
   },
@@ -1079,7 +1090,7 @@ export const SCHEDULE = [
     day: 'Day 1 - March 27',
     events: [
       { time: '10:00 AM - 10:30 AM', title: 'Inauguration along with Banner Launch' },
-      { time: '10:30 AM - 11:30 AM', title: 'Project Pitch Day' },
+      { time: '10:30 AM - 11:30 AM', title: 'Project Pitch' },
       { time: '10:30 AM - 11:30 AM', title: 'AI in EV' },
       { time: '11:30 AM - 12:30 PM', title: 'Cooking Without Fire' },
       { time: '12:30 PM - 01:00 PM', title: 'Blind Fold Taste Test' },

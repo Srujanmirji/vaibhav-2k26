@@ -45,7 +45,7 @@ const saveDB = () => {
 // Server-side event fee map (single source of truth for pricing)
 // Fees extracted from official event rules documents
 const EVENT_FEES = {
-    e2: 100,  // Project Pitch Day
+    e2: 100,  // Project Pitch
     e3: 100,  // AI in EV
     e4: 100,  // Cooking Without Fire
     e5: 100,  // Blind Fold Taste Test

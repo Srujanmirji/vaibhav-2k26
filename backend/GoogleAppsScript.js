@@ -53,7 +53,7 @@ const EVENT_SHEET_MAP = {
 };
 
 const EVENT_ID_TO_TITLE = {
-  e2: 'Project Pitch Day',
+  e2: 'Project Pitch',
   e3: 'AI in EV',
   e4: 'Cooking Without Fire',
   e5: 'Blind Fold Taste Test',
@@ -97,7 +97,7 @@ const EVENT_ID_TO_DATE = {
 };
 
 const EVENT_TITLE_TO_ID = {
-  projectpitchday: 'e2',
+  projectpitch: 'e2',
   aiinev: 'e3',
   cookingwithoutfire: 'e4',
   blindfoldtastetest: 'e5',
