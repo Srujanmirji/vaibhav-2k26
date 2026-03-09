@@ -381,192 +381,182 @@ const Register: React.FC = () => {
       });
   };
 
-  // Events that require payment for ALL students (including JCET)
-  const PAID_FOR_ALL_EVENT_IDS = ['e23', 'e25']; // Melody Mania, Dance Mania
-
-  const hasPaidForAllEvent = formData.selectedEvents.some(title => {
-    const ev = EVENTS.find(e => e.title === title);
-    return ev && PAID_FOR_ALL_EVENT_IDS.includes(ev.id);
-  });
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
 
-    if (collegeSelection === 'Other' || hasPaidForAllEvent) {
-      const totalFee = calculateTotalFee();
-      if (totalFee > 0) {
-        setStatus('submitting');
-        setMessage('Initializing secure payment gateway...');
+    const totalFee = calculateTotalFee();
+    if (totalFee > 0) {
+      setStatus('submitting');
+      setMessage('Initializing secure payment gateway...');
 
-        const isLoaded = await loadRazorpayScript();
-        if (!isLoaded) {
-          setStatus('error');
-          setMessage('Failed to load payment gateway. Please check your connection or disable AdBlockers.');
-          return;
+      const isLoaded = await loadRazorpayScript();
+      if (!isLoaded) {
+        setStatus('error');
+        setMessage('Failed to load payment gateway. Please check your connection or disable AdBlockers.');
+        return;
+      }
+
+      try {
+        // 1. Hit the new Node.js Backend to create a secure Order ID lock
+        const orderResponse = await fetch('/api/create-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            selectedEventIds: formData.selectedEvents.map(title => {
+              const ev = EVENTS.find(e => e.title === title);
+              return ev?.id || '';
+            }).filter(Boolean),
+            registrationType: formData.registrationType,
+            currency: 'INR',
+            email: formData.email,
+            phone: formData.phone,
+            name: formData.fullName
+          })
+        });
+
+        const orderText = await orderResponse.text();
+        let orderData;
+        try {
+          orderData = JSON.parse(orderText);
+        } catch {
+          console.error('API returned non-JSON:', orderText.substring(0, 200));
+          throw new Error('Server returned an invalid response. Please try again.');
         }
+        if (!orderData.success) {
+          throw new Error(orderData.error || "Failed to create secure order on backend.");
+        }
+
+        // 2. Open Razorpay Checkbox locked to the Backend Order ID
+        const options = {
+          key: RAZORPAY_KEY_ID,
+          amount: orderData.amount, // Secured amount from backend
+          currency: orderData.currency,
+          name: 'Vaibhav 2K26',
+          description: 'Event Registration Fee',
+          order_id: orderData.order_id, // THIS is the crucial security update
+          handler: async function (response: any) {
+            try {
+              setStatus('submitting');
+              setMessage('Verifying payment...');
+
+              // 3. Send the signature to the backend for cryptographic verification
+              const verifyResponse = await fetch('/api/verify-payment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature
+                })
+              });
+
+              const verificationData = await verifyResponse.json();
+
+              if (verificationData.success) {
+                // Instant Success View
+                const uniqueId = `VBHV-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+                setGeneratedRegId(uniqueId);
+                setStatus('success');
+                setMessage('Payment verified! Registration is live.');
+
+                const registrationPayload: any = {
+                  ...formData,
+                  registrationId: uniqueId,
+                  razorpayPaymentId: response.razorpay_payment_id
+                };
+                // Attach per-event team details if multiple group events
+                if (multipleGroupEvents && Object.keys(perEventTeamDetails).length > 0) {
+                  registrationPayload.perEventTeamDetails = perEventTeamDetails;
+                }
+
+                // Reset form immediately
+                setFormData(prev => ({
+                  ...prev,
+                  phone: '',
+                  college: '',
+                  department: '',
+                  year: '1',
+                  selectedEvents: [],
+                  teamName: '',
+                  teamMembers: '',
+                }));
+                setCollegeSelection('');
+                setPerEventTeamDetails({});
+
+                // Background Sync
+                submitRegistration(registrationPayload)
+                  .then(() => fetchRegisteredEvents(registrationPayload.email, true))
+                  .catch(err => console.error('Background registration failed:', err));
+              } else {
+                setStatus('error');
+                setMessage('Payment verification failed! Potential tampering detected.');
+              }
+            } catch (verifyError) {
+              setStatus('error');
+              setMessage('Network error during verification. Payment is safe, please contact support.');
+            }
+          },
+          prefill: {
+            name: formData.fullName,
+            email: formData.email,
+            contact: `+91${formData.phone.replace(/\D/g, '')}`
+          },
+          readonly: {
+            email: true,
+            contact: true
+          },
+          theme: {
+            color: '#ff0055' // primary color matching the UI
+          },
+          modal: {
+            animation: false,
+            ondismiss: function () {
+              setStatus('idle');
+              setMessage('Payment was cancelled. You can try again when ready.');
+            }
+          }
+        };
+
+        const paymentObject = new (window as any).Razorpay(options);
+        paymentObject.on('payment.failed', function (response: any) {
+          setStatus('error');
+          setMessage('Payment failed: ' + response.error.description + '. You can retry safely.');
+        });
+
+        // Intercept Razorpay's native alert which occurs on fatal init errors without firing events
+        const originalAlert = window.alert;
+        let alertTriggered = false;
+        window.alert = function (msg: any) {
+          if (typeof msg === 'string' && (msg.toLowerCase().includes('failed') || msg.toLowerCase().includes('wrong'))) {
+            alertTriggered = true;
+            setStatus('error');
+            setMessage(msg + ' Please wait a moment and try again.');
+          }
+          originalAlert(msg);
+        };
 
         try {
-          // 1. Hit the new Node.js Backend to create a secure Order ID lock
-          const orderResponse = await fetch('/api/create-order', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              selectedEventIds: formData.selectedEvents.map(title => {
-                const ev = EVENTS.find(e => e.title === title);
-                return ev?.id || '';
-              }).filter(Boolean),
-              registrationType: formData.registrationType,
-              currency: 'INR',
-              email: formData.email,
-              phone: formData.phone,
-              name: formData.fullName
-            })
-          });
-
-          const orderText = await orderResponse.text();
-          let orderData;
-          try {
-            orderData = JSON.parse(orderText);
-          } catch {
-            console.error('API returned non-JSON:', orderText.substring(0, 200));
-            throw new Error('Server returned an invalid response. Please try again.');
+          paymentObject.open();
+        } finally {
+          // Restore window.alert after synchronous execution
+          window.alert = originalAlert;
+          if (alertTriggered) {
+            return; // Halt flow if init failed
           }
-          if (!orderData.success) {
-            throw new Error(orderData.error || "Failed to create secure order on backend.");
-          }
-
-          // 2. Open Razorpay Checkbox locked to the Backend Order ID
-          const options = {
-            key: RAZORPAY_KEY_ID,
-            amount: orderData.amount, // Secured amount from backend
-            currency: orderData.currency,
-            name: 'Vaibhav 2K26',
-            description: 'Event Registration Fee',
-            order_id: orderData.order_id, // THIS is the crucial security update
-            handler: async function (response: any) {
-              try {
-                setStatus('submitting');
-                setMessage('Verifying payment...');
-
-                // 3. Send the signature to the backend for cryptographic verification
-                const verifyResponse = await fetch('/api/verify-payment', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    razorpay_order_id: response.razorpay_order_id,
-                    razorpay_payment_id: response.razorpay_payment_id,
-                    razorpay_signature: response.razorpay_signature
-                  })
-                });
-
-                const verificationData = await verifyResponse.json();
-
-                if (verificationData.success) {
-                  // Instant Success View
-                  const uniqueId = `VBHV-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-                  setGeneratedRegId(uniqueId);
-                  setStatus('success');
-                  setMessage('Payment verified! Registration is live.');
-
-                  const registrationPayload: any = {
-                    ...formData,
-                    registrationId: uniqueId,
-                    razorpayPaymentId: response.razorpay_payment_id
-                  };
-                  // Attach per-event team details if multiple group events
-                  if (multipleGroupEvents && Object.keys(perEventTeamDetails).length > 0) {
-                    registrationPayload.perEventTeamDetails = perEventTeamDetails;
-                  }
-
-                  // Reset form immediately
-                  setFormData(prev => ({
-                    ...prev,
-                    phone: '',
-                    college: '',
-                    department: '',
-                    year: '1',
-                    selectedEvents: [],
-                    teamName: '',
-                    teamMembers: '',
-                  }));
-                  setCollegeSelection('');
-                  setPerEventTeamDetails({});
-
-                  // Background Sync
-                  submitRegistration(registrationPayload)
-                    .then(() => fetchRegisteredEvents(registrationPayload.email, true))
-                    .catch(err => console.error('Background registration failed:', err));
-                } else {
-                  setStatus('error');
-                  setMessage('Payment verification failed! Potential tampering detected.');
-                }
-              } catch (verifyError) {
-                setStatus('error');
-                setMessage('Network error during verification. Payment is safe, please contact support.');
-              }
-            },
-            prefill: {
-              name: formData.fullName,
-              email: formData.email,
-              contact: `+91${formData.phone.replace(/\D/g, '')}`
-            },
-            readonly: {
-              email: true,
-              contact: true
-            },
-            theme: {
-              color: '#ff0055' // primary color matching the UI
-            },
-            modal: {
-              animation: false,
-              ondismiss: function () {
-                setStatus('idle');
-                setMessage('Payment was cancelled. You can try again when ready.');
-              }
-            }
-          };
-
-          const paymentObject = new (window as any).Razorpay(options);
-          paymentObject.on('payment.failed', function (response: any) {
-            setStatus('error');
-            setMessage('Payment failed: ' + response.error.description + '. You can retry safely.');
-          });
-
-          // Intercept Razorpay's native alert which occurs on fatal init errors without firing events
-          const originalAlert = window.alert;
-          let alertTriggered = false;
-          window.alert = function (msg: any) {
-            if (typeof msg === 'string' && (msg.toLowerCase().includes('failed') || msg.toLowerCase().includes('wrong'))) {
-              alertTriggered = true;
-              setStatus('error');
-              setMessage(msg + ' Please wait a moment and try again.');
-            }
-            originalAlert(msg);
-          };
-
-          try {
-            paymentObject.open();
-          } finally {
-            // Restore window.alert after synchronous execution
-            window.alert = originalAlert;
-            if (alertTriggered) {
-              return; // Halt flow if init failed
-            }
-          }
-
-          return; // Return here so we don't process registration until payment is done
-
-        } catch (backendError: any) {
-          console.error('Backend error:', backendError);
-          setStatus('error');
-          setMessage('Payment error: ' + (backendError?.message || 'Could not connect to payment server. Please try again.'));
-          return;
         }
+
+        return; // Return here so we don't process registration until payment is done
+
+      } catch (backendError: any) {
+        console.error('Backend error:', backendError);
+        setStatus('error');
+        setMessage('Payment error: ' + (backendError?.message || 'Could not connect to payment server. Please try again.'));
+        return;
       }
     }
 
-    // Default flow for JCET students or events with 0 fee
+    // Default flow for events with 0 fee
     await processRegistration();
   };
 
