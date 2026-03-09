@@ -680,22 +680,34 @@ export const EVENTS: EventDetails[] = [
     ],
     "facultyCoordinators": [
       {
-        "name": "Mr. Girish G",
+        "name": "Prof. Padma D (CSE)",
         "phone": "-"
       },
       {
-        "name": "Mr. Santosh Patil",
+        "name": "Prof. Amrutha P (CSE)",
         "phone": "-"
       },
       {
-        "name": "Ms. Saroja",
+        "name": "Prof. Tejashwini (CSE)",
+        "phone": "-"
+      },
+      {
+        "name": "Miss Anusha (CSE)",
         "phone": "-"
       }
     ],
     "studentCoordinators": [
       {
-        "name": "Gurukiran J",
-        "phone": "9014636477"
+        "name": "Omkar Hegde (CSE 6th SEM)",
+        "phone": "8618866208"
+      },
+      {
+        "name": "Darshan A (CSE 6th SEM)",
+        "phone": "9449309595"
+      },
+      {
+        "name": "B Akshya (CSE 6th SEM)",
+        "phone": "9036637697"
       }
     ],
     "date": "March 28, 2026",
