@@ -586,7 +586,7 @@ function sendConfirmationEmail_(data, eventTitles, skippedEvents) {
     const registrationType = normalizeString_(data.registrationType) || (teamName ? 'Group' : 'Solo');
 
     // Links & Assets
-    const logoUrl = 'https://www.vaibhav2k26.online/JGI-logo-removebg-preview.png';
+    const logoUrl = 'https://www.vaibhav2k26.online/WhatsApp%20Image%202026-03-09%20at%208.06.22%20PM.jpeg';
     const websiteUrl = 'https://www.vaibhav2k26.online';
 
     const subject = "🎟️ YOUR DIGITAL PASS: Vaibhav 2K26 Registration Confirmed!";
