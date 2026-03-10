@@ -135,10 +135,6 @@ export const EVENTS: EventDetails[] = [
         "phone": "-"
       },
       {
-        "name": "Prof. Anita P G",
-        "phone": "-"
-      },
-      {
         "name": "Dr. Devi G",
         "phone": "-"
       }
@@ -172,7 +168,7 @@ export const EVENTS: EventDetails[] = [
   },
   {
     "id": "e5",
-    "title": "Blind Fold Taste Test",
+    "title": "Blind Fold Taste",
     "category": "Fun",
     "description": "Test your taste buds and identify ingredients while blindfolded.",
     "rules": [
@@ -184,26 +180,26 @@ export const EVENTS: EventDetails[] = [
     ],
     "facultyCoordinators": [
       {
-        "name": "Prof. Sucheet M. Gogeri",
+        "name": "Prof. Sucheeth",
         "phone": "-"
       }
     ],
     "studentCoordinators": [
       {
+        "name": "Bhagyalakshmi",
+        "phone": "-"
+      },
+      {
+        "name": "Priyanka",
+        "phone": "-"
+      },
+      {
         "name": "Sanjay",
-        "phone": "6360185670"
+        "phone": "-"
       },
       {
-        "name": "Gopi Jadhav",
-        "phone": "9108222438"
-      },
-      {
-        "name": "Priya Irkal",
-        "phone": "9164013889"
-      },
-      {
-        "name": "Bhagya K",
-        "phone": "9019247397"
+        "name": "Gopi",
+        "phone": "-"
       }
     ],
     "date": "March 27, 2026",
@@ -221,11 +217,16 @@ export const EVENTS: EventDetails[] = [
     "category": "Tech",
     "description": "A hands-on building challenge where creativity meets engineering.",
     "rules": [
-      "Project must be based on Arduino.",
-      "Unique, working model must be built on-spot.",
-      "Max 3 members per team or solo.",
-      "No internet/AI applications allowed.",
-      "Bring your own laptops; copy-paste of code allowed."
+      "The project must be based on Arduino.",
+      "Participants should build a unique, working model using the components provided by the coordinators.",
+      "No extra components will be provided by the college, and participants should not bring their own components.",
+      "Participants are not allowed to connect their laptops to the internet. No use of AI applications either from the laptop or mobile or any other devices.",
+      "Participants should bring their own laptops and are allowed to copy and paste code.",
+      "If there is any damage to the provided Arduino board (excluding other components), the participants must pay for it.",
+      "A team can have a maximum of 3 members, or you can participate as a solo competitor.",
+      "Credits will be given based on the uniqueness and modern efficiency of the model.",
+      "The participation fees per team is Rs 250.",
+      "Exciting cash prizes for the winning team."
     ],
     "facultyCoordinators": [
       {
@@ -235,23 +236,23 @@ export const EVENTS: EventDetails[] = [
     ],
     "studentCoordinators": [
       {
-        "name": "Ms. Madiha Mannangi (ECE)",
+        "name": "Ms. Madiha Mannangi (6th Sem, ECE)",
         "phone": "8105669846"
       },
       {
-        "name": "Ms. Sinchana Kulkarni (ECE)",
+        "name": "Ms. Sinchana Kulkarni (6th Sem, ECE)",
         "phone": "9483270923"
       },
       {
-        "name": "Mr. Md. Anas Khan (ME)",
+        "name": "Mr. Md. Anas Khan (6th Sem, ME)",
         "phone": "8217589739"
       },
       {
-        "name": "Mr. Kishan Bharade (ME)",
+        "name": "Mr. Kishan Bharade (6th Sem, ME)",
         "phone": "6362928359"
       },
       {
-        "name": "Mr. Satvik Pandurangi (ECE)",
+        "name": "Mr. Satvik Pandurangi (2nd Sem, ECE)",
         "phone": "8073623745"
       }
     ],
@@ -259,7 +260,7 @@ export const EVENTS: EventDetails[] = [
     "time": "10:30 AM",
     "venue": "Electrical Lab",
     "image": "https://loremflickr.com/800/600/engineering,tools",
-    "teamSize": "2-4 Members",
+    "teamSize": "Solo or Max 3",
     "department": "ME",
     "fee": 250,
     "rulesPdf": "/rules/Buildathon_2k26.pdf"
@@ -360,26 +361,18 @@ export const EVENTS: EventDetails[] = [
     ],
     "facultyCoordinators": [
       {
-        "name": "Shivakant. M",
+        "name": "Prof. Shivakanth M",
         "phone": "-"
       }
     ],
     "studentCoordinators": [
       {
-        "name": "Omprakash T",
-        "phone": "8296893297"
+        "name": "Karthik",
+        "phone": "-"
       },
       {
-        "name": "Basavaraj K",
-        "phone": "9535725483"
-      },
-      {
-        "name": "Bhagyalaxmi K",
-        "phone": "9019247397"
-      },
-      {
-        "name": "Khushi C",
-        "phone": "8660968316"
+        "name": "Ramanagouda",
+        "phone": "-"
       }
     ],
     "date": "March 28, 2026",
@@ -466,7 +459,7 @@ export const EVENTS: EventDetails[] = [
   },
   {
     "id": "e11",
-    "title": "Graduation Day Magazine Launch",
+    "title": "Graduation Day Magzine Launch & Kreeda Vaibhav Certificate Distribution",
     "category": "General",
     "description": "Magazine launch and Kreeda Vaibhav certificate distribution ceremony.",
     "rules": [
@@ -507,16 +500,15 @@ export const EVENTS: EventDetails[] = [
     ],
     "facultyCoordinators": [
       {
-        "name": "Dr. V. G. Kasabegoudar",
-        "phone": "Principal"
-      }
-    ],
-    "studentCoordinators": [
+        "name": "Prof. Mahendra M K",
+        "phone": "-"
+      },
       {
-        "name": "General Support Team",
+        "name": "Prof. Pooja Patil",
         "phone": "-"
       }
     ],
+    "studentCoordinators": [],
     "date": "March 27, 2026",
     "time": "10:00 AM",
     "venue": "Quadrangle",
@@ -576,6 +568,14 @@ export const EVENTS: EventDetails[] = [
       {
         "name": "Mohammad Haris",
         "phone": "9353499105"
+      },
+      {
+        "name": "Mehseen",
+        "phone": "6360357659"
+      },
+      {
+        "name": "Almas",
+        "phone": "7019112892"
       }
     ],
     "date": "March 27, 2026",
@@ -589,7 +589,7 @@ export const EVENTS: EventDetails[] = [
   },
   {
     "id": "e23",
-    "title": "Melody Mania",
+    "title": "Melody Mania & Dance Infusion (Solo & Group)",
     "category": "Cultural",
     "description": "A spectacular showcase of vocal talent. Compete in solo or group singing categories.",
     "rules": [
@@ -606,16 +606,40 @@ export const EVENTS: EventDetails[] = [
       {
         "name": "Prof. Anitha U",
         "phone": "-"
+      },
+      {
+        "name": "Prof. Harshitha C K",
+        "phone": "-"
+      },
+      {
+        "name": "Prof. Pooja Patil",
+        "phone": "-"
       }
     ],
     "studentCoordinators": [
       {
-        "name": "Satvik (CSE)",
+        "name": "Satvik (CSE-2nd Sem)",
         "phone": "9743045805"
       },
       {
-        "name": "Anush (CSE)",
+        "name": "Anush (CSE-2nd Sem)",
         "phone": "7619266419"
+      },
+      {
+        "name": "Arpitha M Udoji",
+        "phone": "8105262158"
+      },
+      {
+        "name": "Alfiya",
+        "phone": "9019512055"
+      },
+      {
+        "name": "Srushti Inamdar",
+        "phone": "8431063097"
+      },
+      {
+        "name": "Drushti",
+        "phone": "7483480781"
       }
     ],
     "date": "March 28, 2026",
@@ -732,15 +756,11 @@ export const EVENTS: EventDetails[] = [
     ],
     "facultyCoordinators": [
       {
-        "name": "Dr. Bhadramma",
+        "name": "Prof. Chaithanya",
         "phone": "-"
       },
       {
         "name": "Prof. Anita P G",
-        "phone": "-"
-      },
-      {
-        "name": "Dr. Devi G",
         "phone": "-"
       }
     ],
@@ -787,16 +807,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "-"
       }
     ],
-    "studentCoordinators": [
-      {
-        "name": "Srushti Inamdar",
-        "phone": "8431063097"
-      },
-      {
-        "name": "Drushti",
-        "phone": "7483480781"
-      }
-    ],
+    "studentCoordinators": [],
     "date": "March 27, 2026",
     "time": "04:00 PM",
     "venue": "Quadrangle",
@@ -808,7 +819,7 @@ export const EVENTS: EventDetails[] = [
   },
   {
     "id": "e2",
-    "title": "Project Pitch",
+    "title": "Project Pitch Day",
     "category": "Innovation",
     "description": "Showcase your ground-breaking ideas and present a Pitch Deck solving a niche problem.",
     "rules": [
@@ -952,18 +963,18 @@ export const EVENTS: EventDetails[] = [
     ],
     "facultyCoordinators": [
       {
-        "name": "Prof. Venkangoud H",
+        "name": "Prof. Venkanagouda H",
         "phone": "-"
       }
     ],
     "studentCoordinators": [
       {
-        "name": "Bhagyalaxmi K",
-        "phone": "9019247397"
+        "name": "Shreyas",
+        "phone": "-"
       },
       {
-        "name": "Khushi C",
-        "phone": "8660968316"
+        "name": "Manikantha(6th Sem)",
+        "phone": "-"
       }
     ],
     "date": "March 27, 2026",
@@ -1040,19 +1051,11 @@ export const EVENTS: EventDetails[] = [
     ],
     "studentCoordinators": [
       {
-        "name": "Raveena T B",
+        "name": "Raveena",
         "phone": "-"
       },
       {
-        "name": "Pushpavathi B S",
-        "phone": "-"
-      },
-      {
-        "name": "Darshan Patil",
-        "phone": "-"
-      },
-      {
-        "name": "Raja Hussain G",
+        "name": "Pushpavathi",
         "phone": "-"
       }
     ],
@@ -1103,17 +1106,17 @@ export const SCHEDULE = [
     day: 'Day 1 - March 27',
     events: [
       { time: '10:00 AM - 10:30 AM', title: 'Inauguration along with Banner Launch' },
-      { time: '10:30 AM - 11:30 AM', title: 'Project Pitch' },
+      { time: '10:30 AM - 11:30 AM', title: 'Project Pitch Day' },
       { time: '10:30 AM - 11:30 AM', title: 'AI in EV' },
       { time: '11:30 AM - 12:30 PM', title: 'Cooking Without Fire' },
-      { time: '12:30 PM - 01:00 PM', title: 'Blind Fold Taste Test' },
+      { time: '12:30 PM - 01:00 PM', title: 'Blind Fold Taste' },
       { time: '01:00 PM - 02:00 PM', title: 'Lunch Break' },
       { time: '02:00 PM - 03:00 PM', title: 'Survey Hunt' },
       { time: '03:00 PM - 04:00 PM', title: 'Art Gallery' },
       { time: '03:00 PM - 03:30 PM', title: 'Spot Acting Battle' },
       { time: '03:00 PM - 04:00 PM', title: 'Laugh Logic Loot' },
       { time: '04:00 PM - 05:00 PM', title: 'Performances by Kala Sangam Team' },
-      { time: '05:00 PM - 07:00 PM', title: 'Graduation Day Magazine Launch' },
+      { time: '05:00 PM - 07:00 PM', title: 'Graduation Day Magzine Launch & Kreeda Vaibhav Certificate Distribution' },
       { time: '07:00 PM - 07:30 PM', title: 'Short Break' },
       { time: '07:30 PM - 08:30 PM', title: 'Rock Band' },
     ]
@@ -1133,8 +1136,7 @@ export const SCHEDULE = [
       { time: '03:30 PM - 04:30 PM', title: 'Minute Master' },
       { time: '04:30 PM - 05:00 PM', title: 'Short Break' },
       { time: '05:00 PM - 05:30 PM', title: 'Valedictory' },
-      { time: '05:30 PM - 06:30 PM', title: 'Melody Mania' },
-      { time: '06:30 PM - 07:30 PM', title: 'Dance Mania' },
+      { time: '05:30 PM - 07:30 PM', title: 'Melody Mania & Dance Infusion (Solo & Group)' },
       { time: '07:30 PM - 08:30 PM', title: 'DJ Night' },
     ]
   }
