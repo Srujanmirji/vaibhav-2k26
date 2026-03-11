@@ -145,13 +145,24 @@ const Events: React.FC = () => {
                   </button>
 
                   {!event.registrationClosed && (
-                    <Link
-                      to={`/register?event=${encodeURIComponent(event.id)}`}
-                      state={{ preselectedEventId: event.id }}
-                      className="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-primary hover:text-white text-white text-[10px] sm:text-xs font-bold py-2.5 sm:py-3 rounded-xl transition-all border border-white/10 hover:border-primary group-hover:shadow-[0_0_15px_rgba(255,0,85,0.4)]"
-                    >
-                      REGISTER <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                    </Link>
+                    event.registrationLink ? (
+                      <a
+                        href={event.registrationLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-primary hover:text-white text-white text-[10px] sm:text-xs font-bold py-2.5 sm:py-3 rounded-xl transition-all border border-white/10 hover:border-primary group-hover:shadow-[0_0_15px_rgba(255,0,85,0.4)]"
+                      >
+                        REGISTER <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      </a>
+                    ) : (
+                      <Link
+                        to={`/register?event=${encodeURIComponent(event.id)}`}
+                        state={{ preselectedEventId: event.id }}
+                        className="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-primary hover:text-white text-white text-[10px] sm:text-xs font-bold py-2.5 sm:py-3 rounded-xl transition-all border border-white/10 hover:border-primary group-hover:shadow-[0_0_15px_rgba(255,0,85,0.4)]"
+                      >
+                        REGISTER <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      </Link>
+                    )
                   )}
                 </div>
               </div>
@@ -298,13 +309,24 @@ const Events: React.FC = () => {
               {/* Action Buttons in Modal */}
               <div className="pt-4 flex flex-col gap-3">
                 {!selectedEventForModal.registrationClosed && (
-                  <Link
-                    to={`/register?event=${encodeURIComponent(selectedEventForModal.id)}`}
-                    state={{ preselectedEventId: selectedEventForModal.id }}
-                    className="w-full py-4 bg-primary text-white font-black uppercase tracking-widest rounded-2xl text-center hover:bg-white hover:text-primary transition-all shadow-[0_0_20px_rgba(255,0,85,0.4)]"
-                  >
-                    REGISTER FOR ₹{selectedEventForModal.fee === 1 ? '100' : selectedEventForModal.fee}
-                  </Link>
+                  selectedEventForModal.registrationLink ? (
+                    <a
+                      href={selectedEventForModal.registrationLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full py-4 bg-primary text-white font-black uppercase tracking-widest rounded-2xl text-center hover:bg-white hover:text-primary transition-all shadow-[0_0_20px_rgba(255,0,85,0.4)] block"
+                    >
+                      REGISTER ON UNSTOP
+                    </a>
+                  ) : (
+                    <Link
+                      to={`/register?event=${encodeURIComponent(selectedEventForModal.id)}`}
+                      state={{ preselectedEventId: selectedEventForModal.id }}
+                      className="w-full py-4 bg-primary text-white font-black uppercase tracking-widest rounded-2xl text-center hover:bg-white hover:text-primary transition-all shadow-[0_0_20px_rgba(255,0,85,0.4)]"
+                    >
+                      REGISTER FOR ₹{selectedEventForModal.fee === 1 ? '100' : selectedEventForModal.fee}
+                    </Link>
+                  )
                 )}
                 <button
                   onClick={() => setSelectedEventForModal(null)}

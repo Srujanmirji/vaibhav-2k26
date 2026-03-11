@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { getRegistrations, submitRegistration } from '../services/googleSheets';
 import { clearAuthToken, getAuthUserFromToken, getStoredAuthUser, persistAuthToken } from '../services/authSession';
 import { RegistrationFormData } from '../types';
-import { CheckCircle, AlertCircle, Loader2, Sparkles, User, LogOut, Check } from 'lucide-react';
+import { CheckCircle, AlertCircle, Loader2, Sparkles, User, LogOut, Check, ArrowUpRight } from 'lucide-react';
 
 // Declare google global for TypeScript
 declare const google: any;
@@ -948,20 +948,29 @@ const Register: React.FC = () => {
                         const isRegistered = registeredEventSet.has(normalizeTitleKey(event.title));
                         const isSelected = formData.selectedEvents.includes(event.title);
                         const isClosed = event.registrationClosed;
+                        const hasExternalLink = !!event.registrationLink;
 
                         if (isClosed && !isRegistered) return null;
 
                         return (
                           <div
                             key={event.id}
-                            onClick={() => !isRegistered && !isClosed && handleEventToggle(event.title)}
+                            onClick={() => {
+                              if (hasExternalLink) {
+                                window.open(event.registrationLink, '_blank');
+                              } else if (!isRegistered && !isClosed) {
+                                handleEventToggle(event.title);
+                              }
+                            }}
                             className={`p-4 rounded-lg border transition-all duration-300 flex items-center justify-between group ${isRegistered
                               ? 'bg-green-500/5 border-green-500/20 opacity-80 cursor-default'
                               : isClosed
                                 ? 'bg-gray-800/10 border-white/5 opacity-50 cursor-not-allowed'
                                 : isSelected
                                   ? 'bg-primary/20 border-primary shadow-[0_0_15px_rgba(255,0,85,0.2)] cursor-pointer'
-                                  : 'bg-black/40 border-white/5 hover:border-primary/50 hover:bg-white/5 cursor-pointer'
+                                  : hasExternalLink
+                                    ? 'bg-blue-500/10 border-blue-500/30 hover:bg-blue-500/20 hover:border-blue-500/50 cursor-pointer shadow-[0_0_15px_rgba(59,130,246,0.1)]'
+                                    : 'bg-black/40 border-white/5 hover:border-primary/50 hover:bg-white/5 cursor-pointer'
                               }`}
                           >
                             <div className="min-w-0 pr-2">
@@ -982,13 +991,21 @@ const Register: React.FC = () => {
                                   REGISTRATION CLOSED
                                 </span>
                               )}
+                              {hasExternalLink && !isRegistered && (
+                                <span className="inline-block mt-1 px-1.5 py-0.5 bg-blue-500/20 text-blue-400 text-[9px] font-black rounded uppercase border border-blue-500/30">
+                                  EXTERNAL REGISTRATION
+                                </span>
+                              )}
                             </div>
                             <div className={`shrink-0 w-6 h-6 rounded-full border flex items-center justify-center transition-colors ${isRegistered
                               ? 'bg-green-500 border-green-500 text-white'
                               : isSelected
                                 ? 'bg-primary border-primary text-white'
-                                : 'border-gray-600 group-hover:border-primary/50'
+                                : hasExternalLink
+                                  ? 'border-blue-500 text-blue-500 group-hover:bg-blue-500 group-hover:text-white'
+                                  : 'border-gray-600 group-hover:border-primary/50'
                               }`}>
+                              {hasExternalLink && !isRegistered && <ArrowUpRight className="w-3.5 h-3.5" />}
                               {(isSelected || isRegistered) && <Check className="w-4 h-4" />}
                             </div>
                           </div>

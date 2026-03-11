@@ -212,20 +212,73 @@ export const EVENTS: EventDetails[] = [
     "rulesPdf": "/rules/Blind Fold Taste.pdf"
   },
   {
-    "id": "e15",
-    "title": "Buildathon",
+    "id": "e15_track1",
+    "title": "BUILDATHON 2026 - Track 1: Prototype Proposal Challenge",
     "category": "Tech",
-    "description": "A hands-on building challenge where creativity meets engineering.",
+    "description": "Buildathon 2026 is a 6-hour hardware hackathon organized by the Robotics Club of JCET. Track 1 is an idea-driven innovation challenge.",
     "rules": [
-      "The project must be based on Arduino.",
-      "Participants should build a unique, working model using the components provided by the coordinators.",
-      "No extra components will be provided by the college, and participants should not bring their own components.",
-      "Participants are not allowed to connect their laptops to the internet. No use of AI applications either from the laptop or mobile or any other devices.",
-      "Participants should bring their own laptops and are allowed to copy and paste code.",
-      "If there is any damage to the provided Arduino board (excluding other components), the participants must pay for it.",
-      "A team can have a maximum of 3 members, or you can participate as a solo competitor.",
+      "Submit a Max 6-slide PPT/PDF proposal describing your hardware prototype idea.",
+      "PPT must include: Problem Statement, Proposed Solution, System Design / Block Diagram, Components Required, & Expected Outcome.",
+      "Early-stage ideas are encouraged; a fully developed prototype is not required at the proposal stage, but a working prototype reflecting the proposed idea is mandatory.",
+      "Submissions will be evaluated based on innovation, technical feasibility, technical clarity, and real-world impact.",
+      "Shortlisted teams will be invited to the final 6-HOUR BUILDATHON offline round at JCET campus.",
+      "Teams will have 6 hours to build and demonstrate a working hardware prototype based on their proposal.",
+      "Teams must bring all components and tools required to build their prototype during the final round.",
+      "Inter-disciplinary and inter-college teams are encouraged.",
+      "Registration Fee: ₹250 per team (Payable only after shortlisting for the final round).",
+      "Plagiarism or copied project ideas will lead to immediate disqualification. The idea must be original."
+    ],
+    "facultyCoordinators": [
+      {
+        "name": "Prof. Prabhudev Mallapur",
+        "phone": "7083403465"
+      }
+    ],
+    "studentCoordinators": [
+      {
+        "name": "Ms. Madiha Mannangi (6th Sem, ECE)",
+        "phone": "8105669846"
+      },
+      {
+        "name": "Ms. Sinchana Kulkarni (6th Sem, ECE)",
+        "phone": "9483270923"
+      },
+      {
+        "name": "Mr. Md. Anas Khan (6th Sem, ME)",
+        "phone": "8217589739"
+      },
+      {
+        "name": "Mr. Kishan Bharade (6th Sem, ME)",
+        "phone": "6362928359"
+      },
+      {
+        "name": "Mr. Satvik Pandurangi (2nd Sem, ECE)",
+        "phone": "8073623745"
+      }
+    ],
+    "date": "March 28, 2026",
+    "time": "10:30 AM",
+    "venue": "Electrical Lab",
+    "image": "https://loremflickr.com/800/600/engineering,tools",
+    "teamSize": "2-4 Members",
+    "department": "ME",
+    "fee": 250,
+    "rulesPdf": "/rules/Buildathon_2k26.pdf",
+    "registrationLink": "https://unstop.com/"
+  },
+  {
+    "id": "e15_track2",
+    "title": "BUILDATHON 2026 - Track 2: Rapid Hardware Build Challenge",
+    "category": "Tech",
+    "description": "An on-spot 6-hour rapid hardware build competition. Register directly on the site, no proposal phase required.",
+    "rules": [
+      "Project must be based on Arduino and purely on the components provided by the coordinators.",
+      "No extra components are allowed to be brought by participants.",
+      "Timer runs for 6 hours in the background for the build phase.",
+      "Restrictions: No internet connection allowed. No use of AI applications from laptop/mobile.",
+      "Participants must bring their own laptops (copy-pasting pre-written code is allowed).",
+      "Damage Policy: Any damage to the provided Arduino board (excluding other components) must be paid for by the participants.",
       "Credits will be given based on the uniqueness and modern efficiency of the model.",
-      "The participation fees per team is Rs 250.",
       "Exciting cash prizes for the winning team."
     ],
     "facultyCoordinators": [
