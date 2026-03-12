@@ -12,7 +12,7 @@ export interface EventDetails {
   venue: string;
   image: string;
   teamSize: string;
-  department?: 'CSE' | 'ECE' | 'CVE' | 'ME' | 'BS' | 'General' | 'All';
+  department?: 'CSE' | 'ECE' | 'CVE' | 'ME' | 'BS' | 'General' | 'All' | 'MBA' | 'CSE & AIML';
   fee?: number; // Fee in INR
   groupFee?: number; // Fee in INR for group registration
   registrationClosed?: boolean;

@@ -21,7 +21,7 @@ export const ADMIN_ALLOWED_EMAILS = [
 // Razorpay Keys (Frontend Checkout)
 export const RAZORPAY_KEY_ID = 'rzp_live_SMPLH5DFYeMquJ';
 
-export const DEPARTMENTS = ['All', 'CSE', 'ECE', 'CVE', 'ME', 'BS', 'MBA'];
+export const DEPARTMENTS = ['All', 'CSE', 'ECE', 'CVE', 'ME', 'BS', 'MBA', 'CSE & AIML'];
 export const EVENTS: EventDetails[] = [
   {
     "id": "e3",
@@ -578,8 +578,8 @@ export const EVENTS: EventDetails[] = [
     "rules": [
       "MISSION DIRECTIVES: EACH MEMBER MUST COMPLETE ONE TASK IN SEQUENCE. THE NEXT MEMBER CAN BEGIN ONLY AFTER THE PREVIOUS MEMBER FINISHES. TEAMS FINISH WHEN THE 4TH MEMBER COMPLETES THEIR TASK.",
       "ROUND 1: SPEED PROTOCOL (Relay Fun Round)",
-      "ROUND 2: CREATIVE DISRUPTION (Meme Challenge) - Teams must make memes based on the theme given on the spot. Content must be clean and respectful. No foul language or insults toward teachers & students.",
-      "ROUND 3: TECHNICAL TREASURE HUNT - SUBROUND 1 (CODE BREAKER GATEWAY): Quiz round where logic, coding knowledge, and quick thinking decide who moves forward; SUBROUND 2 (CAMPUS QUEST): Decode clues and discover the next location; SUBROUND 3 (MATCH QUEST): Find the right mentor, scan the right code, and unlock your next move; SUBROUND 4 (TREASURE VAULT): Crack coding challenges to unlock final clues.",
+      "ROUND 2: CREATIVE DISRUPTION (Meme Challenge) - Teams must make memes based on the theme given on the spot. Content must be clean and respectful. Evaluation Criteria: Creativity (5), Relevance (5), Humour Impact (5), Presentation Quality (5), Rule Violation (-2).",
+      "ROUND 3: TECHNICAL TREASURE HUNT - SUBROUND 1 (CODE BREAKER GATEWAY): Quiz round where logic coding knowledge and quick thinking decide who moves forward; SUBROUND 2 (CAMPUS QUEST): Decode clues and discover the next location; SUBROUND 3 (MATCH QUEST): Find the right mentor, scan the right code, and unlock your next move; SUBROUND 4 (TREASURE VAULT): Crack coding challenges to unlock final clues.",
       "WINNER SELECTION: First team to unlock physical treasure box wins the cash. In case of technical failure, judges verify digital submission."
     ],
     "facultyCoordinators": [
@@ -606,11 +606,7 @@ export const EVENTS: EventDetails[] = [
     ],
     "studentCoordinators": [
       {
-        "name": "Abdul Muqeet Kazi",
-        "phone": "8296093149"
-      },
-      {
-        "name": "Uzma Savnur",
+        "name": "Uzma Savanur",
         "phone": "9845736315"
       },
       {
@@ -618,16 +614,20 @@ export const EVENTS: EventDetails[] = [
         "phone": "7204758126"
       },
       {
-        "name": "Mohammad Haris",
-        "phone": "9353499105"
-      },
-      {
         "name": "Arsheen C",
         "phone": "9380672015"
       },
       {
-        "name": "Almas",
+        "name": "Almas Savanur",
         "phone": "7019112892"
+      },
+      {
+        "name": "Mohammed Haris",
+        "phone": "9353499105"
+      },
+      {
+        "name": "Abdul Muqeet Kazi",
+        "phone": "8296093149"
       }
     ],
     "date": "March 26, 2026",
@@ -635,7 +635,7 @@ export const EVENTS: EventDetails[] = [
     "venue": "A208",
     "image": "https://loremflickr.com/800/600/standup,comedy",
     "teamSize": "Team of 4",
-    "department": "CSE",
+    "department": "CSE & AIML",
     "fee": 200,
     "rulesPdf": "/rules/laugh-logic-loot VAIBHAV 2K26.pdf",
     "registrationLink": "https://sites.google.com/view/laugh-logic-loot-2026"
