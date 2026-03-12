@@ -576,10 +576,11 @@ export const EVENTS: EventDetails[] = [
     "category": "Tech",
     "description": "A multi-round quest involving Coding, Campus Treasure Hunt, and Meme making.",
     "rules": [
-      "ROUND 1: SPEED PROTOCOL (Relay Fun Round) - MISSION DIRECTIVES: EACH MEMBER MUST COMPLETE ONE TASK IN SEQUENCE. THE NEXT MEMBER CAN BEGIN ONLY AFTER THE PREVIOUS MEMBER FINISHES. TEAMS FINISH WHEN THE 4TH MEMBER COMPLETES THEIR TASK.",
-      "ROUND 2: CREATIVE DISRUPTION (Meme Challenge) - Teams must make memes based on the theme given on the spot. Content must be clean and respectful. No foul language or insults toward teachers & students.",
-      "ROUND 3: TECHNICAL TREASURE HUNT - SUBROUND 1 (CODE BREAKER GATEWAY): Quiz round where logic, coding knowledge, and quick thinking decide who moves forward; SUBROUND 2 (CAMPUS QUEST): Decode clues and discover the next location; SUBROUND 3 (MATCH QUEST): Find the right mentor, scan the right code, and unlock your next move; SUBROUND 4 (TREASURE VAULT): Crack coding challenges to unlock final clues.",
-      "WINNER SELECTION: First team to unlock physical treasure box wins the cash. In case of technical failure, judges verify digital submission."
+      "ROUND 1: CODE BREAKER GATEWAY - Coding & Logic Relay. Each member must complete one task in sequence. The next member can begin only after the previous member finishes.",
+      "ROUND 2: CAMPUS QUEST - Exploration & Puzzle solving. Includes a Creative Disruption (Meme Challenge) where teams create original, clean, and respectful college-themed memes.",
+      "ROUND 3: IDENTITY MATCH QUEST - Locate mentors to scan QR codes. Faculty Card verification is required; the card ID must match the Team ID for a successful scan.",
+      "ROUND 4: FINAL TREASURE VAULT - Solve digital challenges to obtain a final code and unlock the physical treasure box.",
+      "WINNER SELECTION: The first team to correctly unlock the physical treasure box wins the cash prize. organizers' decisions are final and binding."
     ],
     "facultyCoordinators": [
       {
@@ -621,8 +622,8 @@ export const EVENTS: EventDetails[] = [
         "phone": "9353499105"
       },
       {
-        "name": "Arsheen C",
-        "phone": "9380672015"
+        "name": "Mehseen",
+        "phone": "6360357659"
       },
       {
         "name": "Almas",
