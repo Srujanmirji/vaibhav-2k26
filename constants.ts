@@ -59,7 +59,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "8296893297"
       }
     ],
-    "date": "March 27, 2026",
+    "date": "March 26, 2026",
     "time": "10:30 AM",
     "venue": "Seminar Hall",
     "image": "https://loremflickr.com/800/600/electric,car,ai",
@@ -109,7 +109,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "9014636477"
       }
     ],
-    "date": "March 28, 2026",
+    "date": "March 27, 2026",
     "time": "10:00 AM",
     "venue": "A112",
     "image": "https://loremflickr.com/800/600/artificial-intelligence,robot",
@@ -157,7 +157,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "9113914185"
       }
     ],
-    "date": "March 27, 2026",
+    "date": "March 26, 2026",
     "time": "03:00 PM",
     "venue": "Library",
     "image": "https://loremflickr.com/800/600/art,gallery",
@@ -202,7 +202,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "-"
       }
     ],
-    "date": "March 27, 2026",
+    "date": "March 26, 2026",
     "time": "12:30 PM",
     "venue": "Electrical Lab",
     "image": "https://loremflickr.com/800/600/tasting,food",
@@ -256,7 +256,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "8073623745"
       }
     ],
-    "date": "March 28, 2026",
+    "date": "March 27, 2026",
     "time": "10:30 AM",
     "venue": "Electrical Lab",
     "image": "https://loremflickr.com/800/600/engineering,tools",
@@ -308,7 +308,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "8073623745"
       }
     ],
-    "date": "March 28, 2026",
+    "date": "March 27, 2026",
     "time": "10:30 AM",
     "venue": "Electrical Lab",
     "image": "https://loremflickr.com/800/600/engineering,tools",
@@ -349,7 +349,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "-"
       }
     ],
-    "date": "March 28, 2026",
+    "date": "March 27, 2026",
     "time": "02:00 PM",
     "venue": "Electrical Lab",
     "image": "https://loremflickr.com/800/600/electronics,circuit",
@@ -390,7 +390,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "-"
       }
     ],
-    "date": "March 27, 2026",
+    "date": "March 26, 2026",
     "time": "11:30 AM",
     "venue": "Electrical Lab",
     "image": "https://loremflickr.com/800/600/cooking,chef",
@@ -427,7 +427,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "-"
       }
     ],
-    "date": "March 28, 2026",
+    "date": "March 27, 2026",
     "time": "03:00 PM",
     "venue": "Seminar Hall",
     "image": "https://loremflickr.com/800/600/cinema,actor",
@@ -458,7 +458,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "-"
       }
     ],
-    "date": "March 28, 2026",
+    "date": "March 27, 2026",
     "time": "07:30 PM",
     "venue": "Quadrangle",
     "image": "https://loremflickr.com/800/600/dj,party",
@@ -500,7 +500,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "7338615066"
       }
     ],
-    "date": "March 28, 2026",
+    "date": "March 27, 2026",
     "time": "02:00 PM",
     "venue": "CAED Lab",
     "image": "https://loremflickr.com/800/600/gaming,videogame",
@@ -531,7 +531,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "-"
       }
     ],
-    "date": "March 27, 2026",
+    "date": "March 26, 2026",
     "time": "05:00 PM",
     "venue": "Quadrangle",
     "image": "https://loremflickr.com/800/600/graduation,magazine",
@@ -561,7 +561,7 @@ export const EVENTS: EventDetails[] = [
       }
     ],
     "studentCoordinators": [],
-    "date": "March 27, 2026",
+    "date": "March 26, 2026",
     "time": "10:00 AM",
     "venue": "Quadrangle",
     "image": "https://loremflickr.com/800/600/celebration,ceremony",
@@ -577,10 +577,10 @@ export const EVENTS: EventDetails[] = [
     "description": "A multi-round quest involving Coding, Campus Treasure Hunt, and Meme making.",
     "rules": [
       "4 members per team.",
-      "Round 1: Code Breaker sequence (Logic screening).",
-      "Round 2: Campus Quest (Puzzle solving & movement).",
-      "Round 3: Meme Challenge (College-themed, clean content).",
-      "Round 4: Treasure Vault (Digital unlock + physical prize)."
+      "Round 1: Speed Protocol (Relay Fun Round) - Each member must complete one task in sequence; the next can begin only after the previous finishes.",
+      "Round 2: Creative Disruption (Meme Challenge) - Teams must make clean, respectful memes on a given theme (Evaluation: Creativity, Relevance, Humor, Presentation).",
+      "Round 3: Technical Treasure Hunt - A 4-stage quest: Code Breaker Gateway (Quiz), Campus Quest (Clues), Match Quest (Mentors/Codes), and Treasure Vault (Coding challenges).",
+      "Winner Selection: The first team to unlock the physical treasure box wins the cash prize."
     ],
     "facultyCoordinators": [
       {
@@ -630,7 +630,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "7019112892"
       }
     ],
-    "date": "March 27, 2026",
+    "date": "March 26, 2026",
     "time": "03:00 PM",
     "venue": "A208",
     "image": "https://loremflickr.com/800/600/standup,comedy",
@@ -695,7 +695,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "7483480781"
       }
     ],
-    "date": "March 28, 2026",
+    "date": "March 27, 2026",
     "time": "05:30 PM",
     "venue": "Quadrangle",
     "image": "https://loremflickr.com/800/600/singing,music",
@@ -735,7 +735,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "9019512055"
       }
     ],
-    "date": "March 28, 2026",
+    "date": "March 27, 2026",
     "time": "06:30 PM",
     "venue": "Quadrangle",
     "image": "https://loremflickr.com/800/600/dance,stage",
@@ -787,7 +787,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "9036637697"
       }
     ],
-    "date": "March 28, 2026",
+    "date": "March 27, 2026",
     "time": "12:00 PM",
     "venue": "Skill Lab",
     "image": "https://loremflickr.com/800/600/computer,funny",
@@ -831,7 +831,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "9448589221"
       }
     ],
-    "date": "March 28, 2026",
+    "date": "March 27, 2026",
     "time": "03:30 PM",
     "venue": "Seminar Hall",
     "image": "https://loremflickr.com/800/600/stopwatch,clock",
@@ -861,7 +861,7 @@ export const EVENTS: EventDetails[] = [
       }
     ],
     "studentCoordinators": [],
-    "date": "March 27, 2026",
+    "date": "March 26, 2026",
     "time": "04:00 PM",
     "venue": "Quadrangle",
     "image": "https://loremflickr.com/800/600/dance,culture",
@@ -918,7 +918,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "7483574498"
       }
     ],
-    "date": "March 27, 2026",
+    "date": "March 26, 2026",
     "time": "10:30 AM",
     "venue": "A208",
     "image": "https://loremflickr.com/800/600/business,meeting",
@@ -949,7 +949,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "-"
       }
     ],
-    "date": "March 27, 2026",
+    "date": "March 26, 2026",
     "time": "07:30 PM",
     "venue": "Quadrangle",
     "image": "https://loremflickr.com/800/600/rock,band",
@@ -993,7 +993,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "8792055904"
       }
     ],
-    "date": "March 28, 2026",
+    "date": "March 27, 2026",
     "time": "11:30 AM",
     "venue": "Seminar Hall",
     "image": "https://loremflickr.com/800/600/filmmaking,camera",
@@ -1030,7 +1030,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "-"
       }
     ],
-    "date": "March 27, 2026",
+    "date": "March 26, 2026",
     "time": "03:00 PM",
     "venue": "Seminar Hall",
     "image": "https://loremflickr.com/800/600/theatre,drama",
@@ -1067,7 +1067,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "9663074795"
       }
     ],
-    "date": "March 27, 2026",
+    "date": "March 26, 2026",
     "time": "02:00 PM",
     "venue": "A118",
     "image": "https://loremflickr.com/800/600/map,search",
@@ -1112,7 +1112,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "-"
       }
     ],
-    "date": "March 28, 2026",
+    "date": "March 27, 2026",
     "time": "10:30 AM",
     "venue": "A118",
     "image": "https://loremflickr.com/800/600/building-blocks,tower",
@@ -1143,7 +1143,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "-"
       }
     ],
-    "date": "March 28, 2026",
+    "date": "March 27, 2026",
     "time": "05:00 PM",
     "venue": "Quadrangle",
     "image": "https://loremflickr.com/800/600/celebration,award",
