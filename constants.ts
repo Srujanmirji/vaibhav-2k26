@@ -576,11 +576,11 @@ export const EVENTS: EventDetails[] = [
     "category": "Tech",
     "description": "A multi-round quest involving Coding, Campus Treasure Hunt, and Meme making.",
     "rules": [
-      "4 members per team.",
-      "Round 1: Speed Protocol (Relay Fun Round) - Each member must complete one task in sequence; the next can begin only after the previous finishes.",
-      "Round 2: Creative Disruption (Meme Challenge) - Teams must make clean, respectful memes on a given theme (Evaluation: Creativity, Relevance, Humor, Presentation).",
-      "Round 3: Technical Treasure Hunt - A 4-stage quest: Code Breaker Gateway (Quiz), Campus Quest (Clues), Match Quest (Mentors/Codes), and Treasure Vault (Coding challenges).",
-      "Winner Selection: The first team to unlock the physical treasure box wins the cash prize."
+      "MISSION DIRECTIVES: EACH MEMBER MUST COMPLETE ONE TASK IN SEQUENCE. THE NEXT MEMBER CAN BEGIN ONLY AFTER THE PREVIOUS MEMBER FINISHES. TEAMS FINISH WHEN THE 4TH MEMBER COMPLETES THEIR TASK.",
+      "ROUND 1: SPEED PROTOCOL (Relay Fun Round)",
+      "ROUND 2: CREATIVE DISRUPTION (Meme Challenge) - Teams must make memes based on the theme given on the spot. Content must be clean and respectful. No foul language or insults toward teachers & students.",
+      "ROUND 3: TECHNICAL TREASURE HUNT - SUBROUND 1 (CODE BREAKER GATEWAY): Quiz round where logic, coding knowledge, and quick thinking decide who moves forward; SUBROUND 2 (CAMPUS QUEST): Decode clues and discover the next location; SUBROUND 3 (MATCH QUEST): Find the right mentor, scan the right code, and unlock your next move; SUBROUND 4 (TREASURE VAULT): Crack coding challenges to unlock final clues.",
+      "WINNER SELECTION: First team to unlock physical treasure box wins the cash. In case of technical failure, judges verify digital submission."
     ],
     "facultyCoordinators": [
       {
