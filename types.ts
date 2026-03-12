@@ -17,7 +17,7 @@ export interface EventDetails {
   groupFee?: number; // Fee in INR for group registration
   registrationClosed?: boolean;
   rulesPdf?: string;
-  registrationLink?: string; // Optional field for external registration links like Unstop
+  registrationLink?: string; // Optional field for external registration links
 }
 
 export interface RegistrationFormData {

@@ -263,8 +263,7 @@ export const EVENTS: EventDetails[] = [
     "teamSize": "2-4 Members",
     "department": "ME",
     "fee": 250,
-    "rulesPdf": "/rules/Buildathon_2k26.pdf",
-    "registrationLink": "https://unstop.com/"
+    "rulesPdf": "/rules/Buildathon_2k26.pdf"
   },
   {
     "id": "e15_track2",
@@ -623,8 +622,8 @@ export const EVENTS: EventDetails[] = [
         "phone": "9353499105"
       },
       {
-        "name": "Mehseen",
-        "phone": "6360357659"
+        "name": "Arsheen C",
+        "phone": "9380672015"
       },
       {
         "name": "Almas",
@@ -638,7 +637,8 @@ export const EVENTS: EventDetails[] = [
     "teamSize": "Team of 4",
     "department": "CSE",
     "fee": 200,
-    "rulesPdf": "/rules/laugh-logic-loot VAIBHAV 2K26.pdf"
+    "rulesPdf": "/rules/laugh-logic-loot VAIBHAV 2K26.pdf",
+    "registrationLink": "https://sites.google.com/view/laugh-logic-loot-2026"
   },
   {
     "id": "e23",

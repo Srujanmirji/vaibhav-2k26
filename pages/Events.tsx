@@ -316,7 +316,7 @@ const Events: React.FC = () => {
                       rel="noopener noreferrer"
                       className="w-full py-4 bg-primary text-white font-black uppercase tracking-widest rounded-2xl text-center hover:bg-white hover:text-primary transition-all shadow-[0_0_20px_rgba(255,0,85,0.4)] block"
                     >
-                      REGISTER ON UNSTOP
+                      REGISTER NOW
                     </a>
                   ) : (
                     <Link
