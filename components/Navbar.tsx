@@ -63,7 +63,7 @@ const Navbar: React.FC = () => {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <NavLink to="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
-            <img src="/WhatsApp%20Image%202026-03-09%20at%208.06.22%20PM.jpeg" alt="JGI Logo" className="h-8 sm:h-10 md:h-11 lg:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105" />
+            <img src="/LOGO.png" alt="Vaibhav 2K26 Logo" className="h-8 sm:h-10 md:h-11 lg:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105" />
             <span className="text-sm sm:text-xl md:text-xl lg:text-2xl font-bold font-mono tracking-tighter text-white whitespace-nowrap">
               VAIB<span className="text-primary text-glow">HAV</span> 2K26
             </span>
