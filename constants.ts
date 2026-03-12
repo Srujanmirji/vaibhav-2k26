@@ -636,7 +636,7 @@ export const EVENTS: EventDetails[] = [
     "teamSize": "Team of 4",
     "department": "CSE",
     "fee": 200,
-    "rulesPdf": "/rules/laugh-logic-loot VAIBHAV 2K26.pdf",
+    "rulesPdf": "/rules/Laugh,logic,loot.pdf",
     "registrationLink": "https://sites.google.com/view/laugh-logic-loot-2026"
   },
   {
