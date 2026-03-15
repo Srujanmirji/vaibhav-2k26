@@ -239,8 +239,57 @@ const Events: React.FC = () => {
                 )}
               </div>
 
+              {/* Tracks Section (for multi-track events like Buildathon) */}
+              {selectedEventForModal.tracks && selectedEventForModal.tracks.length > 0 && (
+                <div className="space-y-4">
+                  <h4 className="text-white font-bold flex items-center gap-2 text-lg">
+                    <ShieldCheck className="w-5 h-5 text-primary" /> Available Tracks
+                  </h4>
+                  <div className="grid grid-cols-1 gap-4">
+                    {selectedEventForModal.tracks.map((track, i) => (
+                      <div key={i} className="bg-white/5 p-4 md:p-6 rounded-2xl border border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-4 group hover:border-primary/50 transition-all">
+                        <div className="flex-1 space-y-2">
+                          <h5 className="text-lg font-bold text-white group-hover:text-primary transition-colors">{track.title}</h5>
+                          <p className="text-gray-400 text-sm leading-relaxed">{track.description}</p>
+                          <div className="flex flex-wrap gap-3 pt-1">
+                            <span className="flex items-center text-gray-500 text-[10px] font-bold uppercase tracking-wider">
+                              <Users className="w-3 h-3 mr-1.5 text-secondary" /> {track.teamSize}
+                            </span>
+                            <span className="flex items-center text-gray-500 text-[10px] font-bold uppercase tracking-wider">
+                              <ShieldCheck className="w-3 h-3 mr-1.5 text-secondary" /> ₹{track.fee}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="shrink-0">
+                          {!track.registrationClosed && (
+                            track.registrationLink ? (
+                              <a
+                                href={track.registrationLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white text-xs font-bold uppercase tracking-widest rounded-xl hover:bg-white hover:text-primary transition-all shadow-[0_0_15px_rgba(255,0,85,0.3)] w-full md:w-auto"
+                              >
+                                REGISTER <ArrowUpRight className="w-4 h-4" />
+                              </a>
+                            ) : (
+                              <Link
+                                to={`/register?event=${encodeURIComponent(track.id)}`}
+                                state={{ preselectedEventId: track.id }}
+                                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-secondary text-darker text-xs font-bold uppercase tracking-widest rounded-xl hover:bg-white hover:text-secondary transition-all shadow-[0_0_15px_rgba(0,255,255,0.2)] w-full md:w-auto"
+                              >
+                                REGISTER <ArrowUpRight className="w-4 h-4" />
+                              </Link>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Rules Section */}
-              {selectedEventForModal.rules && (
+              {selectedEventForModal.rules && !selectedEventForModal.tracks && (
                 <div className="space-y-4">
                   <h4 className="text-white font-bold flex items-center gap-2 text-lg">
                     <ShieldCheck className="w-5 h-5 text-primary" /> Rules & Regulations
@@ -308,7 +357,7 @@ const Events: React.FC = () => {
 
               {/* Action Buttons in Modal */}
               <div className="pt-4 flex flex-col gap-3">
-                {!selectedEventForModal.registrationClosed && (
+                {!selectedEventForModal.registrationClosed && !selectedEventForModal.tracks && (
                   selectedEventForModal.registrationLink ? (
                     <a
                       href={selectedEventForModal.registrationLink}

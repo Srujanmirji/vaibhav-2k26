@@ -212,21 +212,16 @@ export const EVENTS: EventDetails[] = [
     "rulesPdf": "/rules/Blind Fold Taste.pdf"
   },
   {
-    "id": "e15_track1",
-    "title": "BUILDATHON 2026 - Track 1: Prototype Proposal Challenge",
+    "id": "e15",
+    "title": "BUILDATHON 2026",
     "category": "Tech",
-    "description": "Buildathon 2026 is a 6-hour hardware hackathon organized by the Robotics Club of JCET. Track 1 is an idea-driven innovation challenge.",
+    "description": "Buildathon 2026 is a 6-hour hardware hackathon organized by the Robotics Club of JCET. Choose Between Prototype Proposal (Track 1) or Rapid Hardware Build (Track 2).",
     "rules": [
-      "Submit a Max 6-slide PPT/PDF proposal describing your hardware prototype idea.",
-      "PPT must include: Problem Statement, Proposed Solution, System Design / Block Diagram, Components Required, & Expected Outcome.",
-      "Early-stage ideas are encouraged; a fully developed prototype is not required at the proposal stage, but a working prototype reflecting the proposed idea is mandatory.",
-      "Submissions will be evaluated based on innovation, technical feasibility, technical clarity, and real-world impact.",
-      "Shortlisted teams will be invited to the final 6-HOUR BUILDATHON offline round at JCET campus.",
-      "Teams will have 6 hours to build and demonstrate a working hardware prototype based on their proposal.",
-      "Teams must bring all components and tools required to build their prototype during the final round.",
+      "Track 1 (Innovation Challenge): Submit a proposal for a hardware prototype. Shortlisted teams build and demonstrate the project in a 6-hour offline round.",
+      "Track 2 (Rapid Build Challenge): An on-spot 6-hour hardware build competition using components provided by coordinators.",
+      "Evaluation based on innovation, technical feasibility, and real-world impact.",
       "Inter-disciplinary and inter-college teams are encouraged.",
-      "Registration Fee: ₹250 per team (Payable only after shortlisting for the final round).",
-      "Plagiarism or copied project ideas will lead to immediate disqualification. The idea must be original."
+      "Registration Fee: ₹250 per team."
     ],
     "facultyCoordinators": [
       {
@@ -260,62 +255,27 @@ export const EVENTS: EventDetails[] = [
     "time": "10:30 AM",
     "venue": "Electrical Lab",
     "image": "https://loremflickr.com/800/600/engineering,tools",
-    "teamSize": "2-4 Members",
+    "teamSize": "Multiple Tracks",
     "department": "ME",
     "fee": 250,
-    "rulesPdf": "/rules/Buildathon_2k26.pdf"
-  },
-  {
-    "id": "e15_track2",
-    "title": "BUILDATHON 2026 - Track 2: Rapid Hardware Build Challenge",
-    "category": "Tech",
-    "description": "An on-spot 6-hour rapid hardware build competition. Register directly on the site, no proposal phase required.",
-    "rules": [
-      "Project must be based on Arduino and purely on the components provided by the coordinators.",
-      "No extra components are allowed to be brought by participants.",
-      "Timer runs for 6 hours in the background for the build phase.",
-      "Restrictions: No internet connection allowed. No use of AI applications from laptop/mobile.",
-      "Participants must bring their own laptops (copy-pasting pre-written code is allowed).",
-      "Damage Policy: Any damage to the provided Arduino board (excluding other components) must be paid for by the participants.",
-      "Credits will be given based on the uniqueness and modern efficiency of the model.",
-      "Exciting cash prizes for the winning team."
-    ],
-    "facultyCoordinators": [
+    "rulesPdf": "/rules/Buildathon_2k26.pdf",
+    "tracks": [
       {
-        "name": "Prof. Prabhudev Mallapur",
-        "phone": "7083403465"
+        "id": "e15_track1",
+        "title": "Track 1: Prototype Proposal Challenge",
+        "description": "An idea-driven innovation challenge. Submit a proposal, get shortlisted, and build your prototype in 6 hours.",
+        "teamSize": "2-4 Members",
+        "fee": 250,
+        "registrationLink": "https://unstop.com/o/bmV1HCT?utm_medium=Share&utm_source=jcetclu22944&utm_campaign=Online_coding_challenge"
+      },
+      {
+        "id": "e15_track2",
+        "title": "Track 2: Rapid Hardware Build Challenge",
+        "description": "An on-spot 6-hour rapid hardware build competition using provided Arduino and components.",
+        "teamSize": "Solo or Max 3",
+        "fee": 250
       }
-    ],
-    "studentCoordinators": [
-      {
-        "name": "Ms. Madiha Mannangi (6th Sem, ECE)",
-        "phone": "8105669846"
-      },
-      {
-        "name": "Ms. Sinchana Kulkarni (6th Sem, ECE)",
-        "phone": "9483270923"
-      },
-      {
-        "name": "Mr. Md. Anas Khan (6th Sem, ME)",
-        "phone": "8217589739"
-      },
-      {
-        "name": "Mr. Kishan Bharade (6th Sem, ME)",
-        "phone": "6362928359"
-      },
-      {
-        "name": "Mr. Satvik Pandurangi (2nd Sem, ECE)",
-        "phone": "8073623745"
-      }
-    ],
-    "date": "March 27, 2026",
-    "time": "10:30 AM",
-    "venue": "Electrical Lab",
-    "image": "https://loremflickr.com/800/600/engineering,tools",
-    "teamSize": "Solo or Max 3",
-    "department": "ME",
-    "fee": 250,
-    "rulesPdf": "/rules/Buildathon_2k26.pdf"
+    ]
   },
   {
     "id": "e19",

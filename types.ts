@@ -1,3 +1,14 @@
+export interface TrackDetails {
+  id: string;
+  title: string;
+  description: string;
+  rules?: string[];
+  teamSize: string;
+  fee: number;
+  registrationLink?: string;
+  registrationClosed?: boolean;
+}
+
 export interface EventDetails {
   id: string;
   title: string;
@@ -18,6 +29,7 @@ export interface EventDetails {
   registrationClosed?: boolean;
   rulesPdf?: string;
   registrationLink?: string; // Optional field for external registration links
+  tracks?: TrackDetails[];
 }
 
 export interface RegistrationFormData {
