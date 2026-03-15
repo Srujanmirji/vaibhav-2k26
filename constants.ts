@@ -247,8 +247,8 @@ export const EVENTS: EventDetails[] = [
         "phone": "6362928359"
       },
       {
-        "name": "Mr. Satvik Pandurangi (2nd Sem, ECE)",
-        "phone": "8073623745"
+        "name": "Mr. Varun Raval (ECE)",
+        "phone": "9380246979"
       }
     ],
     "date": "March 27, 2026",
