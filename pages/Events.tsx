@@ -145,7 +145,14 @@ const Events: React.FC = () => {
                   </button>
 
                   {!event.registrationClosed && (
-                    event.registrationLink ? (
+                    event.tracks && event.tracks.length > 0 ? (
+                      <button
+                        onClick={() => setSelectedEventForModal(event)}
+                        className="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-primary hover:text-white text-white text-[10px] sm:text-xs font-bold py-2.5 sm:py-3 rounded-xl transition-all border border-white/10 hover:border-primary group-hover:shadow-[0_0_15px_rgba(255,0,85,0.4)]"
+                      >
+                        REGISTER <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      </button>
+                    ) : event.registrationLink ? (
                       <a
                         href={event.registrationLink}
                         target="_blank"
