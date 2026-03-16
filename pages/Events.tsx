@@ -197,10 +197,10 @@ const Events: React.FC = () => {
             initial={{ scale: 0.9, opacity: 0, y: 30 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="relative w-full max-w-6xl bg-darker/60 backdrop-blur-md border border-white/10 rounded-none sm:rounded-3xl overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.8)] h-full sm:h-auto sm:max-h-[90dvh] flex flex-col md:flex-row"
+            className="relative w-full max-w-6xl bg-darker/60 backdrop-blur-md border border-white/10 rounded-none sm:rounded-3xl overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.8)] h-[100dvh] sm:h-auto sm:max-h-[90dvh] flex flex-col md:flex-row"
           >
             {/* Left Column: Fixed Image (Desktop) / Header Image (Mobile) */}
-            <div className="relative w-full md:w-[45%] lg:w-[40%] shrink-0 overflow-hidden bg-black flex items-center justify-center min-h-[40vh] md:min-h-0">
+            <div className="relative w-full md:w-[45%] lg:w-[40%] shrink-0 overflow-hidden bg-black flex items-center justify-center max-h-[35vh] md:max-h-none md:min-h-0">
               {/* High-intensity animated blurred background */}
               <motion.div 
                 initial={{ scale: 1.2, opacity: 0 }}
@@ -218,15 +218,15 @@ const Events: React.FC = () => {
                 transition={{ delay: 0.2, duration: 0.8 }}
                 src={selectedEventForModal.image}
                 alt={selectedEventForModal.title}
-                className="relative w-full h-full object-contain z-20 drop-shadow-[0_0_30px_rgba(0,0,0,0.5)]"
+                className="relative w-full h-full object-contain z-20 drop-shadow-[0_0_30px_rgba(0,0,0,0.5)] max-h-[35vh] md:max-h-full"
               />
 
               {/* Mobile Close Button */}
               <button
                 onClick={() => setSelectedEventForModal(null)}
-                className="absolute top-4 right-4 p-3 bg-black/60 hover:bg-primary text-white rounded-full transition-all z-50 md:hidden"
+                className="absolute top-3 right-3 p-2.5 bg-black/70 hover:bg-primary text-white rounded-full transition-all z-50 md:hidden backdrop-blur-sm"
               >
-                <X className="w-6 h-6" />
+                <X className="w-5 h-5" />
               </button>
 
               {/* Status Badge (Mobile Only) */}
@@ -267,73 +267,73 @@ const Events: React.FC = () => {
               </div>
 
               {/* Mobile Header Title (Inside scroll view) */}
-              <div className="md:hidden px-6 pt-6 pb-2 shrink-0">
+              <div className="md:hidden px-4 pt-4 pb-2 shrink-0">
                 <motion.span 
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="inline-block px-2 py-0.5 bg-primary/20 border border-primary/30 text-primary text-[10px] font-bold uppercase tracking-widest rounded-full mb-2"
+                  className="inline-block px-2 py-0.5 bg-primary/20 border border-primary/30 text-primary text-[10px] font-bold uppercase tracking-widest rounded-full mb-1.5"
                 >
                   {selectedEventForModal.category}
                 </motion.span>
-                <h2 className="text-2xl font-black text-white font-mono tracking-tight leading-tight">
+                <h2 className="text-xl font-black text-white font-mono tracking-tight leading-tight">
                   {selectedEventForModal.title}
                 </h2>
-                <div className="w-10 h-1 bg-primary mt-3 rounded-full"></div>
+                <div className="w-8 h-0.5 bg-primary mt-2 rounded-full"></div>
               </div>
 
               {/* Main Content Area */}
-              <div className="flex-1 min-h-0 p-6 md:p-8 overflow-y-auto space-y-6 md:space-y-10">
+              <div className="flex-1 min-h-0 px-4 py-3 md:p-8 overflow-y-auto space-y-4 md:space-y-10">
                 {/* Description */}
                 <motion.p 
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.2 }}
-                  className="text-gray-300 text-sm md:text-lg leading-relaxed font-light"
+                  className="text-gray-300 text-xs md:text-lg leading-relaxed font-light"
                 >
                   {selectedEventForModal.description}
                 </motion.p>
 
                 {/* Info Cards Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-3 gap-2 md:grid-cols-3 md:gap-4">
                   <motion.div 
                     whileHover={{ y: -5 }}
-                    className="bg-white/5 p-5 rounded-2xl border border-white/10 hover:border-secondary/50 transition-all flex items-start gap-4"
+                    className="bg-white/5 p-3 md:p-5 rounded-xl md:rounded-2xl border border-white/10 hover:border-secondary/50 transition-all flex flex-col md:flex-row items-center md:items-start gap-2 md:gap-4 text-center md:text-left"
                   >
-                    <div className="p-3 bg-secondary/10 rounded-xl">
-                      <Calendar className="w-6 h-6 text-secondary" />
+                    <div className="p-2 md:p-3 bg-secondary/10 rounded-lg md:rounded-xl">
+                      <Calendar className="w-4 h-4 md:w-6 md:h-6 text-secondary" />
                     </div>
                     <div>
-                      <p className="text-gray-500 text-[10px] uppercase font-black tracking-widest mb-1">When</p>
-                      <p className="text-white text-sm font-bold">{selectedEventForModal.date}</p>
-                      <p className="text-gray-400 text-xs">{selectedEventForModal.time}</p>
+                      <p className="text-gray-500 text-[8px] md:text-[10px] uppercase font-black tracking-widest mb-0.5">When</p>
+                      <p className="text-white text-[11px] md:text-sm font-bold">{selectedEventForModal.date}</p>
+                      <p className="text-gray-400 text-[10px] md:text-xs">{selectedEventForModal.time}</p>
                     </div>
                   </motion.div>
 
                   <motion.div 
                     whileHover={{ y: -5 }}
-                    className="bg-white/5 p-5 rounded-2xl border border-white/10 hover:border-secondary/50 transition-all flex items-start gap-4"
+                    className="bg-white/5 p-3 md:p-5 rounded-xl md:rounded-2xl border border-white/10 hover:border-secondary/50 transition-all flex flex-col md:flex-row items-center md:items-start gap-2 md:gap-4 text-center md:text-left"
                   >
-                    <div className="p-3 bg-secondary/10 rounded-xl">
-                      <MapPin className="w-6 h-6 text-secondary" />
+                    <div className="p-2 md:p-3 bg-secondary/10 rounded-lg md:rounded-xl">
+                      <MapPin className="w-4 h-4 md:w-6 md:h-6 text-secondary" />
                     </div>
                     <div>
-                      <p className="text-gray-500 text-[10px] uppercase font-black tracking-widest mb-1">Where</p>
-                      <p className="text-white text-sm font-bold truncate">{selectedEventForModal.venue}</p>
-                      <p className="text-gray-400 text-xs">{selectedEventForModal.department} Dept</p>
+                      <p className="text-gray-500 text-[8px] md:text-[10px] uppercase font-black tracking-widest mb-0.5">Where</p>
+                      <p className="text-white text-[11px] md:text-sm font-bold truncate">{selectedEventForModal.venue}</p>
+                      <p className="text-gray-400 text-[10px] md:text-xs">{selectedEventForModal.department}</p>
                     </div>
                   </motion.div>
 
                   <motion.div 
                     whileHover={{ y: -5 }}
-                    className="bg-white/5 p-5 rounded-2xl border border-white/10 hover:border-secondary/50 transition-all flex items-start gap-4"
+                    className="bg-white/5 p-3 md:p-5 rounded-xl md:rounded-2xl border border-white/10 hover:border-secondary/50 transition-all flex flex-col md:flex-row items-center md:items-start gap-2 md:gap-4 text-center md:text-left"
                   >
-                    <div className="p-3 bg-secondary/10 rounded-xl">
-                      <Users className="w-6 h-6 text-secondary" />
+                    <div className="p-2 md:p-3 bg-secondary/10 rounded-lg md:rounded-xl">
+                      <Users className="w-4 h-4 md:w-6 md:h-6 text-secondary" />
                     </div>
                     <div>
-                      <p className="text-gray-500 text-[10px] uppercase font-black tracking-widest mb-1">Format</p>
-                      <p className="text-white text-sm font-bold">{selectedEventForModal.teamSize}</p>
-                      <p className="text-gray-400 text-xs">Entry: ₹{selectedEventForModal.fee === 1 ? '100' : selectedEventForModal.fee}</p>
+                      <p className="text-gray-500 text-[8px] md:text-[10px] uppercase font-black tracking-widest mb-0.5">Format</p>
+                      <p className="text-white text-[11px] md:text-sm font-bold">{selectedEventForModal.teamSize}</p>
+                      <p className="text-gray-400 text-[10px] md:text-xs">₹{selectedEventForModal.fee === 1 ? '100' : selectedEventForModal.fee}</p>
                     </div>
                   </motion.div>
                 </div>
@@ -341,8 +341,8 @@ const Events: React.FC = () => {
                 {/* Tracks Section (Enhanced) */}
                 {selectedEventForModal.tracks && selectedEventForModal.tracks.length > 0 && (
                   <div className="space-y-6">
-                    <h4 className="text-white text-xl font-bold flex items-center gap-3">
-                      <ShieldCheck className="w-6 h-6 text-primary" /> Multi-Track Selection
+                    <h4 className="text-white text-base md:text-xl font-bold flex items-center gap-2 md:gap-3">
+                      <ShieldCheck className="w-5 h-5 md:w-6 md:h-6 text-primary" /> Multi-Track Selection
                     </h4>
                     <div className="grid grid-cols-1 gap-4">
                       {selectedEventForModal.tracks.map((track, i) => (
@@ -351,14 +351,14 @@ const Events: React.FC = () => {
                           initial={{ opacity: 0, x: 20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: 0.3 + (i * 0.1) }}
-                          className="group relative bg-white/5 p-6 rounded-3xl border border-white/10 hover:border-primary/50 transition-all overflow-hidden"
+                          className="group relative bg-white/5 p-4 md:p-6 rounded-2xl md:rounded-3xl border border-white/10 hover:border-primary/50 transition-all overflow-hidden"
                         >
                           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl group-hover:bg-primary/20 transition-all -z-10"></div>
                           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                             <div className="flex-1 space-y-3">
                               <div className="flex items-center gap-3">
-                                <h5 className="text-xl font-bold text-white group-hover:text-primary transition-colors">{track.title}</h5>
-                                <span className="px-2 py-0.5 bg-white/10 text-[10px] font-bold text-gray-400 rounded-lg">TRACK {i + 1}</span>
+                                <h5 className="text-base md:text-xl font-bold text-white group-hover:text-primary transition-colors">{track.title}</h5>
+                                <span className="px-2 py-0.5 bg-white/10 text-[9px] md:text-[10px] font-bold text-gray-400 rounded-lg">TRACK {i + 1}</span>
                               </div>
                               <p className="text-gray-400 text-sm leading-relaxed max-w-xl">{track.description}</p>
                               <div className="flex flex-wrap gap-4 pt-2">
@@ -401,10 +401,10 @@ const Events: React.FC = () => {
 
                 {/* Rules Section (Premium List) */}
                 {selectedEventForModal.rules && !selectedEventForModal.tracks && (
-                  <div className="space-y-6">
+                  <div className="space-y-4 md:space-y-6">
                     <div className="flex items-center justify-between">
-                      <h4 className="text-white text-xl font-bold flex items-center gap-3">
-                        <FileText className="w-6 h-6 text-primary" /> Rules & Regulations
+                      <h4 className="text-white text-base md:text-xl font-bold flex items-center gap-2 md:gap-3">
+                        <FileText className="w-5 h-5 md:w-6 md:h-6 text-primary" /> Rules
                       </h4>
                       {selectedEventForModal.rulesPdf && (
                         <a 
@@ -417,19 +417,19 @@ const Events: React.FC = () => {
                         </a>
                       )}
                     </div>
-                    <div className="grid grid-cols-1 gap-3">
+                    <div className="grid grid-cols-1 gap-2 md:gap-3">
                       {selectedEventForModal.rules.map((rule, i) => (
                         <motion.div 
                           key={i}
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.1 * i }}
-                          className="flex gap-4 p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-white/10 transition-colors group"
+                          transition={{ delay: 0.05 * i }}
+                          className="flex gap-3 md:gap-4 p-3 md:p-4 rounded-xl md:rounded-2xl bg-white/[0.03] border border-white/5 hover:border-white/10 transition-colors group"
                         >
-                          <span className="shrink-0 flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary text-xs font-black">
+                          <span className="shrink-0 flex items-center justify-center w-6 h-6 md:w-8 md:h-8 rounded-md md:rounded-lg bg-primary/10 text-primary text-[10px] md:text-xs font-black">
                             {i + 1}
                           </span>
-                          <p className="text-gray-400 text-sm leading-relaxed group-hover:text-gray-200 transition-colors">
+                          <p className="text-gray-400 text-xs md:text-sm leading-relaxed group-hover:text-gray-200 transition-colors">
                             {rule}
                           </p>
                         </motion.div>
@@ -439,28 +439,28 @@ const Events: React.FC = () => {
                 )}
 
                 {/* Coordinators Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8">
                   {/* Faculty */}
                   {selectedEventForModal.facultyCoordinators && selectedEventForModal.facultyCoordinators.length > 0 && (
                     <div className="space-y-4">
-                      <h4 className="text-white text-lg font-bold flex items-center gap-3">
-                        <ShieldCheck className="w-5 h-5 text-primary" /> Faculty Reach
+                      <h4 className="text-white text-sm md:text-lg font-bold flex items-center gap-2 md:gap-3">
+                        <ShieldCheck className="w-4 h-4 md:w-5 md:h-5 text-primary" /> Faculty Reach
                       </h4>
-                      <div className="space-y-3">
+                      <div className="space-y-2 md:space-y-3">
                         {selectedEventForModal.facultyCoordinators.map((coord, i) => (
-                          <div key={i} className="flex items-center justify-between p-4 bg-white/[0.03] rounded-2xl border border-white/5 group hover:border-primary/30 transition-all">
-                            <div className="flex items-center gap-4">
-                              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                          <div key={i} className="flex items-center justify-between p-3 md:p-4 bg-white/[0.03] rounded-xl md:rounded-2xl border border-white/5 group hover:border-primary/30 transition-all">
+                            <div className="flex items-center gap-3 md:gap-4">
+                              <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs md:text-base">
                                 {coord.name.charAt(0)}
                               </div>
                               <div>
-                                <p className="text-gray-200 font-bold text-sm tracking-tight">{coord.name}</p>
-                                <p className="text-gray-500 text-[9px] uppercase font-black tracking-widest mt-0.5">Faculty Lead</p>
+                                <p className="text-gray-200 font-bold text-xs md:text-sm tracking-tight">{coord.name}</p>
+                                <p className="text-gray-500 text-[8px] md:text-[9px] uppercase font-black tracking-widest mt-0.5">Faculty Lead</p>
                               </div>
                             </div>
                             {coord.phone !== '-' && coord.phone !== 'Principal' && (
-                              <a href={`tel:${coord.phone}`} className="p-3 bg-primary/10 text-primary rounded-xl hover:bg-primary hover:text-white transition-all active:scale-90">
-                                <Phone className="w-4 h-4" />
+                              <a href={`tel:${coord.phone}`} className="p-2 md:p-3 bg-primary/10 text-primary rounded-lg md:rounded-xl hover:bg-primary hover:text-white transition-all active:scale-90">
+                                <Phone className="w-3.5 h-3.5 md:w-4 md:h-4" />
                               </a>
                             )}
                           </div>
@@ -472,24 +472,24 @@ const Events: React.FC = () => {
                   {/* Students */}
                   {selectedEventForModal.studentCoordinators && selectedEventForModal.studentCoordinators.length > 0 && (
                     <div className="space-y-4">
-                      <h4 className="text-white text-lg font-bold flex items-center gap-3">
-                        <Users className="w-5 h-5 text-secondary" /> Student Crew
+                      <h4 className="text-white text-sm md:text-lg font-bold flex items-center gap-2 md:gap-3">
+                        <Users className="w-4 h-4 md:w-5 md:h-5 text-secondary" /> Student Crew
                       </h4>
-                      <div className="space-y-3">
+                      <div className="space-y-2 md:space-y-3">
                         {selectedEventForModal.studentCoordinators.map((coord, i) => (
-                          <div key={i} className="flex items-center justify-between p-4 bg-white/[0.03] rounded-2xl border border-white/5 group hover:border-secondary/30 transition-all">
-                            <div className="flex items-center gap-4">
-                              <div className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary font-bold">
+                          <div key={i} className="flex items-center justify-between p-3 md:p-4 bg-white/[0.03] rounded-xl md:rounded-2xl border border-white/5 group hover:border-secondary/30 transition-all">
+                            <div className="flex items-center gap-3 md:gap-4">
+                              <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary font-bold text-xs md:text-base">
                                 {coord.name.charAt(0)}
                               </div>
                               <div>
-                                <p className="text-gray-200 font-bold text-sm tracking-tight">{coord.name}</p>
-                                <p className="text-gray-500 text-[9px] uppercase font-black tracking-widest mt-0.5">Student Lead</p>
+                                <p className="text-gray-200 font-bold text-xs md:text-sm tracking-tight">{coord.name}</p>
+                                <p className="text-gray-500 text-[8px] md:text-[9px] uppercase font-black tracking-widest mt-0.5">Student Lead</p>
                               </div>
                             </div>
                             {coord.phone !== '-' && (
-                              <a href={`tel:${coord.phone}`} className="p-3 bg-secondary/10 text-secondary rounded-xl hover:bg-secondary hover:text-darker transition-all active:scale-90">
-                                <Phone className="w-4 h-4" />
+                              <a href={`tel:${coord.phone}`} className="p-2 md:p-3 bg-secondary/10 text-secondary rounded-lg md:rounded-xl hover:bg-secondary hover:text-darker transition-all active:scale-90">
+                                <Phone className="w-3.5 h-3.5 md:w-4 md:h-4" />
                               </a>
                             )}
                           </div>
@@ -501,32 +501,32 @@ const Events: React.FC = () => {
               </div>
 
               {/* Sticky Action Footer */}
-              <div className="p-6 md:p-8 pt-0 shrink-0 bg-gradient-to-t from-darker to-transparent">
+              <div className="px-4 pb-4 md:p-8 md:pt-0 shrink-0 bg-gradient-to-t from-darker to-transparent">
                 {!selectedEventForModal.registrationClosed && !selectedEventForModal.tracks && (
-                  <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="flex gap-3 md:gap-4">
                     {selectedEventForModal.registrationLink ? (
                       <a
                         href={selectedEventForModal.registrationLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 py-5 bg-primary text-white font-black uppercase tracking-[0.3em] rounded-2xl text-center hover:bg-white hover:text-primary transition-all shadow-[0_15px_40px_rgba(255,0,85,0.4)] active:scale-[0.98] text-sm"
+                        className="flex-1 py-3.5 md:py-5 bg-primary text-white font-black uppercase tracking-widest md:tracking-[0.3em] rounded-xl md:rounded-2xl text-center hover:bg-white hover:text-primary transition-all shadow-[0_15px_40px_rgba(255,0,85,0.4)] active:scale-[0.98] text-xs md:text-sm"
                       >
-                        CONFIRM REGISTRATION
+                        REGISTER
                       </a>
                     ) : (
                       <Link
                         to={`/register?event=${encodeURIComponent(selectedEventForModal.id)}`}
                         state={{ preselectedEventId: selectedEventForModal.id }}
-                        className="flex-1 py-5 bg-primary text-white font-black uppercase tracking-[0.3em] rounded-2xl text-center hover:bg-white hover:text-primary transition-all shadow-[0_15px_40px_rgba(255,0,85,0.4)] active:scale-[0.98] text-sm"
+                        className="flex-1 py-3.5 md:py-5 bg-primary text-white font-black uppercase tracking-widest md:tracking-[0.3em] rounded-xl md:rounded-2xl text-center hover:bg-white hover:text-primary transition-all shadow-[0_15px_40px_rgba(255,0,85,0.4)] active:scale-[0.98] text-xs md:text-sm"
                       >
-                        REGISTER AT ₹{selectedEventForModal.fee === 1 ? '100' : selectedEventForModal.fee}
+                        REGISTER ₹{selectedEventForModal.fee === 1 ? '100' : selectedEventForModal.fee}
                       </Link>
                     )}
                     <button
                       onClick={() => setSelectedEventForModal(null)}
-                      className="px-8 py-5 bg-white/5 text-gray-400 font-bold uppercase tracking-widest rounded-2xl hover:text-white hover:bg-white/10 transition-all text-xs"
+                      className="px-6 py-3.5 md:px-8 md:py-5 bg-white/5 text-gray-400 font-bold uppercase tracking-widest rounded-xl md:rounded-2xl hover:text-white hover:bg-white/10 transition-all text-[10px] md:text-xs"
                     >
-                      GO BACK
+                      BACK
                     </button>
                   </div>
                 )}
@@ -534,7 +534,7 @@ const Events: React.FC = () => {
                 {(selectedEventForModal.registrationClosed || selectedEventForModal.tracks) && (
                   <button
                     onClick={() => setSelectedEventForModal(null)}
-                    className="w-full py-5 bg-white/5 text-gray-400 font-bold uppercase tracking-widest rounded-2xl hover:text-white hover:bg-white/10 transition-all text-xs"
+                    className="w-full py-3.5 md:py-5 bg-white/5 text-gray-400 font-bold uppercase tracking-widest rounded-xl md:rounded-2xl hover:text-white hover:bg-white/10 transition-all text-[10px] md:text-xs"
                   >
                     CLOSE PREVIEW
                   </button>
