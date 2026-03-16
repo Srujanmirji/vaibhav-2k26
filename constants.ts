@@ -59,10 +59,10 @@ export const EVENTS: EventDetails[] = [
         "phone": "8296893297"
       }
     ],
-    "date": "March 26, 2026",
-    "time": "10:30 AM",
-    "venue": "Seminar Hall",
-    "image": "https://loremflickr.com/800/600/electric,car,ai",
+    "date": "March 27, 2026",
+    "time": "10:30 AM to 11:30 AM",
+    "venue": "Visvesvaraya seminar Hall",
+    "image": "/eventsposters/WhatsApp Image 2026-03-16 at 2.52.20 PM.jpeg",
     "teamSize": "Individual",
     "department": "ME",
     "fee": 100,
@@ -109,10 +109,10 @@ export const EVENTS: EventDetails[] = [
         "phone": "9014636477"
       }
     ],
-    "date": "March 27, 2026",
-    "time": "10:00 AM",
-    "venue": "A112",
-    "image": "https://loremflickr.com/800/600/artificial-intelligence,robot",
+    "date": "March 28, 2026",
+    "time": "10:00 AM Onwards",
+    "venue": "A117, Microcontrollers Lab",
+    "image": "/eventsposters/WhatsApp Image 2026-03-16 at 2.58.26 PM.jpeg",
     "teamSize": "Team of 4",
     "department": "CSE",
     "fee": 200,
@@ -157,10 +157,10 @@ export const EVENTS: EventDetails[] = [
         "phone": "9113914185"
       }
     ],
-    "date": "March 26, 2026",
-    "time": "03:00 PM",
+    "date": "March 27, 2026",
+    "time": "03:00 PM to 04:00 PM",
     "venue": "Library",
-    "image": "https://loremflickr.com/800/600/art,gallery",
+    "image": "/eventsposters/ART GALLERY_page-0001.jpg",
     "teamSize": "Individual",
     "department": "BS",
     "fee": 100,
@@ -168,9 +168,9 @@ export const EVENTS: EventDetails[] = [
   },
   {
     "id": "e5",
-    "title": "Blind Fold Taste",
+    "title": "Blind Taste Challenge",
     "category": "Fun",
-    "description": "Test your taste buds and identify ingredients while blindfolded.",
+    "description": "Test your taste buds and identify ingredients while blindfolded in this exciting challenge.",
     "rules": [
       "Individual or Team of 2 members.",
       "Participants will be blindfolded throughout the round.",
@@ -180,36 +180,74 @@ export const EVENTS: EventDetails[] = [
     ],
     "facultyCoordinators": [
       {
-        "name": "Prof. Sucheeth",
+        "name": "Prof. Sucheet M G",
         "phone": "-"
       }
     ],
     "studentCoordinators": [
       {
-        "name": "Bhagyalakshmi",
-        "phone": "-"
+        "name": "Sanjay Jalli",
+        "phone": "6360185670"
       },
       {
-        "name": "Priyanka",
-        "phone": "-"
+        "name": "Gopi Jadhav",
+        "phone": "9108222438"
       },
       {
-        "name": "Sanjay",
-        "phone": "-"
+        "name": "Priyanka M",
+        "phone": "9164013889"
       },
       {
-        "name": "Gopi",
-        "phone": "-"
+        "name": "Bhagya K",
+        "phone": "9019247397"
       }
     ],
-    "date": "March 26, 2026",
+    "date": "March 27, 2026",
     "time": "12:30 PM",
     "venue": "Electrical Lab",
-    "image": "https://loremflickr.com/800/600/tasting,food",
+    "image": "/eventsposters/WhatsApp Image 2026-03-16 at 2.51.14 PM.jpeg",
     "teamSize": "Solo or Team of 2",
     "department": "ME",
     "fee": 100,
     "rulesPdf": "/rules/Blind Fold Taste.pdf"
+  },
+  {
+    "id": "e15_track1_direct",
+    "title": "BUILDATHON Track 1",
+    "category": "Tech",
+    "description": "Prototype Proposal Challenge: An idea-driven innovation challenge. Submit a proposal, get shortlisted, and build your prototype in 6 hours.",
+    "rules": [
+      "Submit a proposal for a hardware prototype.",
+      "Shortlisted teams build and demonstrate the project in a 6-hour offline round.",
+      "Evaluation based on innovation, technical feasibility, and real-world impact.",
+      "Inter-disciplinary and inter-college teams are encouraged.",
+      "Registration Fee: ₹250 per team."
+    ],
+    "facultyCoordinators": [
+      {
+        "name": "Prof. Prabhudev Mallapur",
+        "phone": "7083403465"
+      }
+    ],
+    "studentCoordinators": [
+      {
+        "name": "Ms. Madiha Mannangi (6th Sem, ECE)",
+        "phone": "8105669846"
+      },
+      {
+        "name": "Ms. Sinchana Kulkarni (6th Sem, ECE)",
+        "phone": "9483270923"
+      }
+    ],
+    "date": "March 28, 2026",
+    "time": "10:30 AM",
+    "venue": "Electrical Lab",
+    "image": "/eventsposters/WhatsApp Image 2026-03-16 at 2.53.41 PM.jpeg",
+    "teamSize": "2-4 Members",
+    "department": "ME",
+    "fee": 250,
+    "rulesPdf": "/rules/Buildathon_2k26.pdf",
+    "registrationLink": "https://unstop.com/o/bmV1HCT?utm_medium=Share&utm_source=jcetclu22944&utm_campaign=Online_coding_challenge"
   },
   {
     "id": "e15",
@@ -231,30 +269,30 @@ export const EVENTS: EventDetails[] = [
     ],
     "studentCoordinators": [
       {
-        "name": "Ms. Madiha Mannangi (6th Sem, ECE)",
+        "name": "Ms. Madiha Mannangi (ECE)",
         "phone": "8105669846"
       },
       {
-        "name": "Ms. Sinchana Kulkarni (6th Sem, ECE)",
+        "name": "Ms. Sinchana Kulkarni (ECE)",
         "phone": "9483270923"
-      },
-      {
-        "name": "Mr. Md. Anas Khan (6th Sem, ME)",
-        "phone": "8217589739"
-      },
-      {
-        "name": "Mr. Kishan Bharade (6th Sem, ME)",
-        "phone": "6362928359"
       },
       {
         "name": "Mr. Varun Raval (ECE)",
         "phone": "9380246979"
+      },
+      {
+        "name": "Mr. Md. Anas Khan (ME)",
+        "phone": "8217589739"
+      },
+      {
+        "name": "Mr. Kishan Bharade (ME)",
+        "phone": "6362928359"
       }
     ],
-    "date": "March 27, 2026",
+    "date": "March 28, 2026",
     "time": "10:30 AM",
     "venue": "Electrical Lab",
-    "image": "https://loremflickr.com/800/600/engineering,tools",
+    "image": "/eventsposters/WhatsApp Image 2026-03-16 at 2.53.41 PM.jpeg",
     "teamSize": "Multiple Tracks",
     "department": "ME",
     "fee": 250,
@@ -312,10 +350,10 @@ export const EVENTS: EventDetails[] = [
     "date": "March 27, 2026",
     "time": "02:00 PM",
     "venue": "Electrical Lab",
-    "image": "https://loremflickr.com/800/600/electronics,circuit",
-    "teamSize": "Individual",
+    "image": "/eventsposters/WhatsApp Image 2026-03-16 at 2.49.51 PM.jpeg",
+    "teamSize": "Team of 4",
     "department": "ECE",
-    "fee": 100,
+    "fee": 200,
     "rulesPdf": "/rules/Circuitmania.pdf"
   },
   {
@@ -350,10 +388,10 @@ export const EVENTS: EventDetails[] = [
         "phone": "-"
       }
     ],
-    "date": "March 26, 2026",
-    "time": "11:30 AM",
+    "date": "March 27, 2026",
+    "time": "11:30 AM to 12.30 PM",
     "venue": "Electrical Lab",
-    "image": "https://loremflickr.com/800/600/cooking,chef",
+    "image": "/eventsposters/WhatsApp Image 2026-03-16 at 2.51.32 PM.jpeg",
     "teamSize": "2 Members",
     "department": "ECE",
     "fee": 100,
@@ -387,10 +425,10 @@ export const EVENTS: EventDetails[] = [
         "phone": "-"
       }
     ],
-    "date": "March 27, 2026",
-    "time": "03:00 PM",
+    "date": "March 28, 2026",
+    "time": "03:00 PM to 3:30 PM",
     "venue": "Seminar Hall",
-    "image": "https://loremflickr.com/800/600/cinema,actor",
+    "image": "/eventsposters/WhatsApp Image 2026-03-16 at 2.51.12 PM.jpeg",
     "teamSize": "Individual",
     "department": "ME",
     "fee": 100,
@@ -491,7 +529,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "-"
       }
     ],
-    "date": "March 26, 2026",
+    "date": "March 27, 2026",
     "time": "05:00 PM",
     "venue": "Quadrangle",
     "image": "https://loremflickr.com/800/600/graduation,magazine",
@@ -521,7 +559,7 @@ export const EVENTS: EventDetails[] = [
       }
     ],
     "studentCoordinators": [],
-    "date": "March 26, 2026",
+    "date": "March 27, 2026",
     "time": "10:00 AM",
     "venue": "Quadrangle",
     "image": "https://loremflickr.com/800/600/celebration,ceremony",
@@ -590,10 +628,10 @@ export const EVENTS: EventDetails[] = [
         "phone": "7019112892"
       }
     ],
-    "date": "March 26, 2026",
+    "date": "March 26 & 27, 2026",
     "time": "03:00 PM",
     "venue": "A208",
-    "image": "https://loremflickr.com/800/600/standup,comedy",
+    "image": "/eventsposters/WhatsApp Image 2026-03-16 at 2.59.23 PM.jpeg",
     "teamSize": "Team of 4",
     "department": "CSE",
     "fee": 200,
@@ -655,10 +693,10 @@ export const EVENTS: EventDetails[] = [
         "phone": "7483480781"
       }
     ],
-    "date": "March 27, 2026",
+    "date": "March 28, 2026",
     "time": "05:30 PM",
     "venue": "Quadrangle",
-    "image": "https://loremflickr.com/800/600/singing,music",
+    "image": "/eventsposters/WhatsApp Image 2026-03-16 at 2.51.05 PM.jpeg",
     "teamSize": "Solo or Group",
     "department": "General",
     "fee": 350,
@@ -695,10 +733,10 @@ export const EVENTS: EventDetails[] = [
         "phone": "9019512055"
       }
     ],
-    "date": "March 27, 2026",
+    "date": "March 28, 2026",
     "time": "06:30 PM",
     "venue": "Quadrangle",
-    "image": "https://loremflickr.com/800/600/dance,stage",
+    "image": "/eventsposters/WhatsApp Image 2026-03-16 at 2.51.06 PM.jpeg",
     "teamSize": "Solo or Group",
     "department": "General",
     "fee": 350,
@@ -747,13 +785,13 @@ export const EVENTS: EventDetails[] = [
         "phone": "9036637697"
       }
     ],
-    "date": "March 27, 2026",
+    "date": "March 28, 2026",
     "time": "12:00 PM",
     "venue": "Skill Lab",
-    "image": "https://loremflickr.com/800/600/computer,funny",
-    "teamSize": "Individual",
+    "image": "/eventsposters/WhatsApp Image 2026-03-16 at 3.02.36 PM.jpeg",
+    "teamSize": "Individual or Team",
     "department": "CSE",
-    "fee": 100,
+    "fee": 50,
     "rulesPdf": "/rules/Rules for Meme (1).pdf"
   },
   {
@@ -791,10 +829,10 @@ export const EVENTS: EventDetails[] = [
         "phone": "9448589221"
       }
     ],
-    "date": "March 27, 2026",
-    "time": "03:30 PM",
+    "date": "March 28, 2026",
+    "time": "03:30 PM to 4:30 PM",
     "venue": "Seminar Hall",
-    "image": "https://loremflickr.com/800/600/stopwatch,clock",
+    "image": "/eventsposters/minute master(1)_page-0001.jpg",
     "teamSize": "Team of 2",
     "department": "BS",
     "fee": 100,
@@ -821,7 +859,7 @@ export const EVENTS: EventDetails[] = [
       }
     ],
     "studentCoordinators": [],
-    "date": "March 26, 2026",
+    "date": "March 27, 2026",
     "time": "04:00 PM",
     "venue": "Quadrangle",
     "image": "https://loremflickr.com/800/600/dance,culture",
@@ -832,59 +870,59 @@ export const EVENTS: EventDetails[] = [
   },
   {
     "id": "e2",
-    "title": "Project Pitch Day",
+    "title": "JCET SHARK TANK",
     "category": "Innovation",
-    "description": "Showcase your ground-breaking ideas and present a Pitch Deck solving a niche problem.",
+    "description": "Showcase your ground-breaking ideas and present a Pitch Deck solving a niche problem in this Shark Tank style event.",
     "rules": [
       "Team Size: 3 to 5 members (Cross-departmental teams encouraged).",
       "Pre-registration required by 25th March 2026.",
-      "Submit a PPT covering: Problem, Target Audience, Solution, Feasibility, & Advantage.",
+      "Submit a PPT covering: Problem statement, Proposed Solution, Technical Feasibility, Market & Social Impact, Scalability.",
       "Presentation: 8 mins Pitch + 2 mins Q&A (Strict timing).",
-      "Professionalism: ID cards and professional decorum required."
+      "Registration Fee: ₹200 per Team."
     ],
     "facultyCoordinators": [
       {
         "name": "Prof. Trupti Thite",
-        "phone": "8660421075"
+        "phone": "-"
       },
       {
-        "name": "Prof. Megha S",
-        "phone": "9663639663"
+        "name": "Prof. Megha Saunshi",
+        "phone": "-"
       },
       {
-        "name": "Prof. Vanitha G P",
-        "phone": "9538804078"
+        "name": "Prof. Vanita",
+        "phone": "-"
       },
       {
         "name": "Mr. Narayan D",
-        "phone": "9986683129"
+        "phone": "-"
       }
     ],
     "studentCoordinators": [
       {
-        "name": "Vadiraj Kulkarni",
+        "name": "Vadiraj",
         "phone": "9686540253"
       },
       {
-        "name": "Gagan Shetty",
+        "name": "Gagan",
         "phone": "9148785898"
       },
       {
-        "name": "Nirali",
-        "phone": "7892776889"
+        "name": "Tejaswini",
+        "phone": "7483574498"
       },
       {
-        "name": "Tejaswini V S",
-        "phone": "7483574498"
+        "name": "V. Sahana",
+        "phone": "9591737753"
       }
     ],
-    "date": "March 26, 2026",
-    "time": "10:30 AM",
-    "venue": "A208",
-    "image": "https://loremflickr.com/800/600/business,meeting",
+    "date": "March 27, 2026",
+    "time": "10:30 AM to 11:30 AM",
+    "venue": "208, CSE Department",
+    "image": "/eventsposters/WhatsApp Image 2026-03-16 at 3.04.58 PM.jpeg",
     "teamSize": "3-5 Members",
     "department": "CSE",
-    "fee": 100,
+    "fee": 200,
     "rulesPdf": "/rules/Project Pitch.pdf"
   },
   {
@@ -909,7 +947,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "-"
       }
     ],
-    "date": "March 26, 2026",
+    "date": "March 27, 2026",
     "time": "07:30 PM",
     "venue": "Quadrangle",
     "image": "https://loremflickr.com/800/600/rock,band",
@@ -920,12 +958,11 @@ export const EVENTS: EventDetails[] = [
   },
   {
     "id": "e16",
-    "title": "Awareness In Cinematic Campus Video (Social Cause)",
+    "title": "Cinematic Awareness Video Contest",
     "category": "Competition",
     "description": "Create a short cinematic social awareness video on a real-world challenge. Inspire positive change through digital storytelling.",
     "rules": [
-      "Team of 2-4 members.",
-      "Topics: Road Safety, Environment, Mental Health, Cyber Security, etc.",
+      "Themes: Environmental Protection, Road Safety, Mental Health, Digital Addiction, Women Safety, Cyber Security, etc.",
       "Video must clearly communicate a social message.",
       "Judging on Creativity, Clarity of Message, Story & Presentation."
     ],
@@ -956,7 +993,7 @@ export const EVENTS: EventDetails[] = [
     "date": "March 27, 2026",
     "time": "11:30 AM",
     "venue": "Seminar Hall",
-    "image": "https://loremflickr.com/800/600/filmmaking,camera",
+    "image": "/eventsposters/WhatsApp Image 2026-03-16 at 2.51.13 PM.jpeg",
     "teamSize": "Team of 2-4",
     "department": "ME",
     "fee": 100,
@@ -977,23 +1014,31 @@ export const EVENTS: EventDetails[] = [
     "facultyCoordinators": [
       {
         "name": "Prof. Venkanagouda H",
-        "phone": "-"
+        "phone": "7795731359"
       }
     ],
     "studentCoordinators": [
       {
-        "name": "Shreyas",
+        "name": "Manikanta S K",
+        "phone": "7411310976"
+      },
+      {
+        "name": "Shreyas J S",
+        "phone": "9611014516"
+      },
+      {
+        "name": "Miss Priyanka",
         "phone": "-"
       },
       {
-        "name": "Manikantha(6th Sem)",
+        "name": "Miss Khushi",
         "phone": "-"
       }
     ],
-    "date": "March 26, 2026",
-    "time": "03:00 PM",
-    "venue": "Seminar Hall",
-    "image": "https://loremflickr.com/800/600/theatre,drama",
+    "date": "March 27, 2026",
+    "time": "03:00 PM to 3:30 PM",
+    "venue": "Mechanical Seminar Hall",
+    "image": "/eventsposters/WhatsApp Image 2026-03-16 at 2.51.08 PM.jpeg",
     "teamSize": "Individual",
     "department": "ME",
     "fee": 100,
@@ -1027,7 +1072,7 @@ export const EVENTS: EventDetails[] = [
         "phone": "9663074795"
       }
     ],
-    "date": "March 26, 2026",
+    "date": "March 27, 2026",
     "time": "02:00 PM",
     "venue": "A118",
     "image": "https://loremflickr.com/800/600/map,search",
@@ -1072,13 +1117,13 @@ export const EVENTS: EventDetails[] = [
         "phone": "-"
       }
     ],
-    "date": "March 27, 2026",
+    "date": "March 28, 2026",
     "time": "10:30 AM",
     "venue": "A118",
-    "image": "https://loremflickr.com/800/600/building-blocks,tower",
-    "teamSize": "Team of 3",
+    "image": "/eventsposters/WhatsApp Image 2026-03-16 at 2.50.07 PM.jpeg",
+    "teamSize": "Team of 4",
     "department": "CVE",
-    "fee": 100,
+    "fee": 200,
     "rulesPdf": "/rules/Tallest Tower challenge Technical Event Details.pdf"
   },
   {
