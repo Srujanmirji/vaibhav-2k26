@@ -184,221 +184,361 @@ const Events: React.FC = () => {
 
       {/* Detail Modal */}
       {selectedEventForModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-6">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 sm:p-4 md:p-6 lg:p-8">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectedEventForModal(null)}
-            className="absolute inset-0 bg-black/80 backdrop-blur-md"
+            className="absolute inset-0 bg-black/90 backdrop-blur-xl"
           ></motion.div>
 
           <motion.div
-            initial={{ scale: 0.95, opacity: 0, y: 10 }}
+            initial={{ scale: 0.9, opacity: 0, y: 30 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            className="relative w-full max-w-2xl bg-card border border-white/10 rounded-2xl md:rounded-3xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] max-h-[95dvh] md:max-h-[90dvh] flex flex-col mt-4 md:mt-0"
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="relative w-full max-w-6xl bg-darker/60 backdrop-blur-md border border-white/10 rounded-none sm:rounded-3xl overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.8)] h-full sm:h-auto sm:max-h-[90dvh] flex flex-col md:flex-row"
           >
-            {/* Modal Header/Image */}
-            <div className="relative aspect-[3/4] md:h-[550px] shrink-0 overflow-hidden bg-black/60">
-              {/* High-intensity blurred background for modal */}
-              <div 
-                className="absolute inset-0 bg-cover bg-center blur-3xl opacity-50 scale-125"
+            {/* Left Column: Fixed Image (Desktop) / Header Image (Mobile) */}
+            <div className="relative w-full md:w-[45%] lg:w-[40%] shrink-0 overflow-hidden bg-black flex items-center justify-center min-h-[40vh] md:min-h-0">
+              {/* High-intensity animated blurred background */}
+              <motion.div 
+                initial={{ scale: 1.2, opacity: 0 }}
+                animate={{ scale: 1.1, opacity: 0.6 }}
+                transition={{ duration: 2 }}
+                className="absolute inset-0 bg-cover bg-center blur-[100px]"
                 style={{ backgroundImage: `url(${selectedEventForModal.image})` }}
-              ></div>
-              <img
+              ></motion.div>
+              
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:via-transparent md:to-black/20 z-10"></div>
+              
+              <motion.img
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2, duration: 0.8 }}
                 src={selectedEventForModal.image}
                 alt={selectedEventForModal.title}
-                className="relative w-full h-full object-contain z-10"
+                className="relative w-full h-full object-contain z-20 drop-shadow-[0_0_30px_rgba(0,0,0,0.5)]"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent z-20"></div>
+
+              {/* Mobile Close Button */}
               <button
                 onClick={() => setSelectedEventForModal(null)}
-                className="absolute top-2 right-2 md:top-4 md:right-4 p-2 bg-black/50 hover:bg-primary text-white rounded-full transition-colors z-20"
+                className="absolute top-4 right-4 p-3 bg-black/60 hover:bg-primary text-white rounded-full transition-all z-50 md:hidden"
               >
-                <X className="w-5 h-5 md:w-6 md:h-6" />
+                <X className="w-6 h-6" />
               </button>
-              <div className="absolute bottom-2 left-4 md:bottom-4 md:left-6 z-10 w-[90%]">
-                <span className="px-2 py-0.5 md:px-3 md:py-1 bg-primary text-white text-[10px] md:text-xs font-bold uppercase rounded mb-1 md:mb-2 inline-block">
+
+              {/* Status Badge (Mobile Only) */}
+              <div className="absolute top-4 left-4 z-30 md:hidden">
+                <span className="px-3 py-1 bg-primary/90 text-white text-[10px] font-bold uppercase tracking-wider rounded backdrop-blur">
                   {selectedEventForModal.category}
                 </span>
-                <h2 className="text-xl md:text-3xl font-black text-white font-mono truncate">{selectedEventForModal.title}</h2>
               </div>
             </div>
 
-            {/* Modal Content */}
-            <div className="p-4 md:p-6 overflow-y-auto custom-scrollbar space-y-6 md:space-y-8">
-              {/* Core Info Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 md:gap-4">
-                <div className="bg-white/5 p-3 md:p-4 rounded-xl md:rounded-2xl border border-white/5">
-                  <p className="text-secondary text-[9px] md:text-[10px] uppercase font-bold tracking-widest mb-1">Schedule</p>
-                  <p className="text-white text-xs md:text-sm font-semibold">{selectedEventForModal.date}</p>
-                  <p className="text-gray-400 text-[10px] md:text-xs">{selectedEventForModal.time}</p>
-                </div>
-                <div className="bg-white/5 p-3 md:p-4 rounded-xl md:rounded-2xl border border-white/5">
-                  <p className="text-secondary text-[9px] md:text-[10px] uppercase font-bold tracking-widest mb-1">Location</p>
-                  <p className="text-white text-xs md:text-sm font-semibold truncate">{selectedEventForModal.venue}</p>
-                  <p className="text-gray-400 text-[10px] md:text-xs truncate">{selectedEventForModal.department} Dept</p>
-                </div>
-                {selectedEventForModal.rulesPdf && (
-                  <a
-                    href={selectedEventForModal.rulesPdf}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-primary/10 p-3 md:p-4 rounded-xl md:rounded-2xl border border-primary/20 flex flex-col items-center justify-center group hover:bg-primary/20 transition-all text-center col-span-2 sm:col-span-1"
+            {/* Right Column: Scrollable Content */}
+            <div className="flex-1 flex flex-col overflow-hidden bg-gradient-to-br from-white/[0.03] to-transparent">
+              {/* Header (Desktop Only) */}
+              <div className="hidden md:flex items-center justify-between p-8 pb-0 shrink-0">
+                <div>
+                  <motion.span 
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="inline-block px-3 py-1 bg-primary/20 border border-primary/30 text-primary text-xs font-bold uppercase tracking-[0.2em] rounded-full mb-3"
                   >
-                    <p className="text-primary text-[9px] md:text-[10px] uppercase font-bold tracking-widest mb-1">Event Rules</p>
-                    <div className="flex items-center gap-1 md:gap-2 text-white">
-                      <FileText className="w-4 h-4 md:w-5 md:h-5 text-primary" />
-                      <span className="text-xs md:text-sm font-semibold group-hover:text-primary transition-colors">VIEW PDF</span>
-                    </div>
-                  </a>
-                )}
-              </div>
-
-              {/* Tracks Section (for multi-track events like Buildathon) */}
-              {selectedEventForModal.tracks && selectedEventForModal.tracks.length > 0 && (
-                <div className="space-y-4">
-                  <h4 className="text-white font-bold flex items-center gap-2 text-lg">
-                    <ShieldCheck className="w-5 h-5 text-primary" /> Available Tracks
-                  </h4>
-                  <div className="grid grid-cols-1 gap-4">
-                    {selectedEventForModal.tracks.map((track, i) => (
-                      <div key={i} className="bg-white/5 p-4 md:p-6 rounded-2xl border border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-4 group hover:border-primary/50 transition-all">
-                        <div className="flex-1 space-y-2">
-                          <h5 className="text-lg font-bold text-white group-hover:text-primary transition-colors">{track.title}</h5>
-                          <p className="text-gray-400 text-sm leading-relaxed">{track.description}</p>
-                          <div className="flex flex-wrap gap-3 pt-1">
-                            <span className="flex items-center text-gray-500 text-[10px] font-bold uppercase tracking-wider">
-                              <Users className="w-3 h-3 mr-1.5 text-secondary" /> {track.teamSize}
-                            </span>
-                            <span className="flex items-center text-gray-500 text-[10px] font-bold uppercase tracking-wider">
-                              <ShieldCheck className="w-3 h-3 mr-1.5 text-secondary" /> ₹{track.fee}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="shrink-0">
-                          {!track.registrationClosed && (
-                            track.registrationLink ? (
-                              <a
-                                href={track.registrationLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white text-xs font-bold uppercase tracking-widest rounded-xl hover:bg-white hover:text-primary transition-all shadow-[0_0_15px_rgba(255,0,85,0.3)] w-full md:w-auto"
-                              >
-                                REGISTER <ArrowUpRight className="w-4 h-4" />
-                              </a>
-                            ) : (
-                              <Link
-                                to={`/register?event=${encodeURIComponent(track.id)}`}
-                                state={{ preselectedEventId: track.id }}
-                                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-secondary text-darker text-xs font-bold uppercase tracking-widest rounded-xl hover:bg-white hover:text-secondary transition-all shadow-[0_0_15px_rgba(0,255,255,0.2)] w-full md:w-auto"
-                              >
-                                REGISTER <ArrowUpRight className="w-4 h-4" />
-                              </Link>
-                            )
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                    {selectedEventForModal.category}
+                  </motion.span>
+                  <motion.h2 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="text-4xl lg:text-5xl font-black text-white font-mono tracking-tighter"
+                  >
+                    {selectedEventForModal.title}
+                  </motion.h2>
                 </div>
-              )}
-
-              {/* Rules Section */}
-              {selectedEventForModal.rules && !selectedEventForModal.tracks && (
-                <div className="space-y-4">
-                  <h4 className="text-white font-bold flex items-center gap-2 text-lg">
-                    <ShieldCheck className="w-5 h-5 text-primary" /> Rules & Regulations
-                  </h4>
-                  <ul className="grid grid-cols-1 gap-3">
-                    {selectedEventForModal.rules.map((rule, i) => (
-                      <li key={i} className="flex gap-3 text-sm text-gray-400 bg-white/5 p-3 rounded-xl border border-white/5">
-                        <span className="text-primary font-bold">0{i + 1}</span>
-                        {rule}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {/* Faculty Coordinators Section */}
-              {selectedEventForModal.facultyCoordinators && selectedEventForModal.facultyCoordinators.length > 0 && (
-                <div className="space-y-4">
-                  <h4 className="text-white font-bold flex items-center gap-2 text-lg">
-                    <ShieldCheck className="w-5 h-5 text-primary" /> Faculty Coordinators
-                  </h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {selectedEventForModal.facultyCoordinators.map((coord, i) => (
-                      <div key={i} className="bg-primary/5 p-4 rounded-2xl border border-primary/10 flex items-center justify-between group hover:border-primary/50 transition-colors">
-                        <div>
-                          <p className="text-white font-bold text-sm">{coord.name}</p>
-                          <p className="text-gray-500 text-[10px] uppercase font-bold tracking-wider mt-1">FACULTY</p>
-                          {coord.phone !== '-' && <p className="text-gray-400 text-xs mt-0.5">{coord.phone}</p>}
-                        </div>
-                        {coord.phone !== '-' && coord.phone !== 'Principal' && (
-                          <a href={`tel:${coord.phone}`} className="p-2 bg-primary/10 text-primary rounded-full hover:bg-primary hover:text-white transition-all">
-                            <Phone className="w-4 h-4" />
-                          </a>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Student Coordinators Section */}
-              {selectedEventForModal.studentCoordinators && selectedEventForModal.studentCoordinators.length > 0 && (
-                <div className="space-y-4">
-                  <h4 className="text-white font-bold flex items-center gap-2 text-lg">
-                    <Users className="w-5 h-5 text-secondary" /> Student Coordinators
-                  </h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {selectedEventForModal.studentCoordinators.map((coord, i) => (
-                      <div key={i} className="bg-secondary/5 p-4 rounded-2xl border border-secondary/10 flex items-center justify-between group hover:border-secondary/50 transition-colors">
-                        <div>
-                          <p className="text-white font-bold text-sm">{coord.name}</p>
-                          <p className="text-gray-500 text-[10px] uppercase font-bold tracking-wider mt-1">STUDENT</p>
-                          {coord.phone !== '-' && <p className="text-gray-400 text-xs mt-0.5">{coord.phone}</p>}
-                        </div>
-                        {coord.phone !== '-' && (
-                          <a href={`tel:${coord.phone}`} className="p-2 bg-secondary/10 text-secondary rounded-full hover:bg-secondary hover:text-darker transition-all">
-                            <Phone className="w-4 h-4" />
-                          </a>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Action Buttons in Modal */}
-              <div className="pt-4 flex flex-col gap-3">
-                {!selectedEventForModal.registrationClosed && !selectedEventForModal.tracks && (
-                  selectedEventForModal.registrationLink ? (
-                    <a
-                      href={selectedEventForModal.registrationLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full py-4 bg-primary text-white font-black uppercase tracking-widest rounded-2xl text-center hover:bg-white hover:text-primary transition-all shadow-[0_0_20px_rgba(255,0,85,0.4)] block"
-                    >
-                      REGISTER NOW
-                    </a>
-                  ) : (
-                    <Link
-                      to={`/register?event=${encodeURIComponent(selectedEventForModal.id)}`}
-                      state={{ preselectedEventId: selectedEventForModal.id }}
-                      className="w-full py-4 bg-primary text-white font-black uppercase tracking-widest rounded-2xl text-center hover:bg-white hover:text-primary transition-all shadow-[0_0_20px_rgba(255,0,85,0.4)]"
-                    >
-                      REGISTER FOR ₹{selectedEventForModal.fee === 1 ? '100' : selectedEventForModal.fee}
-                    </Link>
-                  )
-                )}
                 <button
                   onClick={() => setSelectedEventForModal(null)}
-                  className="w-full py-4 bg-white/5 text-gray-400 font-bold uppercase tracking-widest rounded-2xl hover:text-white hover:bg-white/10 transition-all"
+                  className="p-4 bg-white/5 hover:bg-primary text-white rounded-2xl transition-all border border-white/10 group active:scale-95"
                 >
-                  CLOSE PREVIEW
+                  <X className="w-6 h-6 group-hover:rotate-90 transition-transform duration-300" />
                 </button>
+              </div>
+
+              {/* Mobile Header Title (Inside scroll view) */}
+              <div className="md:hidden px-6 pt-6 pb-2 shrink-0">
+                <motion.span 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="inline-block px-2 py-0.5 bg-primary/20 border border-primary/30 text-primary text-[10px] font-bold uppercase tracking-widest rounded-full mb-2"
+                >
+                  {selectedEventForModal.category}
+                </motion.span>
+                <h2 className="text-2xl font-black text-white font-mono tracking-tight leading-tight">
+                  {selectedEventForModal.title}
+                </h2>
+                <div className="w-10 h-1 bg-primary mt-3 rounded-full"></div>
+              </div>
+
+              {/* Main Content Area */}
+              <div className="flex-1 min-h-0 p-6 md:p-8 overflow-y-auto space-y-6 md:space-y-10">
+                {/* Description */}
+                <motion.p 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-gray-300 text-sm md:text-lg leading-relaxed font-light"
+                >
+                  {selectedEventForModal.description}
+                </motion.p>
+
+                {/* Info Cards Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <motion.div 
+                    whileHover={{ y: -5 }}
+                    className="bg-white/5 p-5 rounded-2xl border border-white/10 hover:border-secondary/50 transition-all flex items-start gap-4"
+                  >
+                    <div className="p-3 bg-secondary/10 rounded-xl">
+                      <Calendar className="w-6 h-6 text-secondary" />
+                    </div>
+                    <div>
+                      <p className="text-gray-500 text-[10px] uppercase font-black tracking-widest mb-1">When</p>
+                      <p className="text-white text-sm font-bold">{selectedEventForModal.date}</p>
+                      <p className="text-gray-400 text-xs">{selectedEventForModal.time}</p>
+                    </div>
+                  </motion.div>
+
+                  <motion.div 
+                    whileHover={{ y: -5 }}
+                    className="bg-white/5 p-5 rounded-2xl border border-white/10 hover:border-secondary/50 transition-all flex items-start gap-4"
+                  >
+                    <div className="p-3 bg-secondary/10 rounded-xl">
+                      <MapPin className="w-6 h-6 text-secondary" />
+                    </div>
+                    <div>
+                      <p className="text-gray-500 text-[10px] uppercase font-black tracking-widest mb-1">Where</p>
+                      <p className="text-white text-sm font-bold truncate">{selectedEventForModal.venue}</p>
+                      <p className="text-gray-400 text-xs">{selectedEventForModal.department} Dept</p>
+                    </div>
+                  </motion.div>
+
+                  <motion.div 
+                    whileHover={{ y: -5 }}
+                    className="bg-white/5 p-5 rounded-2xl border border-white/10 hover:border-secondary/50 transition-all flex items-start gap-4"
+                  >
+                    <div className="p-3 bg-secondary/10 rounded-xl">
+                      <Users className="w-6 h-6 text-secondary" />
+                    </div>
+                    <div>
+                      <p className="text-gray-500 text-[10px] uppercase font-black tracking-widest mb-1">Format</p>
+                      <p className="text-white text-sm font-bold">{selectedEventForModal.teamSize}</p>
+                      <p className="text-gray-400 text-xs">Entry: ₹{selectedEventForModal.fee === 1 ? '100' : selectedEventForModal.fee}</p>
+                    </div>
+                  </motion.div>
+                </div>
+
+                {/* Tracks Section (Enhanced) */}
+                {selectedEventForModal.tracks && selectedEventForModal.tracks.length > 0 && (
+                  <div className="space-y-6">
+                    <h4 className="text-white text-xl font-bold flex items-center gap-3">
+                      <ShieldCheck className="w-6 h-6 text-primary" /> Multi-Track Selection
+                    </h4>
+                    <div className="grid grid-cols-1 gap-4">
+                      {selectedEventForModal.tracks.map((track, i) => (
+                        <motion.div 
+                          key={i}
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.3 + (i * 0.1) }}
+                          className="group relative bg-white/5 p-6 rounded-3xl border border-white/10 hover:border-primary/50 transition-all overflow-hidden"
+                        >
+                          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl group-hover:bg-primary/20 transition-all -z-10"></div>
+                          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                            <div className="flex-1 space-y-3">
+                              <div className="flex items-center gap-3">
+                                <h5 className="text-xl font-bold text-white group-hover:text-primary transition-colors">{track.title}</h5>
+                                <span className="px-2 py-0.5 bg-white/10 text-[10px] font-bold text-gray-400 rounded-lg">TRACK {i + 1}</span>
+                              </div>
+                              <p className="text-gray-400 text-sm leading-relaxed max-w-xl">{track.description}</p>
+                              <div className="flex flex-wrap gap-4 pt-2">
+                                <span className="flex items-center text-gray-300 text-xs font-bold bg-white/5 px-3 py-1.5 rounded-full border border-white/5">
+                                  <Users className="w-3.5 h-3.5 mr-2 text-secondary" /> {track.teamSize}
+                                </span>
+                                <span className="flex items-center text-gray-300 text-xs font-bold bg-white/5 px-3 py-1.5 rounded-full border border-white/5">
+                                  <ShieldCheck className="w-3.5 h-3.5 mr-2 text-secondary" /> ₹{track.fee}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="shrink-0">
+                              {!track.registrationClosed && (
+                                track.registrationLink ? (
+                                  <a
+                                    href={track.registrationLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-primary text-white text-xs font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-white hover:text-primary transition-all shadow-[0_10px_30px_rgba(255,0,85,0.3)] w-full md:w-auto active:scale-95"
+                                  >
+                                    REGISTER TRACK <ArrowUpRight className="w-4 h-4" />
+                                  </a>
+                                ) : (
+                                  <Link
+                                    to={`/register?event=${encodeURIComponent(track.id)}`}
+                                    state={{ preselectedEventId: track.id }}
+                                    className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-secondary text-darker text-xs font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-white hover:text-secondary transition-all shadow-[0_10px_30px_rgba(0,255,255,0.2)] w-full md:w-auto active:scale-95"
+                                  >
+                                    REGISTER TRACK <ArrowUpRight className="w-4 h-4" />
+                                  </Link>
+                                )
+                              )}
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Rules Section (Premium List) */}
+                {selectedEventForModal.rules && !selectedEventForModal.tracks && (
+                  <div className="space-y-6">
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-white text-xl font-bold flex items-center gap-3">
+                        <FileText className="w-6 h-6 text-primary" /> Rules & Regulations
+                      </h4>
+                      {selectedEventForModal.rulesPdf && (
+                        <a 
+                          href={selectedEventForModal.rulesPdf}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 text-primary hover:text-white transition-colors text-xs font-black uppercase tracking-widest group"
+                        >
+                          FULL PDF <Download className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
+                        </a>
+                      )}
+                    </div>
+                    <div className="grid grid-cols-1 gap-3">
+                      {selectedEventForModal.rules.map((rule, i) => (
+                        <motion.div 
+                          key={i}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.1 * i }}
+                          className="flex gap-4 p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-white/10 transition-colors group"
+                        >
+                          <span className="shrink-0 flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary text-xs font-black">
+                            {i + 1}
+                          </span>
+                          <p className="text-gray-400 text-sm leading-relaxed group-hover:text-gray-200 transition-colors">
+                            {rule}
+                          </p>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Coordinators Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {/* Faculty */}
+                  {selectedEventForModal.facultyCoordinators && selectedEventForModal.facultyCoordinators.length > 0 && (
+                    <div className="space-y-4">
+                      <h4 className="text-white text-lg font-bold flex items-center gap-3">
+                        <ShieldCheck className="w-5 h-5 text-primary" /> Faculty Reach
+                      </h4>
+                      <div className="space-y-3">
+                        {selectedEventForModal.facultyCoordinators.map((coord, i) => (
+                          <div key={i} className="flex items-center justify-between p-4 bg-white/[0.03] rounded-2xl border border-white/5 group hover:border-primary/30 transition-all">
+                            <div className="flex items-center gap-4">
+                              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                                {coord.name.charAt(0)}
+                              </div>
+                              <div>
+                                <p className="text-gray-200 font-bold text-sm tracking-tight">{coord.name}</p>
+                                <p className="text-gray-500 text-[9px] uppercase font-black tracking-widest mt-0.5">Faculty Lead</p>
+                              </div>
+                            </div>
+                            {coord.phone !== '-' && coord.phone !== 'Principal' && (
+                              <a href={`tel:${coord.phone}`} className="p-3 bg-primary/10 text-primary rounded-xl hover:bg-primary hover:text-white transition-all active:scale-90">
+                                <Phone className="w-4 h-4" />
+                              </a>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Students */}
+                  {selectedEventForModal.studentCoordinators && selectedEventForModal.studentCoordinators.length > 0 && (
+                    <div className="space-y-4">
+                      <h4 className="text-white text-lg font-bold flex items-center gap-3">
+                        <Users className="w-5 h-5 text-secondary" /> Student Crew
+                      </h4>
+                      <div className="space-y-3">
+                        {selectedEventForModal.studentCoordinators.map((coord, i) => (
+                          <div key={i} className="flex items-center justify-between p-4 bg-white/[0.03] rounded-2xl border border-white/5 group hover:border-secondary/30 transition-all">
+                            <div className="flex items-center gap-4">
+                              <div className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary font-bold">
+                                {coord.name.charAt(0)}
+                              </div>
+                              <div>
+                                <p className="text-gray-200 font-bold text-sm tracking-tight">{coord.name}</p>
+                                <p className="text-gray-500 text-[9px] uppercase font-black tracking-widest mt-0.5">Student Lead</p>
+                              </div>
+                            </div>
+                            {coord.phone !== '-' && (
+                              <a href={`tel:${coord.phone}`} className="p-3 bg-secondary/10 text-secondary rounded-xl hover:bg-secondary hover:text-darker transition-all active:scale-90">
+                                <Phone className="w-4 h-4" />
+                              </a>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Sticky Action Footer */}
+              <div className="p-6 md:p-8 pt-0 shrink-0 bg-gradient-to-t from-darker to-transparent">
+                {!selectedEventForModal.registrationClosed && !selectedEventForModal.tracks && (
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    {selectedEventForModal.registrationLink ? (
+                      <a
+                        href={selectedEventForModal.registrationLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 py-5 bg-primary text-white font-black uppercase tracking-[0.3em] rounded-2xl text-center hover:bg-white hover:text-primary transition-all shadow-[0_15px_40px_rgba(255,0,85,0.4)] active:scale-[0.98] text-sm"
+                      >
+                        CONFIRM REGISTRATION
+                      </a>
+                    ) : (
+                      <Link
+                        to={`/register?event=${encodeURIComponent(selectedEventForModal.id)}`}
+                        state={{ preselectedEventId: selectedEventForModal.id }}
+                        className="flex-1 py-5 bg-primary text-white font-black uppercase tracking-[0.3em] rounded-2xl text-center hover:bg-white hover:text-primary transition-all shadow-[0_15px_40px_rgba(255,0,85,0.4)] active:scale-[0.98] text-sm"
+                      >
+                        REGISTER AT ₹{selectedEventForModal.fee === 1 ? '100' : selectedEventForModal.fee}
+                      </Link>
+                    )}
+                    <button
+                      onClick={() => setSelectedEventForModal(null)}
+                      className="px-8 py-5 bg-white/5 text-gray-400 font-bold uppercase tracking-widest rounded-2xl hover:text-white hover:bg-white/10 transition-all text-xs"
+                    >
+                      GO BACK
+                    </button>
+                  </div>
+                )}
+                
+                {(selectedEventForModal.registrationClosed || selectedEventForModal.tracks) && (
+                  <button
+                    onClick={() => setSelectedEventForModal(null)}
+                    className="w-full py-5 bg-white/5 text-gray-400 font-bold uppercase tracking-widest rounded-2xl hover:text-white hover:bg-white/10 transition-all text-xs"
+                  >
+                    CLOSE PREVIEW
+                  </button>
+                )}
               </div>
             </div>
           </motion.div>
