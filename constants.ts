@@ -165,6 +165,7 @@ export const EVENTS: EventDetails[] = [
     "teamSize": "Individual",
     "department": "BS",
     "fee": 50,
+    "groupFee": 50,
     "rulesPdf": "/rules/Rules of art gallery and minute master.pdf"
   },
   {
@@ -843,6 +844,7 @@ export const EVENTS: EventDetails[] = [
     "teamSize": "Team of 2",
     "department": "BS",
     "fee": 50,
+    "groupFee": 50,
     "rulesPdf": "/rules/Rules of art gallery and minute master.pdf"
   },
   {
