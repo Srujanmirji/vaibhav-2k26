@@ -750,10 +750,10 @@ export const EVENTS: EventDetails[] = [
     "category": "Fun",
     "description": "Create the funniest memes related to college life and technology.",
     "rules": [
-      "Individual participation.",
+      "Individual or Team participation permitted.",
       "Theme: College life, technology, or current trends.",
       "Offensive or inappropriate content will lead to disqualification.",
-      "Max 2 entries per person."
+      "Max 2 entries per person/team."
     ],
     "facultyCoordinators": [
       {
