@@ -1129,36 +1129,7 @@ export const EVENTS: EventDetails[] = [
     "fee": 200,
     "rulesPdf": "/rules/Tallest Tower challenge Technical Event Details.pdf"
   },
-  {
-    "id": "e22",
-    "title": "Valedictory",
-    "category": "General",
-    "description": "The closing ceremony of Vaibhav 2K26, celebrating the achievements of all participants.",
-    "rules": [
-      "Closing ceremony and prize distribution.",
-      "Attendance encouraged for all.",
-      "Reflection on event highlights."
-    ],
-    "facultyCoordinators": [
-      {
-        "name": "General Co-ordinators",
-        "phone": "-"
-      }
-    ],
-    "studentCoordinators": [
-      {
-        "name": "Team Vaibhav",
-        "phone": "-"
-      }
-    ],
-    "date": "March 27, 2026",
-    "time": "05:00 PM",
-    "venue": "Quadrangle",
-    "image": "https://loremflickr.com/800/600/celebration,award",
-    "teamSize": "Individual",
-    "department": "General",
-    "fee": 0,
-  },
+
   {
     "id": "e26",
     "title": "Traditional Day",
@@ -1273,7 +1244,6 @@ export const SCHEDULE = [
       { time: '03:00 PM - 03:30 PM', title: 'Dialogue Delivery Battle' },
       { time: '03:30 PM - 04:30 PM', title: 'Minute Master' },
       { time: '04:30 PM - 05:00 PM', title: 'Short Break' },
-      { time: '05:00 PM - 05:30 PM', title: 'Valedictory' },
       { time: '05:30 PM - 07:30 PM', title: 'Melody Mania & Dance Infusion (Solo & Group)' },
       { time: '07:30 PM - 08:30 PM', title: 'DJ Night' },
     ]
