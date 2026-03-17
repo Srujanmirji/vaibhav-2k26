@@ -127,7 +127,8 @@ export const EVENTS: EventDetails[] = [
       "Mehendi: Intricate designs, 60m, hand one side.",
       "Model Making: Theme \"Save the Environment\", 60m, on-spot.",
       "Pencil Sketching: Graphite only, theme-based, 60m.",
-      "Bouquet: Assembled from scratch on-spot, 60m."
+      "Bouquet: Assembled from scratch on-spot, 60m.",
+      "Registration Fee: ₹50."
     ],
     "facultyCoordinators": [
       {
@@ -806,7 +807,8 @@ export const EVENTS: EventDetails[] = [
       "Team: 2 members.",
       "Multiple rounds with 60s challenges.",
       "On-spot rules announcement.",
-      "Disqualification for rule violation."
+      "Disqualification for rule violation.",
+      "Registration Fee: ₹50 per team."
     ],
     "facultyCoordinators": [
       {
