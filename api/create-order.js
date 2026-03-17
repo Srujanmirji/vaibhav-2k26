@@ -7,7 +7,7 @@ const EVENT_FEES = {
     e4: { fee: 100, groupFee: 100 },
     e5: { fee: 100, groupFee: 100 },
     e6: { fee: 100 },
-    e7: { fee: 100 },
+    e7: { fee: 50, groupFee: 50 }, // Art Gallery
     e8: { fee: 100 },
     e9: { fee: 200 },
     e10: { fee: 0 },
@@ -21,11 +21,11 @@ const EVENT_FEES = {
     e18: { fee: 200 },
     e19: { fee: 100 },
     e20: { fee: 100 },
-    e21: { fee: 100, groupFee: 100 },
+    e21: { fee: 50, groupFee: 50 }, // Minute Master
     e22: { fee: 0 },
-    e23: { fee: 150, groupFee: 350 }, // Example: solo 150, group 350
+    e23: { fee: 100, groupFee: 200 }, // Melody Mania
     e24: { fee: 0 },
-    e25: { fee: 150, groupFee: 350 }  // Example: solo 150, group 350
+    e25: { fee: 100, groupFee: 200 }  // Dance Mania
 };
 
 export default async function handler(req, res) {
