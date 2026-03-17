@@ -344,11 +344,11 @@ export const EVENTS: EventDetails[] = [
     "studentCoordinators": [
       {
         "name": "Shristi Dasannavar (ECE)",
-        "phone": "-"
+        "phone": "8088399319"
       },
       {
         "name": "Meghana Bangari (ECE)",
-        "phone": "-"
+        "phone": "8088226744"
       }
     ],
     "date": "March 27, 2026",
