@@ -1158,11 +1158,88 @@ export const EVENTS: EventDetails[] = [
     "teamSize": "Individual",
     "department": "General",
     "fee": 0,
+  },
+  {
+    "id": "e26",
+    "title": "Traditional Day",
+    "category": "General",
+    "description": "Celebrate Culture & Heritage. Dress in your traditional best and celebrate the spirit of culture!",
+    "rules": [
+      "Traditional Skit",
+      "Folk Songs",
+      "Oggattu",
+      "Passing the Message",
+      "Ramp Walk"
+    ],
+    "facultyCoordinators": [
+      {
+        "name": "General Co-ordinators",
+        "phone": "-"
+      }
+    ],
+    "studentCoordinators": [
+      {
+        "name": "Team Vaibhav",
+        "phone": "-"
+      }
+    ],
+    "date": "March 25, 2026",
+    "time": "11:00 AM to 04:00 PM",
+    "venue": "JCET Campus, Hubballi",
+    "image": "https://loremflickr.com/800/1200/culture,traditional",
+    "teamSize": "Individual/Group",
+    "department": "General",
+    "fee": 0,
+    "registrationClosed": true
+  },
+  {
+    "id": "e27",
+    "title": "Mismatch Day",
+    "category": "General",
+    "description": "A day of fun, colors, and creativity! Show off your most mismatched and quirky outfits.",
+    "rules": [
+      "Madact",
+      "Painting",
+      "Twin Telepathy",
+      "Dance",
+      "Ramp Walk"
+    ],
+    "facultyCoordinators": [
+      {
+        "name": "General Co-ordinators",
+        "phone": "-"
+      }
+    ],
+    "studentCoordinators": [
+      {
+        "name": "Team Vaibhav",
+        "phone": "-"
+      }
+    ],
+    "date": "March 26, 2026",
+    "time": "11:00 AM to 04:00 PM",
+    "venue": "JCET Campus, Hubballi",
+    "image": "https://loremflickr.com/800/1200/colorful,fun",
+    "teamSize": "Individual/Group",
+    "department": "General",
+    "fee": 0,
     "registrationClosed": true
   }
 ];
 
 export const SCHEDULE = [
+  {
+    day: 'Pre-Event - March 25',
+    events: [
+      { time: '11:00 AM - 04:00 PM', title: 'Traditional Day' },
+    ]
+  },
+  {
+    day: 'Pre-Event - March 26',
+    events: [
+      { time: '11:00 AM - 04:00 PM', title: 'Mismatch Day' },
+    ]
+  },
   {
     day: 'Day 1 - March 27',
     events: [
