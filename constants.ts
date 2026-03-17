@@ -641,14 +641,15 @@ export const EVENTS: EventDetails[] = [
   },
   {
     "id": "e23",
-    "title": "Melody Mania & Dance Infusion (Solo & Group)",
+    "title": "Melody Mania",
     "category": "Cultural",
     "description": "A spectacular showcase of vocal talent. Compete in solo or group singing categories.",
     "rules": [
       "Solo Singing: 3-6 mins.",
       "Group Singing: 4-7 mins.",
       "Tracks must be in mp3 format.",
-      "No hazardous props allowed on stage."
+      "No hazardous props allowed on stage.",
+      "Registration Fee: Solo - ₹100, Group - ₹200."
     ],
     "facultyCoordinators": [
       {
@@ -713,7 +714,8 @@ export const EVENTS: EventDetails[] = [
       "Solo Dance: 3-6 mins.",
       "Group Dance: 3-6 mins, max 8 people.",
       "Tracks must be in mp3 format.",
-      "No hazardous props allowed on stage."
+      "No hazardous props allowed on stage.",
+      "Registration Fee: Solo - ₹100, Group - ₹200."
     ],
     "facultyCoordinators": [
       {
@@ -742,7 +744,7 @@ export const EVENTS: EventDetails[] = [
     "teamSize": "Solo or Group",
     "department": "General",
     "fee": 100,
-    "groupFee": 100,
+    "groupFee": 200,
     "rulesPdf": "/rules/dance jcet.pdf"
   },
   {
@@ -1246,7 +1248,7 @@ export const SCHEDULE = [
       { time: '03:00 PM - 03:30 PM', title: 'Dialogue Delivery Battle' },
       { time: '03:30 PM - 04:30 PM', title: 'Minute Master' },
       { time: '04:30 PM - 05:00 PM', title: 'Short Break' },
-      { time: '05:30 PM - 07:30 PM', title: 'Melody Mania & Dance Infusion (Solo & Group)' },
+      { time: '05:30 PM - 07:30 PM', title: 'Melody Mania' },
       { time: '07:30 PM - 08:30 PM', title: 'DJ Night' },
     ]
   }

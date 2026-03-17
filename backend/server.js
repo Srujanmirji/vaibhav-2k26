@@ -75,7 +75,7 @@ const EVENT_FEES = {
     e20: 100, // Dialogue Delivery Battle
     e21: 50, // Minute Master
     e23: { solo: 100, group: 200 }, // Melody Mania
-    e25: { solo: 100, group: 100 }, // Dance Mania
+    e25: { solo: 100, group: 200 }, // Dance Mania
 };
 
 
