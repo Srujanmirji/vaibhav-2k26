@@ -62,7 +62,7 @@ const EVENT_FEES = {
     e4: 100,  // Cooking Without Fire
     e5: 100,  // Blind Fold Taste Test
     e6: 100,  // Survey Hunt
-    e7: 50,  // Art Gallery
+    e7: { solo: 50, group: 50 },  // Art Gallery
     e8: 100,  // Spot Acting Battle
     e9: 200,  // Laugh Logic Loot - Rs 200/team
     e13: 200, // AI Prompt Battle - Rs 200/team
@@ -73,7 +73,7 @@ const EVENT_FEES = {
     e18: 200, // Game Zone - Rs 200/team
     e19: 100, // Circuit Mania
     e20: 100, // Dialogue Delivery Battle
-    e21: 50, // Minute Master
+    e21: { solo: 50, group: 50 }, // Minute Master
     e23: { solo: 100, group: 200 }, // Melody Mania
     e25: { solo: 100, group: 200 }, // Dance Mania
 };
