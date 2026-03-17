@@ -163,7 +163,7 @@ export const EVENTS: EventDetails[] = [
     "image": "/eventsposters/ART GALLERY_page-0001.jpg",
     "teamSize": "Individual",
     "department": "BS",
-    "fee": 100,
+    "fee": 50,
     "rulesPdf": "/rules/Rules of art gallery and minute master.pdf"
   },
   {
@@ -699,7 +699,8 @@ export const EVENTS: EventDetails[] = [
     "image": "/eventsposters/WhatsApp Image 2026-03-16 at 2.51.05 PM.jpeg",
     "teamSize": "Solo or Group",
     "department": "General",
-    "fee": 350,
+    "fee": 100,
+    "groupFee": 200,
     "rulesPdf": "/rules/dance jcet.pdf"
   },
   {
@@ -739,7 +740,8 @@ export const EVENTS: EventDetails[] = [
     "image": "/eventsposters/WhatsApp Image 2026-03-16 at 2.51.06 PM.jpeg",
     "teamSize": "Solo or Group",
     "department": "General",
-    "fee": 350,
+    "fee": 100,
+    "groupFee": 100,
     "rulesPdf": "/rules/dance jcet.pdf"
   },
   {
@@ -792,6 +794,7 @@ export const EVENTS: EventDetails[] = [
     "teamSize": "Individual or Team",
     "department": "CSE",
     "fee": 50,
+    "groupFee": 100,
     "rulesPdf": "/rules/Rules for Meme (1).pdf"
   },
   {
@@ -835,7 +838,7 @@ export const EVENTS: EventDetails[] = [
     "image": "/eventsposters/minute master(1)_page-0001.jpg",
     "teamSize": "Team of 2",
     "department": "BS",
-    "fee": 100,
+    "fee": 50,
     "rulesPdf": "/rules/Rules of art gallery and minute master.pdf"
   },
   {
@@ -1075,7 +1078,7 @@ export const EVENTS: EventDetails[] = [
     "date": "March 27, 2026",
     "time": "02:00 PM",
     "venue": "A118",
-    "image": "https://loremflickr.com/800/600/map,search",
+    "image": "/eventsposters/survey hunt.jpeg",
     "teamSize": "Team of 4",
     "department": "CVE",
     "fee": 100,

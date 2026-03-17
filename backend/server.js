@@ -62,20 +62,20 @@ const EVENT_FEES = {
     e4: 100,  // Cooking Without Fire
     e5: 100,  // Blind Fold Taste Test
     e6: 100,  // Survey Hunt
-    e7: 100,  // Art Gallery
+    e7: 50,  // Art Gallery
     e8: 100,  // Spot Acting Battle
     e9: 200,  // Laugh Logic Loot - Rs 200/team
     e13: 200, // AI Prompt Battle - Rs 200/team
     e14: 100, // Tallest Tower Challenge
     e15: 250, // Buildathon - Rs 250/team
     e16: 100, // Social Media Awareness Contest
-    e17: 100, // Meme Challenge
+    e17: { solo: 50, group: 100 }, // Meme Challenge
     e18: 200, // Game Zone - Rs 200/team
     e19: 100, // Circuit Mania
     e20: 100, // Dialogue Delivery Battle
-    e21: 100, // Minute Master
-    e23: 350, // Melody Mania - Rs 350/group
-    e25: 350, // Dance Mania - Rs 350/group
+    e21: 50, // Minute Master
+    e23: { solo: 100, group: 200 }, // Melody Mania
+    e25: { solo: 100, group: 100 }, // Dance Mania
 };
 
 
@@ -85,7 +85,7 @@ const EVENT_FEES = {
  */
 app.post('/api/create-order', async (req, res) => {
     try {
-        const { selectedEventIds, currency, email, phone, name } = req.body;
+        const { selectedEventIds, currency, email, phone, name, registrationType } = req.body;
 
         // Validate event IDs and calculate total fee server-side
         if (!Array.isArray(selectedEventIds) || selectedEventIds.length === 0) {
@@ -95,9 +95,15 @@ app.post('/api/create-order', async (req, res) => {
         let totalFee = 0;
         const validEvents = [];
         for (const eventId of selectedEventIds) {
-            const fee = EVENT_FEES[eventId];
-            if (fee !== undefined) {
-                totalFee += fee;
+            const feeValue = EVENT_FEES[eventId];
+            if (feeValue !== undefined) {
+                if (typeof feeValue === 'number') {
+                    totalFee += feeValue;
+                } else {
+                    // Support separate solo/group fees
+                    const fee = (registrationType === 'Group') ? (feeValue.group || 0) : (feeValue.solo || 0);
+                    totalFee += fee;
+                }
                 validEvents.push(eventId);
             }
         }

@@ -333,7 +333,7 @@ const Events: React.FC = () => {
                     <div>
                       <p className="text-gray-500 text-[8px] md:text-[10px] uppercase font-black tracking-widest mb-0.5">Format</p>
                       <p className="text-white text-[11px] md:text-sm font-bold">{selectedEventForModal.teamSize}</p>
-                      <p className="text-gray-400 text-[10px] md:text-xs">₹{selectedEventForModal.fee === 1 ? '100' : selectedEventForModal.fee}</p>
+                      <p className="text-gray-400 text-[10px] md:text-xs">₹{selectedEventForModal.fee}</p>
                     </div>
                   </motion.div>
                 </div>
@@ -519,7 +519,7 @@ const Events: React.FC = () => {
                         state={{ preselectedEventId: selectedEventForModal.id }}
                         className="flex-1 py-3.5 md:py-5 bg-primary text-white font-black uppercase tracking-widest md:tracking-[0.3em] rounded-xl md:rounded-2xl text-center hover:bg-white hover:text-primary transition-all shadow-[0_15px_40px_rgba(255,0,85,0.4)] active:scale-[0.98] text-xs md:text-sm"
                       >
-                        REGISTER ₹{selectedEventForModal.fee === 1 ? '100' : selectedEventForModal.fee}
+                        REGISTER ₹{selectedEventForModal.fee}
                       </Link>
                     )}
                     <button
