@@ -321,13 +321,15 @@ export const EVENTS: EventDetails[] = [
     "id": "e19",
     "title": "Circuit Mania",
     "category": "Tech",
-    "description": "Test your skills in circuit design and debugging in this electrifying event.",
+    "description": "Circuit Mania is a technical event focusing on basic electronics and problem-solving skills. Participants will work through simple challenges that involve identifying and correcting faults in electronic setups. The event encourages logical thinking, attention to detail, and practical knowledge of electronic components. It’s a great opportunity to apply what you’ve learned and experience real-world troubleshooting.",
     "rules": [
-      "Individual participation.",
-      "Round 1: Theory-based MCQ screening.",
-      "Round 2: Identify & rectify faults in given circuit.",
-      "No mobile phones or personal materials allowed.",
-      "Decision of judges is final and binding."
+      "Number of participants per team: 1 or 2.",
+      "The event will be conducted in three rounds: a quiz round, a schematic-based debugging round and a physical circuit debugging final round.",
+      "Teams must advance to qualify.",
+      "Participants must strictly follow the time limits and follow all instructions given by the organizers.",
+      "Only the materials and equipment provided by the organizers may be used during the event.",
+      "Any form of rule violation or misconduct will result in disqualification.",
+      "Results will be announced on the same day, all participants will receive a participation certificate."
     ],
     "facultyCoordinators": [
       {
@@ -353,9 +355,9 @@ export const EVENTS: EventDetails[] = [
     "time": "02:00 PM",
     "venue": "Electrical Lab",
     "image": "/eventsposters/WhatsApp Image 2026-03-16 at 2.49.51 PM.jpeg",
-    "teamSize": "Team of 4",
+    "teamSize": "Solo or Team of 2",
     "department": "ECE",
-    "fee": 200,
+    "fee": 100,
     "rulesPdf": "/rules/Circuitmania.pdf"
   },
   {
