@@ -6,7 +6,7 @@ const EVENT_FEES = {
     e3: { fee: 100 },
     e4: { fee: 100, groupFee: 100 },
     e5: { fee: 100, groupFee: 100 },
-    e6: { fee: 100 },
+    e6: { fee: 200 },
     e7: { fee: 50, groupFee: 50 }, // Art Gallery
     e8: { fee: 100 },
     e9: { fee: 200 },

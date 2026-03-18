@@ -1090,7 +1090,7 @@ export const EVENTS: EventDetails[] = [
     "image": "/eventsposters/survey hunt.jpeg",
     "teamSize": "Team of 4",
     "department": "CVE",
-    "fee": 100,
+    "fee": 200,
     "rulesPdf": "/rules/Survey Hunt.pdf"
   },
   {
