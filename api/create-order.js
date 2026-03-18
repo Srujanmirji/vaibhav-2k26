@@ -2,7 +2,7 @@ import Razorpay from 'razorpay';
 
 const EVENT_FEES = {
     e1: { fee: 0 },
-    e2: { fee: 100 },
+    e2: { fee: 200 },  // JCET SHARK TANK
     e3: { fee: 100 },
     e4: { fee: 100, groupFee: 100 },
     e5: { fee: 100, groupFee: 100 },
