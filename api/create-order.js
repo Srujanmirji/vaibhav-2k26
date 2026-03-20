@@ -42,7 +42,8 @@ export default async function handler(req, res) {
             key_secret: process.env.RAZORPAY_KEY_SECRET,
         });
 
-        const { selectedEventIds, currency, registrationType } = req.body;
+        const { selectedEventIds, selectedEventNames, currency, registrationType, name, email } = req.body;
+        const eventNamesStr = Array.isArray(selectedEventNames) ? selectedEventNames.join(', ') : '';
 
         if (!Array.isArray(selectedEventIds) || selectedEventIds.length === 0) {
             return res.status(400).json({ success: false, error: 'No events selected.' });
@@ -69,6 +70,12 @@ export default async function handler(req, res) {
             amount: totalFee * 100,
             currency: currency || 'INR',
             receipt: 'receipt_' + Date.now(),
+            notes: {
+                description: `${name || 'Unknown'} | ${eventNamesStr || 'N/A'}`.substring(0, 255),
+                customer_name: name || '',
+                customer_email: email || '',
+                events: eventNamesStr.substring(0, 255),
+            },
         });
 
         return res.json({

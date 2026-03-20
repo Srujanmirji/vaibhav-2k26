@@ -85,7 +85,8 @@ const EVENT_FEES = {
  */
 app.post('/api/create-order', async (req, res) => {
     try {
-        const { selectedEventIds, currency, email, phone, name, registrationType } = req.body;
+        const { selectedEventIds, selectedEventNames, currency, email, phone, name, registrationType } = req.body;
+        const eventNamesStr = Array.isArray(selectedEventNames) ? selectedEventNames.join(', ') : '';
 
         // Validate event IDs and calculate total fee server-side
         if (!Array.isArray(selectedEventIds) || selectedEventIds.length === 0) {
@@ -116,6 +117,12 @@ app.post('/api/create-order', async (req, res) => {
             amount: totalFee * 100, // Amount in paise
             currency: currency || 'INR',
             receipt: `receipt_${Date.now()}`,
+            notes: {
+                description: `${name || 'Unknown'} | ${eventNamesStr || 'N/A'}`.substring(0, 255),
+                customer_name: name || '',
+                customer_email: email || '',
+                events: eventNamesStr.substring(0, 255),
+            },
         };
 
         const order = await razorpay.orders.create(orderOptions);

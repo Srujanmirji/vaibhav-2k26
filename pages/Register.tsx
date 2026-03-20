@@ -407,6 +407,7 @@ const Register: React.FC = () => {
               const ev = EVENTS.find(e => e.title === title);
               return ev?.id || '';
             }).filter(Boolean),
+            selectedEventNames: formData.selectedEvents,
             registrationType: formData.registrationType,
             currency: 'INR',
             email: formData.email,
@@ -433,7 +434,7 @@ const Register: React.FC = () => {
           amount: orderData.amount, // Secured amount from backend
           currency: orderData.currency,
           name: 'Vaibhav 2K26',
-          description: 'Event Registration Fee',
+          description: `${formData.fullName} | ${formData.selectedEvents.join(', ')}`.substring(0, 255),
           order_id: orderData.order_id, // THIS is the crucial security update
           handler: async function (response: any) {
             try {
