@@ -280,6 +280,14 @@ function doPost(e) {
     if (action !== 'register') return createJSONOutput_({ status: 'error', message: 'Invalid action.' });
 
     const email = normalizeString_(data.email).toLowerCase();
+    const idToken = normalizeString_(data.idToken || '');
+
+    // Verify that the user is actually who they say they are
+    const verifiedEmail = verifyGoogleIdToken_(idToken);
+    if (!verifiedEmail || verifiedEmail !== email) {
+      return createJSONOutput_({ status: 'error', message: 'Authentication failed. Please sign in again with your Google account.' });
+    }
+
     const selectedEvents = normalizeEvents_(data);
 
     if (!email || selectedEvents.length === 0) return createJSONOutput_({ status: 'error', message: 'Email and at least one event are required.' });

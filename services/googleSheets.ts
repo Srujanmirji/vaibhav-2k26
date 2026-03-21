@@ -1,5 +1,6 @@
 import { RegistrationFormData, ApiResponse, AdminRegistrationRecord } from '../types';
 import { EVENTS, GOOGLE_SCRIPT_URL } from '../constants';
+import { getStoredAuthToken } from './authSession';
 
 // Simulated database for when Google Script URL is missing or fails (CORS)
 const SIMULATED_DB: RegistrationFormData[] = [
@@ -221,10 +222,16 @@ export const submitRegistration = async (data: RegistrationFormData): Promise<Ap
       };
     });
 
+    const idToken = getStoredAuthToken();
+    if (!idToken) {
+      return { status: 'error', message: 'Authentication token is required. Please sign in again.' };
+    }
+
     const payload = {
       ...data,
       selectedEvents: eventsWithIds,
       action: 'register',
+      idToken,
     };
 
     try {
