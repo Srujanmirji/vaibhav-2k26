@@ -1,7 +1,7 @@
 import { EventDetails } from './types';
 
 // Replace this with your deployed Google Apps Script Web App URL
-export const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyj0GWc2pGQcLkmQdHE-8aWSXt1u-wRFlfvv0JHHA_0eL9ZpFWj995GVQ3VPgwSQLIobg/exec';
+export const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyNb2fzeJ328esixWyjc8XgxtqclYxuZrl2MKS0GrWOED-eMnY5GEREuAfkSu559Gng/exec';
 
 // Replace with your Google Cloud Client ID (for Google Sign-In)
 export const GOOGLE_CLIENT_ID = '258766307307-4o43namsrf53p4rc9o8shlm75sb483l9.apps.googleusercontent.com';

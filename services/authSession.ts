@@ -11,13 +11,28 @@ const decodeJwtToken = (token: string) => {
   try {
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(window.atob(base64).split('').map((c) => {
+    const jsonPayload = atob(base64).split('').map((c) => {
       return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-    return JSON.parse(jsonPayload);
+    }).join('');
+    return JSON.parse(decodeURIComponent(jsonPayload));
   } catch (error) {
-    console.error('Failed to decode JWT', error);
+    console.error('Failed to decode JWT:', error);
     return null;
+  }
+};
+
+export const isTokenExpired = (token: string): boolean => {
+  if (!token) return true;
+  try {
+    const payload = decodeJwtToken(token);
+    if (!payload || !payload.exp) return false; // If we can't find exp, assume NOT expired for now
+    
+    // exp is in seconds, Date.now() is in milliseconds
+    const now = Math.floor(Date.now() / 1000);
+    const leeway = 30; // 30 seconds leeway
+    return payload.exp < (now - leeway); 
+  } catch (error) {
+    return false; // On error, let the backend decide
   }
 };
 

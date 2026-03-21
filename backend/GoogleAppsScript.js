@@ -132,6 +132,7 @@ function doGet(e) {
       return createJSONOutput_({ status: 'success', message: 'pong' }, callback);
     }
 
+
     if (action === 'getallregistrations') {
       const idToken = normalizeString_((e && e.parameter && e.parameter.idToken) || '');
       const adminEmail = verifyGoogleIdToken_(idToken);
@@ -145,67 +146,8 @@ function doGet(e) {
         return createJSONOutput_({ status: 'error', message: 'Unauthorized admin access.' }, callback);
       }
 
-      if (!forceRefresh) {
-        const cachedAdminRows = readScriptCacheJSON_(ADMIN_REGISTRATIONS_CACHE_KEY);
-        if (cachedAdminRows && Array.isArray(cachedAdminRows.data)) {
-          return createJSONOutput_({ status: 'success', data: cachedAdminRows.data }, callback);
-        }
-      }
-
-      const allRows = [];
-      const useMainSheet = MAIN_SPREADSHEET_ID && MAIN_SPREADSHEET_ID !== 'YOUR_MAIN_SPREADSHEET_ID_HERE';
-
-      if (useMainSheet) {
-        const mainSheet = getSheet_(MAIN_SPREADSHEET_ID, DEFAULT_SHEET_NAME);
-        const lastRow = mainSheet.getLastRow();
-
-        if (lastRow > 1) {
-          const rows = mainSheet.getRange(2, 1, lastRow - 1, 15).getValues();
-          rows.forEach(function (row) {
-            const eventId = normalizeString_(row[8]);
-            const eventTitle = normalizeString_(row[7]) || EVENT_ID_TO_TITLE[eventId] || eventId;
-            allRows.push({
-              timestamp: formatTimestamp_(row[0]),
-              fullName: normalizeString_(row[1]),
-              email: normalizeString_(row[2]).toLowerCase(),
-              phone: normalizeString_(row[3]),
-              college: normalizeString_(row[4]),
-              department: normalizeString_(row[5]),
-              year: normalizeString_(row[6]),
-              eventTitle: eventTitle,
-              eventId: eventId,
-              eventDate: EVENT_ID_TO_DATE[eventId] || EVENT_DATE_LABEL,
-              registrationId: normalizeString_(row[9]),
-              razorpayPaymentId: normalizeString_(row[10]),
-              teamName: normalizeString_(row[12]),
-              teamMembers: normalizeString_(row[13]),
-              registrationType: normalizeString_(row[14]) || (normalizeString_(row[12]) ? 'Group' : 'Solo'),
-            });
-          });
-        }
-      } else {
-        const eventIds = Object.keys(EVENT_SHEET_MAP);
-        eventIds.forEach(function (eventId) {
-          const config = EVENT_SHEET_MAP[eventId];
-          if (!config || !isSpreadsheetConfigured_(config.spreadsheetId)) return;
-
-          const sheet = getSheet_(config.spreadsheetId, config.sheetName || DEFAULT_SHEET_NAME);
-          const lastRow = sheet.getLastRow();
-          if (lastRow < 2) return;
-
-          const rows = sheet.getRange(2, 1, lastRow - 1, 15).getValues();
-          rows.forEach(function (row) {
-            const eventTitle = normalizeString_(row[7]) || EVENT_ID_TO_TITLE[eventId] || eventId;
-            allRows.push({
-              timestamp: formatTimestamp_(row[0]), fullName: normalizeString_(row[1]), email: normalizeString_(row[2]).toLowerCase(), phone: normalizeString_(row[3]), college: normalizeString_(row[4]), department: normalizeString_(row[5]), year: normalizeString_(row[6]), eventTitle: eventTitle, eventId: normalizeString_(row[8]) || eventId, eventDate: EVENT_ID_TO_DATE[eventId] || EVENT_DATE_LABEL, registrationId: normalizeString_(row[9]), razorpayPaymentId: normalizeString_(row[10]), teamName: normalizeString_(row[12]), teamMembers: normalizeString_(row[13]), registrationType: normalizeString_(row[14]) || (normalizeString_(row[12]) ? 'Group' : 'Solo')
-            });
-          });
-        });
-      }
-
-      allRows.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-      writeScriptCacheJSON_(ADMIN_REGISTRATIONS_CACHE_KEY, { data: allRows }, ADMIN_REGISTRATIONS_CACHE_TTL_SECONDS);
-      return createJSONOutput_({ status: 'success', data: allRows }, callback);
+      const result = getAllRegistrationsInternal_(forceRefresh);
+      return createJSONOutput_(result, callback);
     }
 
     if (action !== 'getregistrations') {
@@ -276,6 +218,22 @@ function doPost(e) {
 
     const data = JSON.parse(e.postData.contents);
     const action = normalizeString_(data.action || 'register').toLowerCase();
+
+    if (action === 'getallregistrations') {
+      const idToken = normalizeString_(data.idToken || '');
+      const adminEmail = verifyGoogleIdToken_(idToken);
+      const forceRefresh = isTruthy_(data.forceRefresh || '');
+
+      if (!adminEmail) {
+        return createJSONOutput_({ status: 'error', message: 'Invalid or expired authentication token.' });
+      }
+
+      if (!isAdminAllowed_(adminEmail)) {
+        return createJSONOutput_({ status: 'error', message: 'Unauthorized admin access.' });
+      }
+
+      return getAllRegistrationsInternal_(forceRefresh);
+    }
 
     if (action !== 'register') return createJSONOutput_({ status: 'error', message: 'Invalid action.' });
 
@@ -386,6 +344,84 @@ function doPost(e) {
   } finally {
     lock.releaseLock();
   }
+}
+
+function getAllRegistrationsInternal_(forceRefresh) {
+  if (!forceRefresh) {
+    const cachedAdminRows = readScriptCacheJSON_(ADMIN_REGISTRATIONS_CACHE_KEY);
+    if (cachedAdminRows && Array.isArray(cachedAdminRows.data)) {
+      return { status: 'success', data: cachedAdminRows.data };
+    }
+  }
+
+  const allRows = [];
+  const useMainSheet = MAIN_SPREADSHEET_ID && MAIN_SPREADSHEET_ID !== 'YOUR_MAIN_SPREADSHEET_ID_HERE';
+
+  if (useMainSheet) {
+    const mainSheet = getSheet_(MAIN_SPREADSHEET_ID, DEFAULT_SHEET_NAME);
+    const lastRow = mainSheet.getLastRow();
+
+    if (lastRow > 1) {
+      const rows = mainSheet.getRange(2, 1, lastRow - 1, 15).getValues();
+      rows.forEach(function (row) {
+        const eventId = normalizeString_(row[8]);
+        const eventTitle = normalizeString_(row[7]) || EVENT_ID_TO_TITLE[eventId] || eventId;
+        allRows.push({
+          timestamp: formatTimestamp_(row[0]),
+          fullName: normalizeString_(row[1]),
+          email: normalizeString_(row[2]).toLowerCase(),
+          phone: normalizeString_(row[3]),
+          college: normalizeString_(row[4]),
+          department: normalizeString_(row[5]),
+          year: normalizeString_(row[6]),
+          eventTitle: eventTitle,
+          eventId: eventId,
+          eventDate: EVENT_ID_TO_DATE[eventId] || EVENT_DATE_LABEL,
+          registrationId: normalizeString_(row[9]),
+          razorpayPaymentId: normalizeString_(row[10]),
+          teamName: normalizeString_(row[12]),
+          teamMembers: normalizeString_(row[13]),
+          registrationType: normalizeString_(row[14]) || (normalizeString_(row[12]) ? 'Group' : 'Solo'),
+        });
+      });
+    }
+  } else {
+    const eventIds = Object.keys(EVENT_SHEET_MAP);
+    eventIds.forEach(function (eventId) {
+      const config = EVENT_SHEET_MAP[eventId];
+      if (!config || !isSpreadsheetConfigured_(config.spreadsheetId)) return;
+
+      const sheet = getSheet_(config.spreadsheetId, config.sheetName || DEFAULT_SHEET_NAME);
+      const lastRow = sheet.getLastRow();
+      if (lastRow < 2) return;
+
+      const rows = sheet.getRange(2, 1, lastRow - 1, 15).getValues();
+      rows.forEach(function (row) {
+        const eventTitle = normalizeString_(row[7]) || EVENT_ID_TO_TITLE[eventId] || eventId;
+        allRows.push({
+          timestamp: formatTimestamp_(row[0]),
+          fullName: normalizeString_(row[1]),
+          email: normalizeString_(row[2]).toLowerCase(),
+          phone: normalizeString_(row[3]),
+          college: normalizeString_(row[4]),
+          department: normalizeString_(row[5]),
+          year: normalizeString_(row[6]),
+          eventTitle: eventTitle,
+          eventId: normalizeString_(row[8]) || eventId,
+          eventDate: EVENT_ID_TO_DATE[eventId] || EVENT_DATE_LABEL,
+          registrationId: normalizeString_(row[9]),
+          razorpayPaymentId: normalizeString_(row[10]),
+          teamName: normalizeString_(row[12]),
+          teamMembers: normalizeString_(row[13]),
+          registrationType: normalizeString_(row[14]) || (normalizeString_(row[12]) ? 'Group' : 'Solo')
+        });
+      });
+    });
+  }
+
+  allRows.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+  writeScriptCacheJSON_(ADMIN_REGISTRATIONS_CACHE_KEY, { data: allRows }, ADMIN_REGISTRATIONS_CACHE_TTL_SECONDS);
+  return { status: 'success', data: allRows };
 }
 
 function getSheet_(spreadsheetId, sheetName) {

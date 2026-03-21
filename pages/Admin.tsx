@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { GOOGLE_CLIENT_ID, ADMIN_ALLOWED_EMAILS, EVENTS } from '../constants';
 import { getAllRegistrationsForAdmin } from '../services/googleSheets';
-import { clearAuthToken, getAuthUserFromToken, getStoredAuthToken, getStoredAuthUser, persistAuthToken, type AuthUser } from '../services/authSession';
+import { clearAuthToken, getAuthUserFromToken, getStoredAuthToken, getStoredAuthUser, persistAuthToken, isTokenExpired, type AuthUser } from '../services/authSession';
 import { AlertCircle, Loader2, LogOut, Shield, Users, RefreshCcw, Download, DollarSign, TrendingUp, UserCheck, CreditCard, Filter, Search, ChevronDown, LayoutDashboard, Table } from 'lucide-react';
 import type { AdminRegistrationRecord } from '../types';
 import AdminAnalyticsDashboard from '../components/AdminAnalyticsDashboard';
@@ -42,6 +42,8 @@ const Admin: React.FC = () => {
       setMessage('Authentication token not found. Please sign in again.');
       return;
     }
+    // We let the backend decide if the token is valid, since local clock skew
+    // can cause false positive expirations.
     setLoading(true);
     setMessage('');
     const response = await getAllRegistrationsForAdmin(adminEmail, idToken, forceRefresh);
@@ -51,6 +53,17 @@ const Admin: React.FC = () => {
       if (!response.data || response.data.length === 0) setMessage('No registrations found.');
       return;
     }
+    
+    // If the backend firmly says the token is invalid or expired, we MUST clear the local session
+    if (response.message?.toLowerCase().includes('invalid or expired')) {
+      console.warn('Backend rejected the token. Forcing local logout so you can obtain a fresh token.');
+      setMessage('Session definitely expired. Logging you out to refresh your access...');
+      setTimeout(() => {
+        handleSignOut();
+      }, 2000);
+      return;
+    }
+    
     setRows([]);
     setMessage(response.message || 'Failed to load registrations.');
   };
