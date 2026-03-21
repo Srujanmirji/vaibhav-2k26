@@ -133,8 +133,13 @@ function doGet(e) {
     }
 
     if (action === 'getallregistrations') {
-      const adminEmail = normalizeString_((e && e.parameter && e.parameter.adminEmail) || '').toLowerCase();
+      const idToken = normalizeString_((e && e.parameter && e.parameter.idToken) || '');
+      const adminEmail = verifyGoogleIdToken_(idToken);
       const forceRefresh = isTruthy_((e && e.parameter && e.parameter.forceRefresh) || '');
+
+      if (!adminEmail) {
+        return createJSONOutput_({ status: 'error', message: 'Invalid or expired authentication token.' }, callback);
+      }
 
       if (!isAdminAllowed_(adminEmail)) {
         return createJSONOutput_({ status: 'error', message: 'Unauthorized admin access.' }, callback);
@@ -389,6 +394,24 @@ function getSheet_(spreadsheetId, sheetName) {
 function isAdminAllowed_(adminEmail) {
   if (!adminEmail) return false;
   return ADMIN_ALLOWED_EMAILS_NORMALIZED.includes(normalizeString_(adminEmail).toLowerCase());
+}
+
+function verifyGoogleIdToken_(idToken) {
+  if (!idToken) return null;
+  try {
+    var response = UrlFetchApp.fetch(
+      'https://oauth2.googleapis.com/tokeninfo?id_token=' + encodeURIComponent(idToken),
+      { muteHttpExceptions: true }
+    );
+    if (response.getResponseCode() !== 200) return null;
+    var payload = JSON.parse(response.getContentText());
+    var email = (payload.email || '').toLowerCase().trim();
+    if (!email || payload.email_verified === 'false') return null;
+    return email;
+  } catch (e) {
+    Logger.log('Token verification error: ' + e.toString());
+    return null;
+  }
 }
 
 function normalizeEvents_(data) {

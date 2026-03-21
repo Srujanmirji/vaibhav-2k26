@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { GOOGLE_CLIENT_ID, ADMIN_ALLOWED_EMAILS, EVENTS } from '../constants';
 import { getAllRegistrationsForAdmin } from '../services/googleSheets';
-import { clearAuthToken, getAuthUserFromToken, getStoredAuthUser, persistAuthToken, type AuthUser } from '../services/authSession';
+import { clearAuthToken, getAuthUserFromToken, getStoredAuthToken, getStoredAuthUser, persistAuthToken, type AuthUser } from '../services/authSession';
 import { AlertCircle, Loader2, LogOut, Shield, Users, RefreshCcw, Download, DollarSign, TrendingUp, UserCheck, CreditCard, Filter, Search, ChevronDown, LayoutDashboard, Table } from 'lucide-react';
 import type { AdminRegistrationRecord } from '../types';
 import AdminAnalyticsDashboard from '../components/AdminAnalyticsDashboard';
@@ -37,9 +37,14 @@ const Admin: React.FC = () => {
   };
 
   const fetchAllRegistrations = async (adminEmail: string, forceRefresh = false) => {
+    const idToken = getStoredAuthToken();
+    if (!idToken) {
+      setMessage('Authentication token not found. Please sign in again.');
+      return;
+    }
     setLoading(true);
     setMessage('');
-    const response = await getAllRegistrationsForAdmin(adminEmail, forceRefresh);
+    const response = await getAllRegistrationsForAdmin(adminEmail, idToken, forceRefresh);
     setLoading(false);
     if (response.status === 'success') {
       setRows(response.data || []);

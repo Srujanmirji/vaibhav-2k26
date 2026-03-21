@@ -370,6 +370,7 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 export const getAllRegistrationsForAdmin = async (
   adminEmail: string,
+  idToken: string,
   forceRefresh = false
 ): Promise<{ status: 'success' | 'error'; data?: AdminRegistrationRecord[]; message?: string }> => {
   // Check cache first if not forcing refresh
@@ -389,10 +390,14 @@ export const getAllRegistrationsForAdmin = async (
     }
   }
 
+  if (!idToken) {
+    return { status: 'error', message: 'Authentication token is required. Please sign in again.' };
+  }
+
   try {
     const query = new URLSearchParams({
       action: 'getAllRegistrations',
-      adminEmail,
+      idToken,
     });
     if (forceRefresh) {
       query.set('forceRefresh', '1');
