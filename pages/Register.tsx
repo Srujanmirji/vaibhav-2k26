@@ -3,6 +3,55 @@ import { EVENTS, GOOGLE_CLIENT_ID, DEPARTMENTS, RAZORPAY_KEY_ID } from '../const
 import { useLocation } from 'react-router-dom';
 
 import { getRegistrations, submitRegistration } from '../services/googleSheets';
+
+const FAILED_REGISTRATIONS_KEY = 'vbhv_failed_registrations';
+
+const saveFailedRegistration = (payload: any) => {
+  try {
+    const existing = JSON.parse(localStorage.getItem(FAILED_REGISTRATIONS_KEY) || '[]');
+    existing.push({ payload, timestamp: Date.now() });
+    localStorage.setItem(FAILED_REGISTRATIONS_KEY, JSON.stringify(existing));
+  } catch (e) {
+    console.error('Failed to save registration for retry:', e);
+  }
+};
+
+const retryFailedRegistrations = async () => {
+  try {
+    const raw = localStorage.getItem(FAILED_REGISTRATIONS_KEY);
+    if (!raw) return;
+    const pending = JSON.parse(raw) as { payload: any; timestamp: number }[];
+    if (!Array.isArray(pending) || pending.length === 0) return;
+
+    // Only retry entries less than 24 hours old
+    const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+    const valid = pending.filter(entry => entry.timestamp > cutoff);
+    if (valid.length === 0) {
+      localStorage.removeItem(FAILED_REGISTRATIONS_KEY);
+      return;
+    }
+
+    const stillFailed: typeof valid = [];
+    for (const entry of valid) {
+      try {
+        const result = await submitRegistration(entry.payload);
+        if (result.status !== 'success') {
+          stillFailed.push(entry);
+        }
+      } catch {
+        stillFailed.push(entry);
+      }
+    }
+
+    if (stillFailed.length > 0) {
+      localStorage.setItem(FAILED_REGISTRATIONS_KEY, JSON.stringify(stillFailed));
+    } else {
+      localStorage.removeItem(FAILED_REGISTRATIONS_KEY);
+    }
+  } catch (e) {
+    console.error('Failed to retry registrations:', e);
+  }
+};
 import { clearAuthToken, getAuthUserFromToken, getStoredAuthUser, persistAuthToken } from '../services/authSession';
 import { RegistrationFormData } from '../types';
 import { CheckCircle, AlertCircle, Loader2, Sparkles, User, LogOut, Check, ArrowUpRight } from 'lucide-react';
@@ -185,6 +234,9 @@ const Register: React.FC = () => {
       }
       fetchRegisteredEvents(storedUser.email);
     }
+
+    // Retry any previously failed registrations (e.g. token expired during background sync)
+    retryFailedRegistrations();
   }, []);
 
   useEffect(() => {
@@ -375,9 +427,17 @@ const Register: React.FC = () => {
 
     // 3. Background Sync (Crucially non-blocking)
     submitRegistration(payload)
-      .then(() => fetchRegisteredEvents(formData.email, true))
+      .then((result) => {
+        if (result.status === 'success') {
+          fetchRegisteredEvents(formData.email, true);
+        } else {
+          console.error('Registration sync failed:', result.message);
+          saveFailedRegistration(payload);
+        }
+      })
       .catch(error => {
         console.error('Background Sync Failed:', error);
+        saveFailedRegistration(payload);
       });
   };
 
@@ -487,8 +547,18 @@ const Register: React.FC = () => {
 
                 // Background Sync
                 submitRegistration(registrationPayload)
-                  .then(() => fetchRegisteredEvents(registrationPayload.email, true))
-                  .catch(err => console.error('Background registration failed:', err));
+                  .then((result) => {
+                    if (result.status === 'success') {
+                      fetchRegisteredEvents(registrationPayload.email, true);
+                    } else {
+                      console.error('Registration sync failed after payment:', result.message);
+                      saveFailedRegistration(registrationPayload);
+                    }
+                  })
+                  .catch(err => {
+                    console.error('Background registration failed:', err);
+                    saveFailedRegistration(registrationPayload);
+                  });
               } else {
                 setStatus('error');
                 setMessage('Payment verification failed! Potential tampering detected.');
