@@ -82,15 +82,26 @@ const Home: React.FC = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 justify-center w-full sm:w-auto px-4 sm:px-0">
-            <Link
-              to={IS_REGISTRATION_CLOSED ? "/events" : "/register"}
-              className="min-h-[44px] min-w-[44px] w-full sm:w-auto px-6 py-3 md:px-8 md:py-4 bg-primary hover:bg-white hover:text-primary text-white font-bold text-base md:text-lg rounded-none skew-x-[-10deg] transition-all duration-300 flex items-center justify-center gap-2 group shadow-[0_0_20px_rgba(255,0,85,0.4)] hover:shadow-[0_0_30px_rgba(255,0,85,0.6)]"
-            >
-              <span className="skew-x-[10deg] flex items-center gap-2">
-                {IS_REGISTRATION_CLOSED ? "Explore Events" : "Register Now"}
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </span>
-            </Link>
+            {IS_REGISTRATION_CLOSED ? (
+              <div
+                className="min-h-[44px] min-w-[44px] w-full sm:w-auto px-6 py-3 md:px-8 md:py-4 bg-gray-600/50 text-gray-300 font-bold text-base md:text-lg rounded-none skew-x-[-10deg] flex items-center justify-center gap-2 cursor-not-allowed border border-gray-500/30"
+              >
+                <span className="skew-x-[10deg] flex items-center gap-2">
+                  Registration Closed
+                </span>
+              </div>
+            ) : (
+              <Link
+                to="/register"
+                className="min-h-[44px] min-w-[44px] w-full sm:w-auto px-6 py-3 md:px-8 md:py-4 bg-primary hover:bg-white hover:text-primary text-white font-bold text-base md:text-lg rounded-none skew-x-[-10deg] transition-all duration-300 flex items-center justify-center gap-2 group shadow-[0_0_20px_rgba(255,0,85,0.4)] hover:shadow-[0_0_30px_rgba(255,0,85,0.6)]"
+              >
+                <span className="skew-x-[10deg] flex items-center gap-2">
+                  Register Now
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </Link>
+            )}
+
             <Link
               to="/events"
               className="min-h-[44px] min-w-[44px] w-full sm:w-auto px-6 py-3 md:px-8 md:py-4 bg-transparent border border-secondary text-secondary hover:bg-secondary hover:text-darker font-bold text-base md:text-lg rounded-none skew-x-[-10deg] transition-all duration-300 flex items-center justify-center shadow-[0_0_10px_rgba(0,255,255,0.2)] hover:shadow-[0_0_20px_rgba(0,255,255,0.4)]"
