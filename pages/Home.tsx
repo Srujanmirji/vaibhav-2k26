@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Calendar, ChevronDown, MapPin, Users, Trophy } from 'lucide-react';
+import { IS_REGISTRATION_CLOSED } from '../constants';
 import { motion } from 'framer-motion';
 import About from '../components/About';
 import CyberpunkTerrain from '../components/CyberpunkTerrain';
@@ -82,11 +83,11 @@ const Home: React.FC = () => {
 
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 justify-center w-full sm:w-auto px-4 sm:px-0">
             <Link
-              to="/register"
+              to={IS_REGISTRATION_CLOSED ? "/events" : "/register"}
               className="min-h-[44px] min-w-[44px] w-full sm:w-auto px-6 py-3 md:px-8 md:py-4 bg-primary hover:bg-white hover:text-primary text-white font-bold text-base md:text-lg rounded-none skew-x-[-10deg] transition-all duration-300 flex items-center justify-center gap-2 group shadow-[0_0_20px_rgba(255,0,85,0.4)] hover:shadow-[0_0_30px_rgba(255,0,85,0.6)]"
             >
               <span className="skew-x-[10deg] flex items-center gap-2">
-                Register Now
+                {IS_REGISTRATION_CLOSED ? "Explore Events" : "Register Now"}
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </span>
             </Link>
@@ -127,22 +128,24 @@ const Home: React.FC = () => {
             )}
           </div>
 
-          <div className="mt-2 md:mt-3 inline-flex items-center gap-2 md:gap-3 px-3 md:px-5 py-2 md:py-2.5 rounded-full border border-primary/50 bg-primary/10 backdrop-blur-sm shadow-[0_0_18px_rgba(255,0,85,0.35)] animate-pulse">
-            <span className="relative flex h-2 w-2 md:h-3 md:w-3">
-              <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-75 animate-ping" />
-              <span className="relative inline-flex h-2 w-2 md:h-3 md:w-3 rounded-full bg-primary" />
-            </span>
-            <p className="text-[10px] md:text-sm font-extrabold uppercase tracking-wider text-white">
-              Hurry up. Seats are filling fast.
-            </p>
-            <Link
-              to="/register"
-              className="inline-flex items-center gap-1 text-[10px] md:text-sm font-black uppercase tracking-wider text-secondary hover:text-white transition-colors"
-            >
-              Register Now
-              <ArrowRight className="w-3 h-3 md:w-4 md:h-4 animate-bounce" />
-            </Link>
-          </div>
+          {!IS_REGISTRATION_CLOSED && (
+            <div className="mt-2 md:mt-3 inline-flex items-center gap-2 md:gap-3 px-3 md:px-5 py-2 md:py-2.5 rounded-full border border-primary/50 bg-primary/10 backdrop-blur-sm shadow-[0_0_18px_rgba(255,0,85,0.35)] animate-pulse">
+              <span className="relative flex h-2 w-2 md:h-3 md:w-3">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-75 animate-ping" />
+                <span className="relative inline-flex h-2 w-2 md:h-3 md:w-3 rounded-full bg-primary" />
+              </span>
+              <p className="text-[10px] md:text-sm font-extrabold uppercase tracking-wider text-white">
+                Hurry up. Seats are filling fast.
+              </p>
+              <Link
+                to="/register"
+                className="inline-flex items-center gap-1 text-[10px] md:text-sm font-black uppercase tracking-wider text-secondary hover:text-white transition-colors"
+              >
+                Register Now
+                <ArrowRight className="w-3 h-3 md:w-4 md:h-4 animate-bounce" />
+              </Link>
+            </div>
+          )}
 
           <button
             type="button"

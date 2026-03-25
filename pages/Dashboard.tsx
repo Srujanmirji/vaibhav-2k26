@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { GOOGLE_CLIENT_ID, EVENTS } from '../constants';
+import { GOOGLE_CLIENT_ID, EVENTS, IS_REGISTRATION_CLOSED } from '../constants';
 import { clearAuthToken, getAuthUserFromToken, getStoredAuthUser, persistAuthToken } from '../services/authSession';
 import { getRegistrations } from '../services/googleSheets';
 import { Loader2, AlertCircle, LayoutDashboard, User, LogOut, Ticket, Calendar, RefreshCcw, MapPin, Clock, Hash, CreditCard, Tag } from 'lucide-react';
@@ -153,7 +153,7 @@ const Dashboard: React.FC = () => {
                                     <RefreshCcw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
                                 </button>
                             </div>
-                            {!loading && canRegisterMore && (
+                            {!loading && canRegisterMore && !IS_REGISTRATION_CLOSED && (
                                 <a
                                     href="#/register"
                                     className="inline-flex items-center justify-center w-full sm:w-auto px-4 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-white hover:text-primary transition-all whitespace-nowrap"
@@ -235,9 +235,13 @@ const Dashboard: React.FC = () => {
                         ) : (
                             <div className="text-center py-20 bg-black/20 rounded-xl border border-white/5 border-dashed">
                                 <p className="text-gray-400 mb-4">You haven't registered for any events yet.</p>
-                                <a href="#/register" className="inline-block px-6 py-2 bg-primary text-white font-bold rounded-lg hover:bg-white hover:text-primary transition-all">
-                                    Register Now
-                                </a>
+                                {!IS_REGISTRATION_CLOSED ? (
+                                    <a href="#/register" className="inline-block px-6 py-2 bg-primary text-white font-bold rounded-lg hover:bg-white hover:text-primary transition-all">
+                                        Register Now
+                                    </a>
+                                ) : (
+                                    <p className="text-primary font-bold uppercase tracking-widest">Registrations are closed</p>
+                                )}
                             </div>
                         )}
 

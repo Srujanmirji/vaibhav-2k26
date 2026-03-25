@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { AUTH_CHANGED_EVENT, getStoredAuthUser } from '../services/authSession';
-import { ADMIN_ALLOWED_EMAILS } from '../constants';
+import { ADMIN_ALLOWED_EMAILS, IS_REGISTRATION_CLOSED } from '../constants';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -53,7 +53,7 @@ const Navbar: React.FC = () => {
     ...(isAdmin ? [{ name: 'Admin', path: '/admin' }] : []),
   ];
 
-  const actionLink = isLoggedIn
+  const actionLink = (isLoggedIn || IS_REGISTRATION_CLOSED)
     ? { path: '/dashboard', label: 'DASHBOARD', mobileLabel: 'Dashboard' }
     : { path: '/register', label: 'REGISTER', mobileLabel: 'Register Now' };
 

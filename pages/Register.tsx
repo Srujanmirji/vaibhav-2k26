@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { EVENTS, GOOGLE_CLIENT_ID, DEPARTMENTS, RAZORPAY_KEY_ID } from '../constants';
+import { EVENTS, GOOGLE_CLIENT_ID, DEPARTMENTS, RAZORPAY_KEY_ID, IS_REGISTRATION_CLOSED } from '../constants';
 import { useLocation } from 'react-router-dom';
 
 import { getRegistrations, submitRegistration } from '../services/googleSheets';
@@ -630,6 +630,34 @@ const Register: React.FC = () => {
     // Default flow for events with 0 fee
     await processRegistration();
   };
+
+  if (IS_REGISTRATION_CLOSED) {
+    return (
+      <div className="pt-24 min-h-screen bg-darker flex items-center justify-center p-4 relative overflow-hidden">
+        {/* Background Decor */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/10 rounded-full blur-[120px]"></div>
+
+        <div className="w-full max-w-2xl glass-card rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.5)] p-8 md:p-12 text-center relative z-10 animate-fade-in-up">
+          <div className="mx-auto w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(255,0,85,0.2)]">
+            <AlertCircle className="w-10 h-10 text-primary" />
+          </div>
+          <h1 className="text-3xl md:text-5xl font-black text-white mb-4 font-mono tracking-tighter uppercase">
+            REGISTRATION <span className="text-primary">CLOSED</span>
+          </h1>
+          <p className="text-gray-400 text-lg mb-8 max-w-md mx-auto">
+            Online registrations for Vaibhav 2K26 are now closed. See you at the event!
+          </p>
+          <a
+            href="/"
+            className="inline-block px-8 py-3 bg-primary hover:bg-white hover:text-primary text-white rounded-xl transition-all font-bold tracking-wider shadow-[0_10px_30px_rgba(255,0,85,0.3)]"
+          >
+            RETURN HOME
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="pt-24 min-h-screen bg-darker flex items-center justify-center p-4 relative overflow-hidden">

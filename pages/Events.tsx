@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { EVENTS, DEPARTMENTS } from '../constants';
+import { EVENTS, DEPARTMENTS, IS_REGISTRATION_CLOSED } from '../constants';
 import { Calendar, MapPin, Users, ArrowUpRight, X, Phone, ShieldCheck, Info, FileText, Download } from 'lucide-react';
 import { EventDetails } from '../types';
 
@@ -148,7 +148,7 @@ const Events: React.FC = () => {
                     VIEW DETAILS <Info className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </button>
 
-                  {!event.registrationClosed && (
+                  {!event.registrationClosed && !IS_REGISTRATION_CLOSED && (
                     event.tracks && event.tracks.length > 0 ? (
                       <button
                         onClick={() => setSelectedEventForModal(event)}
@@ -371,7 +371,7 @@ const Events: React.FC = () => {
                               </div>
                             </div>
                             <div className="shrink-0">
-                              {!track.registrationClosed && (
+                              {!track.registrationClosed && !IS_REGISTRATION_CLOSED && (
                                 track.registrationLink ? (
                                   <a
                                     href={track.registrationLink}
@@ -502,7 +502,7 @@ const Events: React.FC = () => {
 
               {/* Sticky Action Footer */}
               <div className="px-4 pb-4 md:p-8 md:pt-0 shrink-0 bg-gradient-to-t from-darker to-transparent">
-                {!selectedEventForModal.registrationClosed && !selectedEventForModal.tracks && (
+                {!selectedEventForModal.registrationClosed && !selectedEventForModal.tracks && !IS_REGISTRATION_CLOSED && (
                   <div className="flex gap-3 md:gap-4">
                     {selectedEventForModal.registrationLink ? (
                       <a
@@ -531,7 +531,7 @@ const Events: React.FC = () => {
                   </div>
                 )}
                 
-                {(selectedEventForModal.registrationClosed || selectedEventForModal.tracks) && (
+                {(selectedEventForModal.registrationClosed || selectedEventForModal.tracks || IS_REGISTRATION_CLOSED) && (
                   <button
                     onClick={() => setSelectedEventForModal(null)}
                     className="w-full py-3.5 md:py-5 bg-white/5 text-gray-400 font-bold uppercase tracking-widest rounded-xl md:rounded-2xl hover:text-white hover:bg-white/10 transition-all text-[10px] md:text-xs"

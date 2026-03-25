@@ -3,6 +3,9 @@ import { EventDetails } from './types';
 // Replace this with your deployed Google Apps Script Web App URL
 export const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyNb2fzeJ328esixWyjc8XgxtqclYxuZrl2MKS0GrWOED-eMnY5GEREuAfkSu559Gng/exec';
 
+// Global registration toggle
+export const IS_REGISTRATION_CLOSED = true;
+
 // Replace with your Google Cloud Client ID (for Google Sign-In)
 export const GOOGLE_CLIENT_ID = '258766307307-4o43namsrf53p4rc9o8shlm75sb483l9.apps.googleusercontent.com';
 
@@ -26,44 +29,47 @@ export const DEPARTMENTS = ['All', 'CSE', 'ECE', 'CVE', 'ME', 'BS', 'MBA'];
 export const EVENTS: EventDetails[] = [
   {
     "id": "e3",
-    "title": "AI in EV",
+    "title": "Paper Presentation on AI in EV",
     "category": "Tech",
     "description": "Explore the intersection of Artificial Intelligence and Electric Vehicles in this insightful session.",
     "rules": [
-      "Maximum 2-3 students per team (interdisciplinary allowed).",
-      "Paper in IEEE format (4-5 pages).",
-      "Presentation: 6-10 minutes + Q&A.",
-      "Topics: AI for EV Range Prediction, Smart Charging, Forward Detection, etc.",
-      "PPT Presentation required (8-10 slides)."
+      "AI for Electric Vehicle Range Prediction",
+      "Intelligent Motor control Using AI",
+      "AI based Regenerative Braking optimization",
+      "AI based Smart Charging system",
+      "AI based driver behavior monitoring",
+      "AI for fault detection in EV",
+      "AI for Thermal safety in Lithium-ion batteries",
+      "AI optimization of power consumption in EV"
     ],
     "facultyCoordinators": [
       {
-        "name": "Mr. Deviprasad N Mirashi",
+        "name": "Prof. Deviprasad N Mirashi",
         "phone": "9916095029"
       }
     ],
     "studentCoordinators": [
       {
-        "name": "Priyadarshini (Civil)",
+        "name": "Priyadarshini",
         "phone": "8618382331"
       },
       {
-        "name": "Ganga (Civil)",
+        "name": "Ganga",
         "phone": "7760206244"
       },
       {
-        "name": "Chetan Badiger (ME)",
+        "name": "Chetan Badiger",
         "phone": "8867342344"
       },
       {
-        "name": "Omprakash (ME)",
+        "name": "Omprakash",
         "phone": "8296893297"
       }
     ],
     "date": "March 27, 2026",
     "time": "10:30 AM to 11:30 AM",
     "venue": "Visvesvaraya seminar Hall",
-    "image": "/eventsposters/WhatsApp Image 2026-03-16 at 2.52.20 PM.jpeg",
+    "image": "/eventsposters/WhatsApp Image 2026-03-22 at 2.31.23 PM.jpeg",
     "teamSize": "Individual",
     "department": "ME",
     "fee": 100,
